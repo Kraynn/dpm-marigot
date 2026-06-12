@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ServicesSection from "@/components/ServicesSection";
-import GallerySection from "@/components/GallerySection";
+import RealisationsGallery from "@/components/RealisationsGallery";
 import ProcessSection from "@/components/ProcessSection";
 import WhyUsSection from "@/components/WhyUsSection";
 import ContactSection from "@/components/ContactSection";
@@ -24,7 +24,7 @@ export default function Home() {
       <HeroSection />
       <TestimonialsSection />
       <ServicesSection />
-      <GallerySection />
+      <RealisationsGallery />
       <ProcessSection />
       <WhyUsSection />
       <ContactSection />
