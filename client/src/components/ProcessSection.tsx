@@ -68,24 +68,22 @@ export default function ProcessSection() {
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                className="relative flex flex-col items-center text-center lg:items-start lg:text-left"
+                className="flex flex-col items-center text-center lg:items-start lg:text-left"
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(24px)",
                   transition: `opacity 0.6s ease ${i * 0.15}s, transform 0.6s ease ${i * 0.15}s`,
                 }}
               >
-                {/* Number + icon */}
-                <div className="relative mb-5">
-                  {/* Big background number */}
+                {/* Numéro + icône sur la même ligne */}
+                <div className="flex items-center gap-3 mb-5">
                   <span
-                    className="absolute -top-4 -left-2 text-7xl font-extrabold text-white/5 select-none pointer-events-none"
+                    className="text-5xl font-extrabold leading-none text-white/[0.07] select-none"
                     style={{ fontFamily: "Sora, sans-serif" }}
                   >
                     {step.number}
                   </span>
-                  {/* Icon circle */}
-                  <div className="relative z-10 w-14 h-14 rounded-2xl bg-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-900/40">
+                  <div className="w-14 h-14 rounded-2xl bg-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-900/40 shrink-0">
                     {step.icon}
                   </div>
                 </div>
