@@ -1,6 +1,6 @@
 import { nodeHTTPRequestHandler } from "@trpc/server/adapters/node-http";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { appRouter } from "../../server/routers";
+import { appRouter } from "../routers";
 
 export default function handler(req: IncomingMessage, res: ServerResponse) {
   const url = new URL(req.url ?? "/", "http://localhost");

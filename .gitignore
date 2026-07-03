@@ -4,3 +4,4 @@ dist/
 .env
 .vercel/
 dpm-marigot/
+api/trpc/handler.js
