@@ -1,10 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm run build:client && node_modules/.bin/esbuild server/_core/vercel-handler.ts --bundle --platform=node --target=node20 --packages=external --format=cjs --outfile=api/trpc/handler.js",
+  "buildCommand": "pnpm run build:client",
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install --no-frozen-lockfile",
   "rewrites": [
-    { "source": "/api/trpc/:path*", "destination": "/api/trpc/handler" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

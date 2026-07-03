@@ -1,4 +1,4 @@
-import type { User } from "../../drizzle/schema";
+import type { User } from "../../drizzle/schema.js";
 
 export type TrpcContext = {
   user: User | null;
