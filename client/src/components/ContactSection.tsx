@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { ArrowRight, Phone, Mail, Clock, CheckCircle2, MapPin } from "lucide-react";
+import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { trpc } from "@/lib/trpc";
 
@@ -19,10 +20,19 @@ const projectTypes = [
 
 export default function ContactSection() {
   const { ref, visible } = useScrollReveal();
-  const [form, setForm] = useState({ nom: "", telephone: "", email: "", projet: "", message: "" });
+  const [form, setForm] = useState({
+    nom: "",
+    telephone: "",
+    email: "",
+    projet: "",
+    message: "",
+    website: "", // honeypot — ne jamais afficher à l'utilisateur
+  });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -31,18 +41,25 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await sendQuoteMutation.mutateAsync({
+      const result = await sendQuoteMutation.mutateAsync({
         nom: form.nom,
         telephone: form.telephone,
-        email: form.email,
+        email: form.email || undefined,
         projet: form.projet,
-        message: form.message,
+        message: form.message || undefined,
+        website: form.website,
       });
+
       setSubmitted(true);
-      setForm({ nom: "", telephone: "", email: "", projet: "", message: "" });
-    } catch (error) {
-      console.error("Failed to send quote request:", error);
-      alert("Erreur lors de l'envoi. Veuillez réessayer.");
+      setForm({ nom: "", telephone: "", email: "", projet: "", message: "", website: "" });
+
+      if (result.emailSent === false) {
+        toast.warning("Demande reçue, mais un problème technique a empêché l'envoi automatique. Contactez-nous directement par email ou téléphone.");
+      } else {
+        toast.success("Demande envoyée ! Nous vous répondrons sous 24h.");
+      }
+    } catch {
+      toast.error("Une erreur est survenue. Veuillez réessayer ou nous contacter directement.");
     }
   };
 
@@ -98,6 +115,18 @@ export default function ContactSection() {
                 onSubmit={handleSubmit}
                 className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 lg:p-8 flex flex-col gap-5"
               >
+                {/* Honeypot — invisible pour les humains, piège pour les bots */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ display: "none" }}
+                />
+
                 {/* Row 1: Nom + Téléphone */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
@@ -191,9 +220,13 @@ export default function ContactSection() {
                 </p>
 
                 {/* Submit */}
-                <button type="submit" className="cta-btn w-full justify-center text-base">
-                  Obtenir mon devis gratuit
-                  <ArrowRight size={18} className="cta-arrow" />
+                <button
+                  type="submit"
+                  disabled={sendQuoteMutation.isPending}
+                  className="cta-btn w-full justify-center text-base disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sendQuoteMutation.isPending ? "Envoi en cours…" : "Obtenir mon devis gratuit"}
+                  {!sendQuoteMutation.isPending && <ArrowRight size={18} className="cta-arrow" />}
                 </button>
               </form>
             )}
