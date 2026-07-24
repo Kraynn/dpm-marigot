@@ -1,4 +1,5 @@
 import { COOKIE_NAME } from "../shared/const.js";
+import { forwardToAsapDevis } from "./_core/asapDevis.js";
 import { getSessionCookieOptions } from "./_core/cookies.js";
 import { sendQuoteEmail } from "./_core/email.js";
 import { notifyOwner } from "./_core/notification.js";
@@ -43,12 +44,21 @@ export const appRouter = router({
           content: `${quoteData.nom} — ${quoteData.projet}\nTél: ${quoteData.telephone}\nEmail: ${quoteData.email ?? "Non fourni"}`,
         });
 
+        // ASap Devis (opt-in) : si le service central est configuré ET qu'il a
+        // généré une estimation, il envoie déjà l'email récap + PDF à Silva —
+        // on évite le doublon. Sinon, comportement historique (email simple).
+        const asap = await forwardToAsapDevis(quoteData);
+
         let emailSent = false;
-        try {
-          await sendQuoteEmail(quoteData);
-          emailSent = true;
-        } catch (err) {
-          console.error("[sendQuote] Échec envoi email Resend:", err);
+        if (asap.forwarded && asap.estimation) {
+          emailSent = true; // email envoyé par asap-devis-api (avec PDF)
+        } else {
+          try {
+            await sendQuoteEmail(quoteData);
+            emailSent = true;
+          } catch (err) {
+            console.error("[sendQuote] Échec envoi email Resend:", err);
+          }
         }
 
         return {
