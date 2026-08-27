@@ -2,9 +2,16 @@
  * DPM Marigot – Services Section
  * Design: White background. 2×2 card grid with real images. Left-border hover accent.
  * Each card: icon + image + title + description + sub-items.
+ *
+ * Images : auto-hébergées dans client/public/images/services/, recadrées depuis les
+ * photos de chantier réelles de client/public/images/realisations/. Elles étaient
+ * servies par un CDN externe (d2xsxph8kpxj0f.cloudfront.net) qui répond 403 depuis :
+ * ne jamais réintroduire de dépendance d'image hors du dépôt.
  */
 import { ArrowRight, Paintbrush2, Palette, Hammer, Droplets } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const FALLBACK_IMAGE = "/images/services/placeholder.jpg";
 
 const services = [
   {
@@ -12,7 +19,7 @@ const services = [
     title: "Peinture",
     description: "Finitions haut de gamme pour tous vos espaces intérieurs et extérieurs.",
     items: ["Murs, plafonds, façades", "Intérieur / extérieur", "Préparation et enduit"],
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663496267502/g5fSpueUDo8xsbtP8Baecz/service-peinture-iAB6bWR9tKdsGDfdWWaSxP.webp",
+    image: "/images/services/peinture.jpg",
     color: "oklch(0.45 0.18 264)",
   },
   {
@@ -20,7 +27,7 @@ const services = [
     title: "Décoration",
     description: "Conseils personnalisés pour créer des intérieurs qui vous ressemblent.",
     items: ["Conseils couleurs", "Revêtements muraux", "Aménagement d'espace"],
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663496267502/g5fSpueUDo8xsbtP8Baecz/service-decoration-faYDArSFLByUovzR9uDPX5.webp",
+    image: "/images/services/decoration.jpg",
     color: "oklch(0.50 0.16 280)",
   },
   {
@@ -28,7 +35,7 @@ const services = [
     title: "Menuiserie",
     description: "Pose et rénovation de menuiseries sur mesure avec des finitions soignées.",
     items: ["Pose et rénovation", "Finitions sur mesure", "Boiseries et habillages"],
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663496267502/g5fSpueUDo8xsbtP8Baecz/service-menuiserie-ewzikyQBBrJbeNUgrGw8Nx.webp",
+    image: "/images/services/menuiserie.jpg",
     color: "oklch(0.42 0.16 248)",
   },
   {
@@ -36,7 +43,7 @@ const services = [
     title: "Rénovation après sinistre",
     description: "Remise en état rapide après dégâts des eaux. Intervention d'urgence.",
     items: ["Dégâts des eaux", "Remise en état rapide", "Coordination assurance"],
-    image: "https://d2xsxph8kpxj0f.cloudfront.net/310519663496267502/g5fSpueUDo8xsbtP8Baecz/service-sinistre-SXZD9SFrZrdzXURE7U3npt.webp",
+    image: "/images/services/sinistre.jpg",
     color: "oklch(0.48 0.18 220)",
   },
 ];
@@ -92,6 +99,14 @@ export default function ServicesSection() {
                 <img
                   src={service.image}
                   alt={service.title}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    if (img.dataset.fallback) return;
+                    img.dataset.fallback = "1";
+                    img.src = FALLBACK_IMAGE;
+                  }}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {/* Icon badge */}

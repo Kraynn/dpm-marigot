@@ -6,7 +6,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Star, CheckCircle2, ArrowRight, Phone } from "lucide-react";
 
-const HERO_IMAGE = "https://d2xsxph8kpxj0f.cloudfront.net/310519663496267502/g5fSpueUDo8xsbtP8Baecz/hero-renovation-EQVCsSf3c94z2gDt9hFLyg.webp";
+// Composite avant/après reconstruit à partir des photos de chantier réelles
+// (client/public/images/realisations/plafond-avant|apres.jpg). L'image était servie
+// par un CDN externe qui répond 403 : tout est auto-hébergé désormais.
+const HERO_IMAGE = "/images/hero-avant-apres.jpg";
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
@@ -147,7 +150,10 @@ export default function HeroSection() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src={HERO_IMAGE}
-                alt="Avant / Après rénovation DPM Marigot"
+                alt="Avant / Après : plafond fissuré puis repris et repeint par DPM Marigot"
+                width={1406}
+                height={900}
+                decoding="async"
                 className="w-full h-auto object-cover"
                 style={{ maxHeight: "520px", objectPosition: "center" }}
               />
