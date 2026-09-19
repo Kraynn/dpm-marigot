@@ -20,7 +20,7 @@ const faqs = [
   },
   {
     q: "Quels sont les délais d'intervention ?",
-    a: "Nous répondons aux demandes sous 24h. La date de démarrage et la durée du chantier sont écrites sur le devis, avant que vous ne signiez quoi que ce soit.",
+    a: "Nous répondons aux demandes sous 72h. La date de démarrage et la durée du chantier sont écrites sur le devis, avant que vous ne signiez quoi que ce soit.",
   },
   {
     q: "Intervenez-vous après un dégât des eaux ?",

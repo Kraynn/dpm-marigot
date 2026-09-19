@@ -38,7 +38,7 @@ const contacts = [
     icon: <Mail size={20} />,
     title: "E-mail",
     value: "dpmmarigot@gmail.com",
-    sub: "Réponse sous 24h",
+    sub: "Réponse sous 72h",
     href: "mailto:dpmmarigot@gmail.com",
     couleur: "bg-prusse",
   },
@@ -92,7 +92,7 @@ export default function ContactSection() {
           "Demande reçue, mais un problème technique a empêché l'envoi automatique. Contactez-nous directement par email ou téléphone."
         );
       } else {
-        toast.success("Demande envoyée ! Nous vous répondrons sous 24h.");
+        toast.success("Demande envoyée ! Nous vous répondrons sous 72h.");
       }
     } catch {
       toast.error("Une erreur est survenue. Veuillez réessayer ou nous contacter directement.");
@@ -117,7 +117,7 @@ export default function ContactSection() {
               Parlons de votre chantier.
             </h2>
             <p className="text-creme/70 leading-relaxed max-w-md mt-5">
-              Décrivez votre projet en deux lignes. Nous revenons vers vous sous 24h. Le devis est
+              Décrivez votre projet en deux lignes. Nous revenons vers vous sous 72h. Le devis est
               gratuit et sans engagement.
             </p>
 
@@ -169,7 +169,7 @@ export default function ContactSection() {
                 </div>
                 <h3 className="text-3xl text-encre mb-3">Demande envoyée</h3>
                 <p className="text-encre/70 text-sm leading-relaxed max-w-sm mx-auto">
-                  Merci pour votre message. Nous vous contactons sous 24h pour parler de votre
+                  Merci pour votre message. Nous vous contactons sous 72h pour parler de votre
                   chantier. Pour une urgence, appelez le{" "}
                   <a href="tel:+33185830355" className="font-bold text-terre underline">
                     01 85 83 03 55
@@ -281,7 +281,7 @@ export default function ContactSection() {
                 </div>
 
                 <p className="text-xs text-taupe">
-                  Réponse sous 24h. Devis gratuit et sans engagement.
+                  Réponse sous 72h. Devis gratuit et sans engagement.
                 </p>
 
                 <button

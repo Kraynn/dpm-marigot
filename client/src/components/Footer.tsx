@@ -35,7 +35,7 @@ export default function Footer() {
               Un chantier en tête ?
             </p>
             <p className="text-white/80 text-sm mt-1">
-              Devis gratuit, réponse sous 24h, sans engagement.
+              Devis gratuit, réponse sous 72h, sans engagement.
             </p>
           </div>
           <div className="flex flex-wrap gap-4">

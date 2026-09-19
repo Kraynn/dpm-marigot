@@ -1,9 +1,12 @@
 /**
  * DPM Marigot – Processus
  * Direction « Le Nuancier » : bande bleu de Prusse, gros numéros en display.
- * Copie passée au stop-slop : « réponse garantie » devient « réponse sous 24h »
+ * Copie passée au stop-slop : « réponse garantie » devient un délai chiffré
  * (une garantie que personne ne peut tenir n'est pas un argument), et
  * « résultat garanti » disparaît.
+ * Le délai annoncé est passé de 24h à 72h le 2026-09-19, à la demande de DPM.
+ * Il est repris à l'identique dans le formulaire, la FAQ, le pied de page et
+ * l'accusé de réception envoyé au client : les quatre doivent rester alignés.
  */
 import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -13,7 +16,7 @@ const steps = [
     number: "01",
     title: "Vous décrivez le chantier",
     description:
-      "Par téléphone ou depuis le formulaire de devis. Deux lignes suffisent pour commencer. Nous répondons sous 24h.",
+      "Par téléphone ou depuis le formulaire de devis. Deux lignes suffisent pour commencer. Nous répondons sous 72h.",
   },
   {
     number: "02",
