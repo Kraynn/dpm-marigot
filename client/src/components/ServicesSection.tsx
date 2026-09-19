@@ -1,50 +1,58 @@
 /**
- * DPM Marigot – Services Section
- * Design: White background. 2×2 card grid with real images. Left-border hover accent.
- * Each card: icon + image + title + description + sub-items.
+ * DPM Marigot – Services
+ * Direction « Le Nuancier » : quatre cartes à bordure franche et ombre dure,
+ * une teinte du nuancier par métier.
  *
  * Images : auto-hébergées dans client/public/images/services/, recadrées depuis les
  * photos de chantier réelles de client/public/images/realisations/. Elles étaient
  * servies par un CDN externe (d2xsxph8kpxj0f.cloudfront.net) qui répond 403 depuis :
  * ne jamais réintroduire de dépendance d'image hors du dépôt.
  */
-import { ArrowRight, Paintbrush2, Palette, Hammer, Droplets } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const FALLBACK_IMAGE = "/images/services/placeholder.jpg";
 
 const services = [
   {
-    icon: <Paintbrush2 size={22} />,
-    title: "Peinture",
-    description: "Finitions haut de gamme pour tous vos espaces intérieurs et extérieurs.",
-    items: ["Murs, plafonds, façades", "Intérieur / extérieur", "Préparation et enduit"],
+    tag: "Peinture",
+    title: "Peinture intérieure et extérieure",
+    description:
+      "Préparation des supports, dépose de papier peint, reprise des fissures, finitions mates ou satinées.",
+    items: ["Murs, plafonds, façades", "Enduit et ratissage", "Intérieur / extérieur"],
     image: "/images/services/peinture.jpg",
-    color: "oklch(0.45 0.18 264)",
+    tagClass: "bg-terre text-white",
+    puce: "bg-terre",
   },
   {
-    icon: <Palette size={22} />,
-    title: "Décoration",
-    description: "Conseils personnalisés pour créer des intérieurs qui vous ressemblent.",
-    items: ["Conseils couleurs", "Revêtements muraux", "Aménagement d'espace"],
+    tag: "Décoration",
+    title: "Sols & murs",
+    description:
+      "Revêtements, papiers peints, harmonies de couleurs. Les collections sont consultables au showroom.",
+    items: ["Conseils couleurs", "Revêtements muraux", "Revêtements de sols"],
     image: "/images/services/decoration.jpg",
-    color: "oklch(0.50 0.16 280)",
+    tagClass: "bg-prusse text-white",
+    puce: "bg-prusse",
   },
   {
-    icon: <Hammer size={22} />,
+    tag: "Menuiserie",
     title: "Menuiserie",
-    description: "Pose et rénovation de menuiseries sur mesure avec des finitions soignées.",
-    items: ["Pose et rénovation", "Finitions sur mesure", "Boiseries et habillages"],
+    description:
+      "Habillages, plinthes, aménagements sur mesure et reprises d'ajustement après travaux.",
+    items: ["Pose et rénovation", "Boiseries et habillages", "Finitions sur mesure"],
     image: "/images/services/menuiserie.jpg",
-    color: "oklch(0.42 0.16 248)",
+    tagClass: "bg-olive text-white",
+    puce: "bg-olive",
   },
   {
-    icon: <Droplets size={22} />,
-    title: "Rénovation après sinistre",
-    description: "Remise en état rapide après dégâts des eaux. Intervention d'urgence.",
-    items: ["Dégâts des eaux", "Remise en état rapide", "Coordination assurance"],
+    tag: "Sinistre",
+    title: "Après un dégât des eaux",
+    description:
+      "Remise en état complète après sinistre : plafonds et murs touchés, dépose des revêtements, finitions.",
+    items: ["Dégâts des eaux", "Reprise des supports", "Suivi du dossier assurance"],
     image: "/images/services/sinistre.jpg",
-    color: "oklch(0.48 0.18 220)",
+    tagClass: "bg-ocre text-encre",
+    puce: "bg-ocre",
   },
 ];
 
@@ -57,11 +65,10 @@ export default function ServicesSection() {
   };
 
   return (
-    <section id="services" className="bg-slate-50 py-20 lg:py-28">
+    <section id="services" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
-        {/* Header */}
         <div
-          className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4"
+          className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -69,36 +76,32 @@ export default function ServicesSection() {
           }}
         >
           <div>
-            <div className="section-label flex items-center gap-2 mb-3">
-              <span className="w-6 h-0.5 bg-blue-700 inline-block" />
-              Nos prestations
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900" style={{ fontFamily: "Sora, sans-serif" }}>
-              Des services complets<br />pour votre habitat
+            <p className="section-num mb-2">01 — Nos métiers</p>
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[16ch]">
+              Quatre savoir-faire, un seul interlocuteur.
             </h2>
           </div>
-          <p className="text-slate-600 max-w-sm text-sm leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
-            De la peinture à la menuiserie, nous prenons en charge tous vos travaux avec le même niveau d'exigence.
+          <p className="text-encre/70 max-w-sm text-sm leading-relaxed">
+            Vous ne coordonnez pas trois entreprises. Nous prenons le chantier du diagnostic à la
+            finition.
           </p>
         </div>
 
-        {/* Services grid */}
-        <div className="grid sm:grid-cols-2 gap-6 mb-10">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {services.map((service, i) => (
-            <div
+            <article
               key={service.title}
-              className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 hover:border-blue-200"
+              className="card-hard flex flex-col"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(24px)",
                 transition: `opacity 0.6s ease ${i * 0.1}s, transform 0.6s ease ${i * 0.1}s`,
               }}
             >
-              {/* Image */}
-              <div className="relative h-44 overflow-hidden">
+              <div className="h-40 overflow-hidden border-b-[3px] border-encre">
                 <img
                   src={service.image}
-                  alt={service.title}
+                  alt={`${service.title} — chantier réalisé par DPM Marigot`}
                   loading="lazy"
                   decoding="async"
                   onError={(e) => {
@@ -107,54 +110,35 @@ export default function ServicesSection() {
                     img.dataset.fallback = "1";
                     img.src = FALLBACK_IMAGE;
                   }}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
-                {/* Icon badge */}
-                <div
-                  className="absolute top-3 left-3 w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-md"
-                  style={{ background: service.color }}
-                >
-                  {service.icon}
-                </div>
               </div>
 
-              {/* Content */}
-              <div className="p-5">
-                {/* Left border accent on hover */}
-                <div className="flex gap-4">
-                  <div
-                    className="w-0.5 rounded-full flex-shrink-0 transition-all duration-300 group-hover:opacity-100 opacity-0"
-                    style={{ background: service.color, minHeight: "100%" }}
-                  />
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-lg mb-1" style={{ fontFamily: "Sora, sans-serif" }}>
-                      {service.title}
-                    </h3>
-                    <p className="text-slate-600 text-sm mb-3" style={{ fontFamily: "Inter, sans-serif" }}>
-                      {service.description}
-                    </p>
-                    <ul className="space-y-1">
-                      {service.items.map((item) => (
-                        <li key={item} className="flex items-center gap-2 text-xs text-slate-500" style={{ fontFamily: "Inter, sans-serif" }}>
-                          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: service.color }} />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+              <div className="p-5 flex flex-col gap-3 grow">
+                <span
+                  className={`self-start text-[11px] font-bold uppercase tracking-[0.12em] px-2.5 py-1 ${service.tagClass}`}
+                >
+                  {service.tag}
+                </span>
+                <h3 className="text-[1.35rem] leading-tight text-encre">{service.title}</h3>
+                <p className="text-encre/70 text-sm leading-relaxed">{service.description}</p>
+                <ul className="mt-auto pt-2 flex flex-col gap-1.5">
+                  {service.items.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-xs text-encre/60">
+                      <span className={`w-1.5 h-1.5 shrink-0 ${service.puce}`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="text-center">
-          <button onClick={handleCTA} className="cta-btn text-base">
-            Obtenir mon devis gratuit
-            <ArrowRight size={18} className="cta-arrow" />
-          </button>
-        </div>
+        <button onClick={handleCTA} className="cta-btn text-base">
+          Demander un devis
+          <ArrowRight size={18} className="cta-arrow" />
+        </button>
       </div>
     </section>
   );

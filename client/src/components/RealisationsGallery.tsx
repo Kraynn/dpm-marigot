@@ -1,4 +1,12 @@
+/**
+ * DPM Marigot – Réalisations
+ * Direction « Le Nuancier » : cartes à bordure franche, ombre dure, badges carrés.
+ * Le curseur avant/après (input range invisible superposé) est conservé tel quel :
+ * il fonctionne au doigt, à la souris et au clavier.
+ * Photos : chantiers réels du client, aucune retouche.
+ */
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 type Projet = {
   titre: string;
@@ -37,7 +45,7 @@ const PROJETS: Projet[] = [
   {
     titre: "Cuisine — après sinistre DDE",
     description:
-      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre DDE (dégât des eaux).",
+      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre DDE (dégât des eaux). Chantier de juin 2025.",
     avant: {
       src: "/images/realisations/cuisine-sinistre-avant.jpg",
       alt: "Mur et plafond de cuisine endommagés par un dégât des eaux",
@@ -49,19 +57,17 @@ const PROJETS: Projet[] = [
   },
 ];
 
-function BeforeAfterSlider({
-  avant,
-  apres,
-}: Pick<Projet, "avant" | "apres">) {
+function BeforeAfterSlider({ avant, apres }: Pick<Projet, "avant" | "apres">) {
   const [pos, setPos] = useState(50);
 
   return (
-    <div className="group relative overflow-hidden aspect-[4/3] bg-slate-100 select-none shadow-[6px_6px_0_0_rgba(15,23,42,0.12)]">
+    <div className="group relative overflow-hidden aspect-[4/3] bg-creme-2 select-none border-b-[3px] border-encre">
       {/* Après — image de base */}
       <img
         src={apres.src}
         alt={apres.alt}
         draggable={false}
+        loading="lazy"
         className="absolute inset-0 w-full h-full object-cover"
       />
 
@@ -70,6 +76,7 @@ function BeforeAfterSlider({
         src={avant.src}
         alt={avant.alt}
         draggable={false}
+        loading="lazy"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
       />
@@ -79,20 +86,20 @@ function BeforeAfterSlider({
         className="absolute top-0 bottom-0 z-10 pointer-events-none"
         style={{ left: `${pos}%`, transform: "translateX(-50%)" }}
       >
-        <div className="absolute inset-0 w-px bg-white shadow-[0_0_6px_rgba(0,0,0,0.5)]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center text-slate-800">
+        <div className="absolute inset-0 w-[3px] bg-creme" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-creme border-[3px] border-encre flex items-center justify-center text-encre">
           <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden>
             <path
               d="M6 7H1M1 7L4 4M1 7L4 10"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
             <path
               d="M12 7H17M17 7L14 4M17 7L14 10"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="1.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -101,15 +108,15 @@ function BeforeAfterSlider({
       </div>
 
       {/* Badges AVANT / APRÈS */}
-      <span className="absolute top-3 left-3 z-10 pointer-events-none bg-slate-900/80 text-white text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1 backdrop-blur-sm">
+      <span className="absolute top-3 left-3 z-10 pointer-events-none bg-encre text-creme text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1">
         Avant
       </span>
-      <span className="absolute top-3 right-3 z-10 pointer-events-none bg-blue-700 text-white text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1">
+      <span className="absolute top-3 right-3 z-10 pointer-events-none bg-olive text-white text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1">
         Après
       </span>
 
-      {/* Indice de glissement (disparaît au hover) */}
-      <span className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 pointer-events-none whitespace-nowrap bg-white/90 text-slate-700 text-[11px] font-medium px-3 py-1 transition-opacity duration-300 group-hover:opacity-0">
+      {/* Indice de glissement (disparaît au survol) */}
+      <span className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 pointer-events-none whitespace-nowrap bg-creme border-2 border-encre text-encre text-[11px] font-bold px-3 py-1 transition-opacity duration-300 group-hover:opacity-0">
         Faites glisser ←→
       </span>
 
@@ -130,33 +137,49 @@ function BeforeAfterSlider({
 }
 
 export default function RealisationsGallery() {
-  return (
-    <section id="realisations" className="bg-white py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-700">
-          Avant / Après
-        </p>
-        <h2 className="mt-3 font-['Sora',sans-serif] text-3xl font-extrabold text-slate-900 md:text-4xl">
-          Nos réalisations
-        </h2>
-        <p className="mt-4 max-w-2xl text-slate-600 text-sm">
-          Glissez le curseur pour voir la transformation sur chaque chantier.
-        </p>
+  const handleCTA = () => {
+    const el = document.querySelector("#contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
-        <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {PROJETS.map((projet) => (
-            <article key={projet.titre} className="flex flex-col">
+  return (
+    <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
+      <div className="container">
+        <div className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <div>
+            <p className="section-num mb-2">02 — Réalisations</p>
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[14ch]">
+              Avant / après, sans retouche.
+            </h2>
+          </div>
+          <p className="text-encre/70 max-w-sm text-sm leading-relaxed">
+            Des chantiers réellement réalisés par DPM Marigot, photographiés sur place. Glissez le
+            curseur pour voir la transformation.
+          </p>
+        </div>
+
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {PROJETS.map((projet, i) => (
+            <article
+              key={projet.titre}
+              className={`card-hard flex flex-col ${
+                i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
+              }`}
+            >
               <BeforeAfterSlider avant={projet.avant} apres={projet.apres} />
-              <div className="mt-4">
-                <h3 className="font-['Sora',sans-serif] text-base font-bold text-slate-900">
-                  {projet.titre}
-                </h3>
-                <p className="mt-1.5 text-sm text-slate-500 leading-relaxed">
-                  {projet.description}
-                </p>
+              <div className="p-5">
+                <h3 className="text-xl text-encre leading-tight">{projet.titre}</h3>
+                <p className="mt-2 text-sm text-encre/70 leading-relaxed">{projet.description}</p>
               </div>
             </article>
           ))}
+        </div>
+
+        <div className="mt-14">
+          <button onClick={handleCTA} className="cta-btn text-base">
+            Demander un devis
+            <ArrowRight size={18} className="cta-arrow" />
+          </button>
         </div>
       </div>
     </section>

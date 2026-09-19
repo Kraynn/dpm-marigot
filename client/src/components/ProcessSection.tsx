@@ -1,28 +1,31 @@
 /**
- * DPM Marigot – Process Section
- * Design: Dark slate-900 band. 3 steps with large numbers. Clean and reassuring.
+ * DPM Marigot – Processus
+ * Direction « Le Nuancier » : bande bleu de Prusse, gros numéros en display.
+ * Copie passée au stop-slop : « réponse garantie » devient « réponse sous 24h »
+ * (une garantie que personne ne peut tenir n'est pas un argument), et
+ * « résultat garanti » disparaît.
  */
-import { ArrowRight, FileText, Home, Wrench } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const steps = [
   {
     number: "01",
-    icon: <FileText size={24} />,
-    title: "Demande de devis",
-    description: "Remplissez notre formulaire en ligne ou appelez-nous directement. Réponse garantie sous 24h.",
+    title: "Vous décrivez le chantier",
+    description:
+      "Par téléphone ou depuis le formulaire de devis. Deux lignes suffisent pour commencer. Nous répondons sous 24h.",
   },
   {
     number: "02",
-    icon: <Home size={24} />,
-    title: "Visite et estimation",
-    description: "Nous nous déplaçons chez vous pour évaluer le chantier et vous proposer un devis détaillé et transparent.",
+    title: "Nous venons voir",
+    description:
+      "Visite sur place pour mesurer, regarder l'état des supports et vous remettre un devis détaillé. Gratuit et sans engagement.",
   },
   {
     number: "03",
-    icon: <Wrench size={24} />,
-    title: "Réalisation des travaux",
-    description: "Nos artisans interviennent dans les délais convenus. Chantier propre, finitions soignées, résultat garanti.",
+    title: "Nous réalisons les travaux",
+    description:
+      "Intervention dans les délais convenus au devis. Protection de vos biens, nettoyage en fin de chantier.",
   },
 ];
 
@@ -35,80 +38,50 @@ export default function ProcessSection() {
   };
 
   return (
-    <section id="processus" className="bg-slate-900 py-20 lg:py-28">
+    <section id="processus" className="bg-prusse py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
-        {/* Header */}
         <div
-          className="mb-14 text-center"
+          className="mb-14 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease, transform 0.6s ease",
           }}
         >
-          <div className="section-label text-blue-400 flex items-center justify-center gap-2 mb-3">
-            <span className="w-6 h-0.5 bg-blue-400 inline-block" />
-            Simple et transparent
-            <span className="w-6 h-0.5 bg-blue-400 inline-block" />
+          <div>
+            <p className="section-num text-ocre mb-2">03 — Comment ça se passe</p>
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-creme max-w-[14ch]">
+              Votre chantier en trois étapes.
+            </h2>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-white" style={{ fontFamily: "Sora, sans-serif" }}>
-            Votre projet en 3 étapes
-          </h2>
-          <p className="mt-3 text-slate-400 max-w-md mx-auto text-sm" style={{ fontFamily: "Inter, sans-serif" }}>
-            Nous avons simplifié le processus pour que vous puissiez vous concentrer sur l'essentiel.
+          <p className="text-creme/70 max-w-sm text-sm leading-relaxed">
+            Vous savez à chaque étape ce qui va se passer, ce que ça coûte et quand.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connector line (desktop) */}
-          <div className="hidden lg:block absolute top-12 left-[calc(16.67%+2rem)] right-[calc(16.67%+2rem)] h-0.5 bg-white/10" />
-
-          <div className="grid lg:grid-cols-3 gap-8 lg:gap-6">
-            {steps.map((step, i) => (
-              <div
-                key={step.number}
-                className="flex flex-col items-center text-center lg:items-start lg:text-left"
-                style={{
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0)" : "translateY(24px)",
-                  transition: `opacity 0.6s ease ${i * 0.15}s, transform 0.6s ease ${i * 0.15}s`,
-                }}
-              >
-                {/* Numéro + icône sur la même ligne */}
-                <div className="flex items-center gap-3 mb-5">
-                  <span
-                    className="text-5xl font-extrabold leading-none text-white/[0.07] select-none"
-                    style={{ fontFamily: "Sora, sans-serif" }}
-                  >
-                    {step.number}
-                  </span>
-                  <div className="w-14 h-14 rounded-2xl bg-blue-700 flex items-center justify-center text-white shadow-lg shadow-blue-900/40 shrink-0">
-                    {step.icon}
-                  </div>
-                </div>
-
-                <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "Sora, sans-serif" }}>
-                  {step.title}
-                </h3>
-                <p className="text-slate-400 text-sm leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
-                  {step.description}
-                </p>
-              </div>
-            ))}
-          </div>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {steps.map((step, i) => (
+            <div
+              key={step.number}
+              className="bg-creme border-[3px] border-encre shadow-[7px_7px_0_var(--color-ocre)] p-7 flex flex-col"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(24px)",
+                transition: `opacity 0.6s ease ${i * 0.15}s, transform 0.6s ease ${i * 0.15}s`,
+              }}
+            >
+              <span className="font-display text-5xl leading-none text-terre mb-5">
+                {step.number}
+              </span>
+              <h3 className="text-2xl text-encre leading-tight mb-3">{step.title}</h3>
+              <p className="text-encre/70 text-sm leading-relaxed">{step.description}</p>
+            </div>
+          ))}
         </div>
 
-        {/* CTA */}
-        <div
-          className="text-center mt-14"
-          style={{
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.6s ease 0.5s",
-          }}
-        >
+        <div className="mt-14" style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease 0.5s" }}>
           <button onClick={handleCTA} className="cta-btn text-base">
-            Obtenir mon devis gratuit
+            Demander un devis
             <ArrowRight size={18} className="cta-arrow" />
           </button>
         </div>

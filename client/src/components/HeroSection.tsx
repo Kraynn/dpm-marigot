@@ -1,195 +1,159 @@
 /**
- * DPM Marigot – Hero Section
- * Design: Left-aligned split layout. Left: headline + CTA + trust badges. Right: before/after image.
- * Background: white. Bold Sora headline. Blue CTA button.
+ * DPM Marigot – Bannière d'accueil
+ * Direction « Le Nuancier » : collage de photos inclinées, bande d'échantillons,
+ * gros titre en DM Serif Display.
+ *
+ * Contenu retiré le 2026-08-28 parce qu'invérifiable (cf. design-demos/brand-spec.md) :
+ *   - la note « 4,5/5 · +10 clients satisfaits » et ses trois avatars fictifs
+ *     (source réelle : 1 avis Facebook, pas encore noté) ;
+ *   - la mention « +10 ans d'expérience terrain », non sourcée.
+ * Remplacés par deux faits vérifiables : le showroom ouvert au public et la
+ * spécialité dégât des eaux.
  */
-import { useEffect, useRef, useState } from "react";
-import { Star, CheckCircle2, ArrowRight, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Phone } from "lucide-react";
 
-// Composite avant/après reconstruit à partir des photos de chantier réelles
-// (client/public/images/realisations/plafond-avant|apres.jpg). L'image était servie
-// par un CDN externe qui répond 403 : tout est auto-hébergé désormais.
-const HERO_IMAGE = "/images/hero-avant-apres.jpg";
+// Les deux polaroïds de la bannière montrent du travail fini. Le plafond affichait
+// jusqu'au 2026-09-19 la photo « avant » — un plafond fissuré en vitrine d'un peintre
+// mettait en avant le dégât, pas la reprise.
+const PHOTO_SALLE_A_MANGER = "/images/realisations/salle-a-manger-apres.jpg";
+const PHOTO_PLAFOND = "/images/realisations/plafond-apres.jpg";
+
+const faits = [
+  { label: "Showroom ouvert au public", fort: true },
+  { label: "Spécialiste dégât des eaux", fort: false },
+  { label: "Sols & murs", fort: false },
+  { label: "Devis gratuit", fort: false },
+];
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
+  const scrollTo = (sel: string) => {
+    const el = document.querySelector(sel);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="relative bg-white pt-16 overflow-hidden">
-      {/* Subtle background pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 39px, oklch(0.12 0.01 260) 39px, oklch(0.12 0.01 260) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, oklch(0.12 0.01 260) 39px, oklch(0.12 0.01 260) 40px)`,
-        }}
-      />
+    <section className="relative bg-creme pt-[74px] lg:pt-[84px] overflow-hidden">
+      {/* Rond ocre : masse de couleur qui casse la grille, motif Nuancier */}
+      <div className="absolute -top-24 -right-32 w-[460px] h-[460px] rounded-full bg-ocre opacity-25 pointer-events-none" />
 
       <div className="container relative">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-4rem)] py-12 lg:py-20">
-          {/* Left column – text */}
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center py-14 lg:py-20">
+          {/* Colonne texte */}
           <div
-            ref={ref}
-            className="flex flex-col gap-6"
+            className="flex flex-col"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(28px)",
+              transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.7s ease, transform 0.7s ease",
             }}
           >
-            {/* Section label */}
-            <div className="section-label flex items-center gap-2">
-              <span className="w-6 h-0.5 bg-blue-700 inline-block" />
-              Artisan local – Île-de-France
-            </div>
-
-            {/* Headline */}
-            <h1
-              className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-slate-900 leading-[1.1] tracking-tight"
-              style={{ fontFamily: "Sora, sans-serif" }}
-            >
-              Un intérieur{" "}
-              <span className="relative inline-block">
-                <span className="relative z-10 text-blue-700">impeccable</span>
-                <span
-                  className="absolute bottom-1 left-0 right-0 h-3 -z-0 opacity-20"
-                  style={{ background: "oklch(0.45 0.18 264)" }}
-                />
-              </span>
-              ,<br />
-              sans stress ni<br />
-              mauvaises surprises.
-            </h1>
-
-            {/* Subheadline */}
-            <p
-              className="text-lg text-slate-600 leading-relaxed max-w-lg"
-              style={{ fontFamily: "Inter, sans-serif" }}
-            >
-              Travaux de peinture, décoration et menuiserie réalisés par des professionnels expérimentés — devis rapide et accompagnement personnalisé.
+            <p className="section-label flex items-center gap-2.5 mb-5">
+              <span className="w-8 h-[3px] bg-terre inline-block" />
+              Le Mesnil-Saint-Denis · Yvelines
             </p>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Finitions haut de gamme",
-                "Intervention rapide",
-                "Conseils personnalisés",
-                "Spécialiste dégâts des eaux",
-              ].map((badge) => (
-                <span key={badge} className="trust-badge">
-                  <CheckCircle2 size={13} />
-                  {badge}
+            <h1 className="text-[2.5rem] sm:text-5xl lg:text-[3.9rem] leading-[1.04] text-encre">
+              La couleur,
+              <br />
+              ça se choisit <em className="italic text-terre">en vrai.</em>
+            </h1>
+
+            <p className="text-lg text-encre/80 leading-relaxed max-w-lg mt-6">
+              Peinture, décoration, menuiserie et revêtements de sols et murs. Notre showroom est
+              ouvert au public : venez voir, toucher et comparer les collections avant de décider.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 mt-8">
+              <button onClick={() => scrollTo("#contact")} className="cta-btn text-base">
+                Demander un devis
+                <ArrowRight size={18} className="cta-arrow" />
+              </button>
+              <button onClick={() => scrollTo("#localisation")} className="cta-btn-ghost text-base">
+                Visiter le showroom
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-2.5 mt-9">
+              {faits.map((f) => (
+                <span key={f.label} className={f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"}>
+                  {f.label}
                 </span>
               ))}
             </div>
 
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
-              <button onClick={handleCTA} className="cta-btn text-base">
-                Obtenir mon devis gratuit
-                <ArrowRight size={18} className="cta-arrow" />
-              </button>
-              <a
-                href="tel:+33185830355"
-                className="flex items-center gap-2 text-slate-700 hover:text-red-700 transition-colors font-medium text-sm"
-                style={{ fontFamily: "Inter, sans-serif" }}
-              >
-                <span className="w-9 h-9 rounded-full bg-red-50 flex items-center justify-center text-red-600">
-                  <Phone size={18} />
+            <a
+              href="tel:+33185830355"
+              className="inline-flex items-center gap-3 mt-8 pt-6 border-t-2 border-encre/15 text-encre hover:text-terre transition-colors w-fit"
+            >
+              <span className="w-10 h-10 bg-prusse text-creme flex items-center justify-center shrink-0">
+                <Phone size={18} />
+              </span>
+              <span>
+                <span className="block text-[11px] uppercase tracking-[0.15em] text-taupe font-bold">
+                  Appel direct
                 </span>
-                <span>Appel direct</span>
-              </a>
-            </div>
-
-            {/* Social proof strip */}
-            <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
-              <div className="flex -space-x-2">
-                {["#3B82F6", "#1D4ED8", "#60A5FA"].map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold"
-                    style={{ background: c }}
-                  >
-                    {["M", "S", "A"][i]}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
-                  ))}
-                  <span className="text-sm font-bold text-slate-900 ml-1" style={{ fontFamily: "Sora, sans-serif" }}>4,5/5</span>
-                </div>
-                <p className="text-xs text-slate-500" style={{ fontFamily: "Inter, sans-serif" }}>+10 clients satisfaits</p>
-              </div>
-            </div>
+                <span className="block font-display text-2xl leading-tight">01 85 83 03 55</span>
+              </span>
+            </a>
           </div>
 
-          {/* Right column – before/after image */}
+          {/* Collage : deux photos réelles inclinées + bande de nuancier */}
           <div
-            className="relative"
+            className="relative h-[420px] sm:h-[520px] lg:h-[540px] hidden sm:block"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(28px)",
-              transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
+              transform: visible ? "translateY(0)" : "translateY(24px)",
+              transition: "opacity 0.7s ease 0.18s, transform 0.7s ease 0.18s",
             }}
           >
-            {/* Image frame */}
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <figure className="absolute top-0 right-4 lg:right-9 w-[300px] lg:w-[340px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
               <img
-                src={HERO_IMAGE}
-                alt="Avant / Après : plafond fissuré puis repris et repeint par DPM Marigot"
-                width={1406}
-                height={900}
+                src={PHOTO_SALLE_A_MANGER}
+                alt="Salle à manger repeinte en teinte taupe par DPM Marigot, charpente apparente"
+                width={480}
+                height={640}
                 decoding="async"
-                className="w-full h-auto object-cover"
-                style={{ maxHeight: "520px", objectPosition: "center" }}
+                className="w-full h-[240px] lg:h-[250px] object-cover"
               />
-              {/* Before/After labels */}
-              <div className="absolute bottom-4 left-4 right-4 flex justify-between pointer-events-none">
-                <span className="bg-black/60 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm" style={{ fontFamily: "Sora, sans-serif" }}>
-                  Avant
-                </span>
-                <span className="bg-blue-700/90 text-white text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm" style={{ fontFamily: "Sora, sans-serif" }}>
-                  Après ✓
-                </span>
-              </div>
-            </div>
+              <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
+                Salle à manger · après
+              </figcaption>
+            </figure>
 
-            {/* Floating stat card */}
-            <div className="absolute -bottom-5 -left-4 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3 border border-slate-100">
-              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-700 text-lg">
-                🏆
-              </div>
-              <div>
-                <p className="text-lg font-extrabold text-slate-900 leading-none" style={{ fontFamily: "Sora, sans-serif" }}>+10 ans</p>
-                <p className="text-xs text-slate-500 mt-0.5" style={{ fontFamily: "Inter, sans-serif" }}>d'expérience terrain</p>
-              </div>
-            </div>
+            <figure className="absolute bottom-0 left-0 w-[215px] lg:w-[245px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
+              <img
+                src={PHOTO_PLAFOND}
+                alt="Plafond repris et remis en peinture par DPM Marigot après un dégât des eaux"
+                width={1200}
+                height={1600}
+                decoding="async"
+                className="w-full h-[160px] lg:h-[180px] object-cover"
+              />
+              <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
+                Plafond · après
+              </figcaption>
+            </figure>
 
-            {/* Floating response badge */}
-            <div className="absolute -top-3 -right-3 bg-amber-400 text-amber-900 rounded-xl shadow-lg p-3 text-center">
-              <p className="text-xs font-bold leading-none" style={{ fontFamily: "Sora, sans-serif" }}>Réponse</p>
-              <p className="text-lg font-extrabold leading-none" style={{ fontFamily: "Sora, sans-serif" }}>24h</p>
+            {/* Échantillons : les teintes du site viennent de ces photos */}
+            <div
+              className="absolute right-0 bottom-8 flex flex-col border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)]"
+              aria-hidden="true"
+            >
+              {["bg-terre", "bg-ocre", "bg-olive", "bg-prusse", "bg-taupe"].map((c) => (
+                <span key={c} className={`${c} w-[54px] h-9 block`} />
+              ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Bottom diagonal */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-slate-50" style={{ clipPath: "polygon(0 100%, 100% 0, 100% 100%)" }} />
     </section>
   );
 }

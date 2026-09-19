@@ -1,24 +1,47 @@
 /**
- * DPM Marigot – Why Choose Us Section
- * Design: White background. Left-aligned. Large feature list with icons. Stats row.
+ * DPM Marigot – Le showroom / pourquoi nous
+ * Direction « Le Nuancier ».
+ *
+ * Réécrit le 2026-08-28. L'ancienne version affichait quatre chiffres dont deux
+ * inventés : « +10 ans d'expérience » et « 100 % clients satisfaits ». Ils sont
+ * remplacés par le seul atout réellement vérifiable et le plus sous-exploité du
+ * site : le showroom ouvert au public au Mesnil-Saint-Denis.
+ * Copie passée au stop-slop : plus de « nous mettons un point d'honneur »,
+ * « service irréprochable », « zéro stress », « entre de bonnes mains ».
  */
-import { ArrowRight, CheckCircle2, Clock, Sparkles, Users, Brush, HardHat } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const features = [
-  { icon: <Sparkles size={20} />, title: "Expertise dans le bâtiment", desc: "Des artisans qualifiés avec des années d'expérience terrain." },
-  { icon: <Users size={20} />, title: "Accompagnement personnalisé", desc: "Un interlocuteur dédié du devis à la livraison." },
-  { icon: <Brush size={20} />, title: "Travail soigné", desc: "Finitions haut de gamme et attention aux détails." },
-  { icon: <Clock size={20} />, title: "Respect des délais", desc: "Nous tenons nos engagements, sans mauvaises surprises." },
-  { icon: <HardHat size={20} />, title: "Chantier propre", desc: "Protection de vos biens et nettoyage en fin de chantier." },
-  { icon: <CheckCircle2 size={20} />, title: "Devis gratuit et transparent", desc: "Pas de frais cachés. Vous savez exactement ce que vous payez." },
-];
+// Le 2026-09-19 : la vraie devanture remplace une photo d'intérieur générique.
+// La section parle du showroom au 92 avenue Habert de Montmort, elle montre donc
+// la vitrine et son enseigne, pas un exemple de décoration.
+const PHOTO_SHOWROOM = "/images/showroom-devanture.webp";
 
-const stats = [
-  { value: "+10", label: "Ans d'expérience" },
-  { value: "100%", label: "Clients satisfaits" },
-  { value: "24h", label: "Délai de réponse" },
-  { value: "0€", label: "Devis gratuit" },
+const engagements = [
+  {
+    title: "Showroom ouvert au public",
+    desc: "Les collections de revêtements de sols et de murs se regardent et se comparent sur place.",
+  },
+  {
+    title: "Un seul interlocuteur",
+    desc: "Du devis à la dernière finition, c'est la même équipe qui suit le chantier.",
+  },
+  {
+    title: "Préparation des supports",
+    desc: "Dépose, rebouchage, ratissage : le rendu se joue avant la dernière couche.",
+  },
+  {
+    title: "Délais écrits sur le devis",
+    desc: "Les dates figurent au devis, pas seulement dans une conversation téléphonique.",
+  },
+  {
+    title: "Chantier protégé et nettoyé",
+    desc: "Meubles et sols bâchés, chantier rendu propre à la fin des travaux.",
+  },
+  {
+    title: "Devis gratuit et détaillé",
+    desc: "Chaque poste est chiffré ligne par ligne, sans frais découvert en cours de route.",
+  },
 ];
 
 export default function WhyUsSection() {
@@ -30,95 +53,81 @@ export default function WhyUsSection() {
   };
 
   return (
-    <section className="bg-white py-20 lg:py-28">
+    <section className="bg-creme-2 py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left: text */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
           <div
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(-24px)",
+              transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.7s ease, transform 0.7s ease",
             }}
           >
-            <div className="section-label flex items-center gap-2 mb-3">
-              <span className="w-6 h-0.5 bg-blue-700 inline-block" />
-              Pourquoi nous choisir
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4" style={{ fontFamily: "Sora, sans-serif" }}>
-              L'artisan local<br />
-              <span className="text-blue-700">fiable et professionnel</span>
+            <p className="section-num mb-2">04 — Le showroom</p>
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre mb-5 max-w-[15ch]">
+              Une teinte ne se choisit pas sur un écran.
             </h2>
-            <p className="text-slate-600 text-sm leading-relaxed mb-8 max-w-md" style={{ fontFamily: "Inter, sans-serif" }}>
-              Chez DPM Marigot, nous mettons un point d'honneur à offrir un service irréprochable, de la première prise de contact jusqu'à la livraison de votre chantier.
+            <p className="text-encre/75 leading-relaxed max-w-lg">
+              Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration et y
+              découvrir les diverses collections de revêtements de sols et de murs. Venez nous rendre
+              visite, sans rendez-vous.
             </p>
 
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
-              {features.map((f, i) => (
-                <div
-                  key={f.title}
-                  className="flex gap-3"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "translateY(0)" : "translateY(16px)",
-                    transition: `opacity 0.5s ease ${0.1 + i * 0.08}s, transform 0.5s ease ${0.1 + i * 0.08}s`,
-                  }}
-                >
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-blue-700 flex-shrink-0 mt-0.5">
-                    {f.icon}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900 text-sm" style={{ fontFamily: "Sora, sans-serif" }}>{f.title}</p>
-                    <p className="text-slate-500 text-xs mt-0.5 leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>{f.desc}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-7 pt-6 border-t-2 border-encre/20">
+              <p className="font-display text-xl text-encre leading-tight">
+                92, Avenue Habert de Montmort
+              </p>
+              <p className="text-encre/70 text-sm mt-1">Le Mesnil-Saint-Denis (78)</p>
             </div>
 
-            <button onClick={handleCTA} className="cta-btn text-base">
-              Obtenir mon devis gratuit
-              <ArrowRight size={18} className="cta-arrow" />
-            </button>
+            <div className="flex flex-wrap items-center gap-4 mt-7">
+              <button onClick={handleCTA} className="cta-btn text-base">
+                Demander un devis
+                <ArrowRight size={18} className="cta-arrow" />
+              </button>
+              <a href="tel:+33185830355" className="cta-btn-ghost text-base">
+                <Phone size={17} />
+                01 85 83 03 55
+              </a>
+            </div>
           </div>
 
-          {/* Right: stats */}
-          <div
+          <figure
+            className="bg-white border-[3px] border-encre p-3 shadow-[9px_9px_0_var(--color-ocre)] rotate-[1.2deg]"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(24px)",
+              transform: visible ? "rotate(1.2deg)" : "rotate(1.2deg) translateY(24px)",
               transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
             }}
           >
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className="bg-slate-900 rounded-2xl p-6 flex flex-col justify-between"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "scale(1)" : "scale(0.95)",
-                    transition: `opacity 0.5s ease ${0.3 + i * 0.1}s, transform 0.5s ease ${0.3 + i * 0.1}s`,
-                  }}
-                >
-                  <p
-                    className="text-4xl font-extrabold text-white mb-2"
-                    style={{ fontFamily: "Sora, sans-serif" }}
-                  >
-                    {stat.value}
-                  </p>
-                  <p className="text-slate-400 text-sm" style={{ fontFamily: "Inter, sans-serif" }}>{stat.label}</p>
-                </div>
-              ))}
-            </div>
+            <img
+              src={PHOTO_SHOWROOM}
+              alt="La devanture du showroom DPM Marigot, enseigne « Travaux de rénovation intérieure », nuanciers et collections en vitrine"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-[300px] lg:h-[360px] object-cover"
+            />
+            <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-3 pb-1 text-encre">
+              Le showroom · 92 avenue Habert de Montmort
+            </figcaption>
+          </figure>
+        </div>
 
-            {/* Highlight box */}
-            <div className="mt-4 bg-blue-700 rounded-2xl p-6 text-white">
-              <p className="text-lg font-bold mb-1" style={{ fontFamily: "Sora, sans-serif" }}>Zéro stress pour vous</p>
-              <p className="text-blue-100 text-sm leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
-                Nous gérons tout : de la préparation du chantier à la livraison finale. Vous n'avez qu'à profiter du résultat.
-              </p>
+        <div
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-7 pt-12 border-t-[3px] border-encre"
+          style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease 0.35s" }}
+        >
+          {engagements.map((f, i) => (
+            <div key={f.title} className="flex gap-4">
+              <span className="font-display text-terre text-lg leading-none pt-1 shrink-0">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <p className="font-bold text-encre text-sm">{f.title}</p>
+                <p className="text-encre/65 text-xs mt-1 leading-relaxed">{f.desc}</p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

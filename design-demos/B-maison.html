@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Direction B — Maison · DPM Marigot</title>
+<!--
+  DIRECTION B — « Maison »
+  Logique : 🏆 référence réelle. Standard visé = les sites de marques de peinture et
+  revêtements dont le design fait autorité : Farrow & Ball (fond crème, photographie
+  pleine largeur d'intérieurs peints, sérif éditorial, noms de teintes traités comme
+  du texte littéraire) et la grammaire éditoriale de Cereal Magazine (grandes marges,
+  filets fins, capitales espacées, rythme vertical lent).
+  Note d'honnêteté : ce sont des références de design reconnues, pas des lauréats Awwwards.
+  Elles sont choisies pour leur pertinence directe au métier (peinture + revêtements),
+  pas pour leur palmarès.
+  Form ← contenu : DPM tient un showroom. Un showroom se visite lentement, pièce par pièce.
+  La page est donc lente : une idée par écran, la photo occupe toute la largeur, le texte respire.
+  Palette échantillonnée sur les photos réelles : crème du plafond repeint, taupe des murs,
+  anthracite des menuiseries, vert-de-gris tiré de la végétation vue par les baies.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --creme:#F4F0E9;      /* plafond repeint */
+  --creme-2:#EAE4D9;
+  --taupe:#7A6E62;      /* murs peints */
+  --anthracite:#24262A; /* menuiseries alu */
+  --vert:#4A6357;       /* vert-de-gris, végétation par les baies */
+  --encre:#1B1C1E;
+  --trait:#D6CEC2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--creme);color:var(--encre);
+  font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.ser{font-family:Newsreader,Georgia,serif;font-weight:300;letter-spacing:-.012em;line-height:1.14}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+.narrow{max-width:720px;margin:0 auto}
+.lab{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:var(--taupe)}
+.rule{height:1px;background:var(--trait);border:0}
+
+/* ── header ─────────────────────────────────────────────────── */
+header{position:sticky;top:0;z-index:60;background:rgba(244,240,233,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--trait)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:82px;gap:30px}
+.mark{text-decoration:none;text-align:left}
+.mark b{font-family:Newsreader,serif;font-weight:400;font-size:25px;letter-spacing:.02em;display:block;line-height:1.1}
+.mark small{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe)}
+.nav nav{display:flex;gap:34px;font-size:13px;letter-spacing:.06em}
+.nav nav a{text-decoration:none;color:var(--taupe);padding-bottom:3px;border-bottom:1px solid transparent}
+.nav nav a:hover{color:var(--encre);border-color:var(--vert)}
+.telh{text-decoration:none;font-size:15px;letter-spacing:.04em;border-bottom:1px solid var(--encre);padding-bottom:2px;white-space:nowrap}
+.telh:hover{color:var(--vert);border-color:var(--vert)}
+
+/* ── bannière d'accueil : photo pleine largeur ──────────────── */
+.hero{position:relative}
+.hero .shot{position:relative;height:640px;overflow:hidden}
+.hero .shot img{width:100%;height:100%;object-fit:cover;object-position:center 58%}
+.hero .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,21,23,.42) 0%,rgba(20,21,23,.14) 42%,rgba(20,21,23,.62) 100%)}
+.hero .txt{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:64px;color:var(--creme)}
+.hero .txt .lab{color:rgba(244,240,233,.82)}
+.hero h1{font-size:70px;color:var(--creme);margin:20px 0 22px;max-width:15ch}
+.hero p{font-size:19px;line-height:1.6;max-width:44ch;color:rgba(244,240,233,.9);font-weight:300}
+.acts{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:32px}
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;font-weight:500;padding:16px 30px;background:var(--creme);color:var(--encre);
+  border:1px solid var(--creme);transition:.25s;
+}
+.btn:hover{background:transparent;color:var(--creme)}
+.btn.line{background:transparent;color:var(--creme);border-color:rgba(244,240,233,.55)}
+.btn.line:hover{background:var(--creme);color:var(--encre)}
+.btn.dark{background:var(--anthracite);color:var(--creme);border-color:var(--anthracite)}
+.btn.dark:hover{background:transparent;color:var(--anthracite)}
+
+/* bandeau de faits sous le hero */
+.facts{border-bottom:1px solid var(--trait);background:var(--creme-2)}
+.facts .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--trait)}
+.facts div{background:var(--creme-2);padding:30px 26px}
+.facts b{font-family:Newsreader,serif;font-size:19px;font-weight:400;display:block;margin-bottom:5px}
+.facts p{font-size:13px;line-height:1.55;color:var(--taupe)}
+
+/* ── sections ───────────────────────────────────────────────── */
+section{padding:110px 0}
+.intro{text-align:center}
+.intro h2{font-size:46px;margin:18px 0 24px}
+.intro p{font-size:18px;font-weight:300;color:#413C36;line-height:1.8}
+
+/* services : liste éditoriale, filets fins */
+.svclist{margin-top:66px;border-top:1px solid var(--trait)}
+.svc{display:grid;grid-template-columns:70px 1.1fr 1.4fr;gap:36px;padding:38px 0;border-bottom:1px solid var(--trait);align-items:start}
+.svc .n{font-family:Newsreader,serif;font-size:15px;color:var(--vert);padding-top:6px}
+.svc h3{font-size:30px}
+.svc .d{font-size:15px;color:#4A443D;max-width:46ch}
+.svc:hover{background:rgba(214,206,194,.22)}
+
+/* réalisations : diptyques pleine largeur */
+.piece{margin-top:84px}
+.piece:first-of-type{margin-top:56px}
+.dip{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.dip figure{position:relative;margin:0}
+.dip img{width:100%;height:400px;object-fit:cover}
+.dip figcaption{position:absolute;top:16px;left:16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;background:rgba(27,28,30,.72);color:var(--creme);padding:6px 12px;backdrop-filter:blur(4px)}
+.dip figure:last-child figcaption{background:rgba(74,99,87,.85)}
+.cap{display:grid;grid-template-columns:1fr 1.2fr;gap:36px;margin-top:22px;align-items:baseline}
+.cap h3{font-size:27px}
+.cap p{font-size:15px;color:#4A443D}
+
+/* showroom : bande sombre */
+.dark{background:var(--anthracite);color:var(--creme)}
+.dark .lab{color:rgba(244,240,233,.6)}
+.dark .wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.dark h2{font-size:46px;color:var(--creme);margin:16px 0 22px}
+.dark p{color:rgba(244,240,233,.78);font-weight:300;font-size:17px}
+.addr{margin-top:30px;padding-top:22px;border-top:1px solid rgba(244,240,233,.22);font-size:15px;line-height:1.9}
+.dark img{height:430px;object-fit:cover;width:100%}
+
+/* zone */
+.zone .wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.map{border:1px solid var(--trait);line-height:0}
+.map iframe{width:100%;height:330px;border:0;display:block;filter:saturate(.72) contrast(.96)}
+.towns{margin-top:26px;font-size:15px;line-height:2.1;color:#4A443D}
+.towns span:after{content:" · ";color:var(--trait)}
+.towns span:last-child:after{content:""}
+
+/* avis honnêtes */
+.avis{background:var(--creme-2)}
+.avis .wrap{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--trait);border:1px solid var(--trait)}
+.avis .cell{background:var(--creme-2);padding:52px 44px}
+.avis h3{font-size:28px;margin-bottom:14px}
+.avis p{font-size:15px;color:#4A443D}
+.avis a.lnk{display:inline-block;margin-top:22px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--vert);color:var(--vert);padding-bottom:3px}
+
+/* devis */
+.devis .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}
+.devis h2{font-size:48px;margin:16px 0 22px}
+.devis .lede{font-size:17px;font-weight:300;color:#413C36;max-width:34ch}
+.bigtel{display:block;margin-top:34px;text-decoration:none;border-top:1px solid var(--trait);border-bottom:1px solid var(--trait);padding:24px 0}
+.bigtel small{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);display:block;margin-bottom:6px}
+.bigtel b{font-family:Newsreader,serif;font-weight:400;font-size:38px;letter-spacing:.01em}
+.bigtel:hover b{color:var(--vert)}
+form{display:grid;gap:22px}
+form label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);display:block;margin-bottom:9px}
+form input,form textarea,form select{
+  width:100%;background:transparent;border:0;border-bottom:1px solid var(--trait);
+  padding:10px 0;font:inherit;font-size:16px;color:var(--encre);border-radius:0;
+}
+form input:focus,form textarea:focus,form select:focus{outline:0;border-color:var(--vert)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+button.send{margin-top:8px;justify-self:start}
+
+footer{border-top:1px solid var(--trait);padding:60px 0 30px}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:50px}
+footer h4{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);margin-bottom:16px}
+footer a{display:block;text-decoration:none;font-size:15px;margin-bottom:9px}
+footer a:hover{color:var(--vert)}
+.legal{margin-top:46px;padding-top:20px;border-top:1px solid var(--trait);display:flex;justify-content:space-between;gap:20px;font-size:12px;color:var(--taupe)}
+@media(max-width:960px){
+  .hero h1{font-size:40px}.hero .shot{height:460px}
+  .facts .wrap,.dark .wrap,.zone .wrap,.avis .wrap,.devis .wrap,.fgrid,.dip,.cap{grid-template-columns:1fr}
+  .svc{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="mark" href="#top"><b>DPM Marigot</b><small>Décoration · Peinture · Menuiserie</small></a>
+    <nav>
+      <a href="#metiers">Nos métiers</a>
+      <a href="#realisations">Réalisations</a>
+      <a href="#showroom">Showroom</a>
+      <a href="#zone">Zone d'intervention</a>
+      <a href="#devis">Devis</a>
+    </nav>
+    <a class="telh" href="tel:+33185830355">01 85 83 03 55</a>
+  </div>
+</header>
+
+<section class="hero" id="top" style="padding:0">
+  <div class="shot">
+    <img src="assets/img/realisations/salle-a-manger-apres.jpg" alt="Salle à manger repeinte par DPM Marigot, murs taupe et charpente apparente">
+    <div class="veil"></div>
+    <div class="txt">
+      <div class="wrap">
+        <p class="lab">Le Mesnil-Saint-Denis · Yvelines</p>
+        <h1>Des intérieurs que l'on choisit avant de les vivre.</h1>
+        <p>Peinture, décoration, menuiserie et revêtements de sols et murs.
+          Notre showroom est ouvert au public : les collections se regardent, se comparent,
+          se touchent — avant le premier coup de pinceau.</p>
+        <div class="acts">
+          <a class="btn" href="#devis">Demander un devis</a>
+          <a class="btn line" href="tel:+33185830355">01 85 83 03 55</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="facts">
+  <div class="wrap">
+    <div><b>Showroom</b><p>Ouvert au public au Mesnil-Saint-Denis, sans rendez-vous obligatoire.</p></div>
+    <div><b>Sols &amp; murs</b><p>Collections de revêtements consultables sur place avant de choisir.</p></div>
+    <div><b>Dégât des eaux</b><p>Remise en état complète après sinistre, du diagnostic aux finitions.</p></div>
+    <div><b>Devis gratuit</b><p>Sans engagement, après visite ou sur description du chantier.</p></div>
+  </div>
+</div>
+
+<section id="metiers">
+  <div class="wrap">
+    <div class="narrow intro">
+      <p class="lab">Nos métiers</p>
+      <h2>Un seul interlocuteur, de la préparation à la finition.</h2>
+      <p>Vous n'avez pas à coordonner un peintre, un décorateur et un menuisier.
+        Nous prenons le chantier dans son ensemble — et nous vous disons dès le devis
+        ce qui sera fait, dans quel ordre, et ce qui ne le sera pas.</p>
+    </div>
+    <div class="svclist">
+      <article class="svc">
+        <span class="n">01</span>
+        <h3>Peinture intérieure</h3>
+        <p class="d">Préparation des supports, dépose de papier peint, reprise des fissures
+          et ratissage, mise en peinture mate ou satinée. Le travail se juge sur la préparation,
+          pas sur la dernière couche.</p>
+      </article>
+      <article class="svc">
+        <span class="n">02</span>
+        <h3>Revêtements de sols &amp; murs</h3>
+        <p class="d">Papiers peints, revêtements muraux, sols. Les collections sont visibles
+          au showroom : c'est la seule façon honnête de juger une matière et une teinte.</p>
+      </article>
+      <article class="svc">
+        <span class="n">03</span>
+        <h3>Menuiserie</h3>
+        <p class="d">Habillages, plinthes, aménagements sur mesure, reprises et ajustements
+          après travaux de peinture ou de sol.</p>
+      </article>
+      <article class="svc">
+        <span class="n">04</span>
+        <h3>Après un dégât des eaux</h3>
+        <p class="d">Remise en état complète après sinistre : plafonds et murs touchés,
+          dépose des revêtements gorgés, reprise des supports, finitions. Nous connaissons
+          le déroulé et les délais côté assurance.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="realisations" style="padding-top:0">
+  <div class="wrap">
+    <div class="narrow intro"><p class="lab">Réalisations</p>
+      <h2>Avant / après.</h2>
+      <p>Des chantiers réellement réalisés par DPM Marigot, photographiés sur place.</p></div>
+
+    <div class="piece">
+      <div class="dip">
+        <figure><img src="assets/img/realisations/cuisine-sinistre-avant.jpg" alt="Cuisine avant remise en état après dégât des eaux"><figcaption>Avant</figcaption></figure>
+        <figure><img src="assets/img/realisations/cuisine-sinistre-apres.jpg" alt="Cuisine remise en état et repeinte"><figcaption>Après</figcaption></figure>
+      </div>
+      <div class="cap">
+        <h3>Cuisine après sinistre</h3>
+        <p>Rénovation complète après un dégât des eaux : dépose du papier peint,
+          reprise des supports et passage en peinture. Chantier de juin 2025.</p>
+      </div>
+    </div>
+
+    <div class="piece">
+      <div class="dip">
+        <figure><img src="assets/img/realisations/plafond-avant.jpg" alt="Plafond fissuré avant intervention"><figcaption>Avant</figcaption></figure>
+        <figure><img src="assets/img/realisations/plafond-apres.jpg" alt="Plafond repris et repeint"><figcaption>Après</figcaption></figure>
+      </div>
+      <div class="cap">
+        <h3>Plafond fissuré</h3>
+        <p>Traitement de la fissure, ratissage et remise en peinture du plafond
+          jusqu'aux angles et à la retombée de la baie.</p>
+      </div>
+    </div>
+
+    <div class="piece">
+      <div class="dip">
+        <figure><img src="assets/img/realisations/salle-a-manger-avant.jpg" alt="Salle à manger avant travaux"><figcaption>Avant</figcaption></figure>
+        <figure><img src="assets/img/realisations/salle-a-manger-apres.jpg" alt="Salle à manger après mise en peinture"><figcaption>Après</figcaption></figure>
+      </div>
+      <div class="cap">
+        <h3>Salle à manger</h3>
+        <p>Mise en peinture des murs et de la charpente apparente dans une teinte taupe,
+          choisie au showroom avec les clients.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="showroom" class="dark">
+  <div class="wrap">
+    <div>
+      <p class="lab">Le showroom</p>
+      <h2>Une teinte ne se choisit pas sur un écran.</h2>
+      <p>Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration
+        et y découvrir les diverses collections de revêtements de sols et de murs.
+        N'hésitez pas à nous rendre visite.</p>
+      <div class="addr">
+        <b>92, Avenue Habert de Montmort</b><br>
+        Le Mesnil-Saint-Denis (78)<br>
+        <a href="tel:+33185830355" style="border-bottom:1px solid rgba(244,240,233,.4);text-decoration:none">01 85 83 03 55</a>
+      </div>
+      <div class="acts"><a class="btn line" href="#devis">Prendre contact</a></div>
+    </div>
+    <img src="assets/img/services/decoration.jpg" alt="Intérieur décoré par DPM Marigot, exemple de réalisation">
+  </div>
+</section>
+
+<section id="zone" class="zone">
+  <div class="wrap">
+    <div>
+      <p class="lab">Zone d'intervention</p>
+      <h2 style="font-size:44px;margin:16px 0 20px">Les Yvelines et l'ouest francilien.</h2>
+      <p style="font-size:17px;font-weight:300;color:#413C36;max-width:38ch">
+        Basés au Mesnil-Saint-Denis, nous intervenons dans un rayon d'une trentaine
+        de kilomètres. Un doute sur votre commune ? Un appel suffit à le lever.</p>
+      <p class="towns">
+        <span>Le Mesnil-Saint-Denis</span><span>Saint-Cyr-l'École</span><span>Élancourt</span>
+        <span>Trappes</span><span>Maurepas</span><span>Montigny-le-Bretonneux</span><span>Versailles</span>
+      </p>
+    </div>
+    <div class="map">
+      <iframe title="Carte — Le Mesnil-Saint-Denis" loading="lazy"
+        src="https://maps.google.com/maps?q=Le%20Mesnil-Saint-Denis&z=12&output=embed"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="avis">
+  <div class="wrap">
+    <div class="cell">
+      <p class="lab">Ils nous ont fait confiance</p>
+      <h3 style="margin-top:12px">Page Facebook · 87 abonnés</h3>
+      <p>Nous y publions nos chantiers au fil de l'eau : photos avant / après et détail
+        des interventions. C'est aujourd'hui le meilleur endroit pour juger notre travail
+        sur pièces plutôt que sur une moyenne.</p>
+      <a class="lnk" href="https://www.facebook.com/dpmmarigot" target="_blank" rel="noopener">Voir nos publications</a>
+    </div>
+    <div class="cell">
+      <p class="lab">Un mot d'honnêteté</p>
+      <h3 style="margin-top:12px">Nous n'affichons pas de note inventée.</h3>
+      <p>Notre présence sur les avis en ligne est récente. Plutôt qu'une moyenne
+        fabriquée, nous préférons vous montrer les chantiers et vous laisser appeler
+        pour poser vos questions.</p>
+      <a class="lnk" href="tel:+33185830355">Nous appeler — 01 85 83 03 55</a>
+    </div>
+  </div>
+</section>
+
+<section id="devis" class="devis">
+  <div class="wrap">
+    <div>
+      <p class="lab">Devis</p>
+      <h2>Décrivez-nous votre chantier.</h2>
+      <p class="lede">Deux lignes suffisent pour commencer. Nous revenons vers vous
+        rapidement, et le devis est gratuit et sans engagement.</p>
+      <a class="bigtel" href="tel:+33185830355"><small>Appeler directement</small><b>01 85 83 03 55</b></a>
+      <p style="margin-top:24px;font-size:15px;color:#4A443D">
+        <a href="mailto:dpmmarigot@gmail.com" style="border-bottom:1px solid var(--trait);text-decoration:none">dpmmarigot@gmail.com</a><br>
+        92, Avenue Habert de Montmort — Le Mesnil-Saint-Denis (78)
+      </p>
+    </div>
+    <form onsubmit="event.preventDefault();alert('Maquette — le formulaire n\'est pas branché.')">
+      <div class="row2">
+        <div><label for="b-n">Nom</label><input id="b-n" required></div>
+        <div><label for="b-t">Téléphone</label><input id="b-t" type="tel" required></div>
+      </div>
+      <div><label for="b-e">E-mail</label><input id="b-e" type="email"></div>
+      <div><label for="b-s">Votre besoin</label>
+        <select id="b-s">
+          <option>Peinture intérieure</option><option>Revêtements sols &amp; murs</option>
+          <option>Menuiserie</option><option>Remise en état après dégât des eaux</option><option>Autre</option>
+        </select></div>
+      <div><label for="b-m">Votre projet</label><textarea id="b-m" rows="4" placeholder="Pièce, surface approximative, délai souhaité…"></textarea></div>
+      <button class="btn dark send" type="submit">Envoyer ma demande</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <a class="mark" href="#top"><b>DPM Marigot</b><small>Décoration · Peinture · Menuiserie</small></a>
+        <p style="font-size:15px;max-width:34ch;color:#4A443D;margin-top:16px">
+          Artisan au Mesnil-Saint-Denis (78). Showroom ouvert au public.</p>
+      </div>
+      <div><h4>Contact</h4>
+        <a href="tel:+33185830355">01 85 83 03 55</a>
+        <a href="mailto:dpmmarigot@gmail.com">dpmmarigot@gmail.com</a>
+        <a href="https://www.facebook.com/dpmmarigot" target="_blank" rel="noopener">Facebook</a>
+      </div>
+      <div><h4>Le site</h4>
+        <a href="#metiers">Nos métiers</a><a href="#realisations">Réalisations</a>
+        <a href="#showroom">Showroom</a><a href="#devis">Devis</a>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 DPM Marigot — 92, Avenue Habert de Montmort, Le Mesnil-Saint-Denis (78)</span>
+      <span>Direction B — « Maison » · maquette</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

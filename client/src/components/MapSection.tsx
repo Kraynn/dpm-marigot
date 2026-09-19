@@ -1,34 +1,41 @@
 /**
- * DPM Marigot – Map / Location Section
- * Design: White background. Google Maps iframe embed. Trust reassurance.
+ * DPM Marigot – Localisation / zone d'intervention
+ * Direction « Le Nuancier » : carte encadrée d'une bordure franche et d'une ombre dure.
+ *
+ * L'iframe Google Maps et la liste des départements sont reprises telles quelles
+ * de la version précédente : la zone d'intervention annoncée est une décision
+ * commerciale du client, pas un choix de design.
+ * Le pavé « Entreprise de confiance » a été retiré (stop-slop : « artisans
+ * qualifiés », « entre de bonnes mains » ne prouvent rien) et remplacé par
+ * l'adresse du showroom, qui est un fait.
  */
-import { MapPin, Shield } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const ZONES = ["Yvelines (78)", "Paris (75)", "Hauts-de-Seine (92)", "Val-d'Oise (95)", "Essonne (91)"];
 
 export default function MapSection() {
   const { ref, visible } = useScrollReveal();
 
   return (
-    <section id="localisation" className="bg-white py-20 lg:py-28">
+    <section id="localisation" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
         <div
-          className="mb-10"
+          className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
             transition: "opacity 0.6s ease, transform 0.6s ease",
           }}
         >
-          <div className="section-label flex items-center gap-2 mb-3">
-            <span className="w-6 h-0.5 bg-blue-700 inline-block" />
-            Localisation
+          <div>
+            <p className="section-num mb-2">06 — Zone d'intervention</p>
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[15ch]">
+              Basés au Mesnil-Saint-Denis.
+            </h2>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900" style={{ fontFamily: "Sora, sans-serif" }}>
-            Basée au Mesnil-Saint-Denis,<br />
-            <span className="text-blue-700">au cœur de l'Île-de-France</span>
-          </h2>
-          <p className="mt-3 text-slate-600 max-w-lg text-sm leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
-            Notre showroom est ouvert au public. Venez découvrir nos collections de revêtements de sols et murs. Nous intervenons dans toute l'Île-de-France.
+          <p className="text-encre/70 max-w-sm text-sm leading-relaxed">
+            Un doute sur votre commune ? Un appel suffit à le lever.
           </p>
         </div>
 
@@ -40,13 +47,13 @@ export default function MapSection() {
             transition: "opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s",
           }}
         >
-          {/* Map – 2 cols */}
-          <div className="lg:col-span-2 rounded-2xl overflow-hidden shadow-lg border border-slate-100">
+          {/* Carte – 2 colonnes */}
+          <div className="lg:col-span-2 border-[3px] border-encre shadow-[9px_9px_0_var(--color-terre)] leading-none">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.7!2d1.9499437!3d48.7394663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sDPM+Marigot!5e0!3m2!1sfr!2sfr!4v1"
               width="100%"
-              height="380"
-              style={{ border: 0 }}
+              height="400"
+              style={{ border: 0, display: "block" }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -54,36 +61,42 @@ export default function MapSection() {
             />
           </div>
 
-          {/* Info – 1 col */}
-          <div className="flex flex-col gap-4">
-            <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center text-blue-700">
+          {/* Infos – 1 colonne */}
+          <div className="flex flex-col gap-6">
+            <div className="card-hard card-hard-prusse p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-9 h-9 bg-prusse text-white flex items-center justify-center shrink-0">
                   <MapPin size={18} />
-                </div>
-                <p className="font-bold text-slate-900 text-sm" style={{ fontFamily: "Sora, sans-serif" }}>Adresse</p>
+                </span>
+                <p className="section-label">Le showroom</p>
               </div>
-              <p className="text-slate-900 font-semibold text-sm mb-3" style={{ fontFamily: "Sora, sans-serif" }}>92, Avenue Habert de Montmort</p>
-              <p className="text-slate-600 text-sm mb-4" style={{ fontFamily: "Inter, sans-serif" }}>Le Mesnil-Saint-Denis (78)</p>
-              <p className="font-bold text-slate-900 text-sm mb-2" style={{ fontFamily: "Sora, sans-serif" }}>Zone d'intervention</p>
-              <ul className="space-y-1.5">
-                {["Paris (75)", "Hauts-de-Seine (92)", "Val-d'Oise (95)", "Yvelines (78)", "Essonne (91)"].map((zone) => (
-                  <li key={zone} className="flex items-center gap-2 text-sm text-slate-600" style={{ fontFamily: "Inter, sans-serif" }}>
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-700 flex-shrink-0" />
+              <p className="font-display text-xl text-encre leading-tight">
+                92, Avenue Habert de Montmort
+              </p>
+              <p className="text-encre/70 text-sm mt-1 mb-5">Le Mesnil-Saint-Denis (78)</p>
+              <p className="text-encre/70 text-sm leading-relaxed">
+                Ouvert au public. Venez voir les collections de revêtements de sols et de murs avant
+                de choisir.
+              </p>
+              <a
+                href="tel:+33185830355"
+                className="inline-flex items-center gap-2 mt-5 font-bold text-sm text-encre border-b-[3px] border-terre pb-1 hover:text-terre transition-colors"
+              >
+                <Phone size={15} />
+                01 85 83 03 55
+              </a>
+            </div>
+
+            <div className="bg-creme-2 border-[3px] border-encre p-6">
+              <p className="section-label mb-4">Nous intervenons</p>
+              <ul className="flex flex-col gap-2.5">
+                {ZONES.map((zone) => (
+                  <li key={zone} className="flex items-center gap-2.5 text-sm text-encre">
+                    <span className="w-2 h-2 bg-terre shrink-0" />
                     {zone}
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="bg-blue-700 rounded-xl p-5 text-white">
-              <div className="flex items-center gap-3 mb-2">
-                <Shield size={18} className="text-blue-200" />
-                <p className="font-bold text-sm" style={{ fontFamily: "Sora, sans-serif" }}>Entreprise de confiance</p>
-              </div>
-              <p className="text-blue-100 text-xs leading-relaxed" style={{ fontFamily: "Inter, sans-serif" }}>
-                DPM Marigot est une entreprise locale établie, avec une adresse réelle et des artisans qualifiés. Votre projet est entre de bonnes mains.
-              </p>
             </div>
           </div>
         </div>
