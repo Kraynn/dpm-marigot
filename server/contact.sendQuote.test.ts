@@ -10,8 +10,13 @@ vi.mock("./_core/email", () => ({
   sendQuoteEmail: vi.fn(),
 }));
 
+vi.mock("./_core/asapDevis", () => ({
+  forwardToAsapDevis: vi.fn(),
+}));
+
 // Imports récupérés après le mock pour accéder aux fonctions mockées
 import { sendQuoteEmail } from "./_core/email";
+import { forwardToAsapDevis } from "./_core/asapDevis";
 
 function createPublicContext(): TrpcContext {
   return {
@@ -32,6 +37,8 @@ const validInput = {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(sendQuoteEmail).mockResolvedValue(undefined);
+  // par défaut : service central non configuré → comportement historique
+  vi.mocked(forwardToAsapDevis).mockResolvedValue({ forwarded: false });
   process.env.QUOTE_RECIPIENT_EMAIL = "owner@example.com";
 });
 
@@ -123,5 +130,59 @@ describe("contact.sendQuote", () => {
 
     expect(result.success).toBe(true);
     expect(sendQuoteEmail).not.toHaveBeenCalled();
+  });
+
+  // 5. Relais vers ASap Devis — qui a déjà prévenu, et qui ne l'a pas fait.
+  // L'enjeu : ne pas envoyer deux fois la même demande à l'artisan, sans pour
+  // autant supprimer le filet quand le service central n'a rien envoyé.
+  it("formule formulaire : la demande est déjà partie, pas d'email de repli", async () => {
+    vi.mocked(forwardToAsapDevis).mockResolvedValue({
+      forwarded: true,
+      estimation: false,
+      notifie: true,
+      reference: null,
+    });
+    const caller = appRouter.createCaller(createPublicContext());
+    const result = await caller.contact.sendQuote(validInput);
+
+    expect(result.emailSent).toBe(true);
+    expect(sendQuoteEmail).not.toHaveBeenCalled();
+  });
+
+  it("formule devis auto : l'estimation est partie, pas d'email de repli", async () => {
+    vi.mocked(forwardToAsapDevis).mockResolvedValue({
+      forwarded: true,
+      estimation: true,
+      notifie: false,
+      reference: "EST-001",
+    });
+    const caller = appRouter.createCaller(createPublicContext());
+    const result = await caller.contact.sendQuote(validInput);
+
+    expect(result.emailSent).toBe(true);
+    expect(sendQuoteEmail).not.toHaveBeenCalled();
+  });
+
+  it("relais sans envoi : le filet joue, l'email de repli part quand même", async () => {
+    vi.mocked(forwardToAsapDevis).mockResolvedValue({
+      forwarded: true,
+      estimation: false,
+      notifie: false,
+      reference: null,
+    });
+    const caller = appRouter.createCaller(createPublicContext());
+    const result = await caller.contact.sendQuote(validInput);
+
+    expect(result.emailSent).toBe(true);
+    expect(sendQuoteEmail).toHaveBeenCalledOnce();
+  });
+
+  it("relais en échec : le filet joue aussi", async () => {
+    vi.mocked(forwardToAsapDevis).mockResolvedValue({ forwarded: false });
+    const caller = appRouter.createCaller(createPublicContext());
+    const result = await caller.contact.sendQuote(validInput);
+
+    expect(result.emailSent).toBe(true);
+    expect(sendQuoteEmail).toHaveBeenCalledOnce();
   });
 });

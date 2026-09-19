@@ -19,7 +19,18 @@ export type AsapDevisLead = {
 
 export type AsapDevisResult =
   | { forwarded: false }
-  | { forwarded: true; estimation: boolean; reference?: string | null };
+  | {
+      forwarded: true;
+      estimation: boolean;
+      /**
+       * Vrai quand le service central a déjà transmis la demande à l'artisan
+       * (formule « formulaire » : fiche PDF + accusé au client, sans devis).
+       * Sans ce drapeau, le site enverrait son email de repli par-dessus et
+       * l'artisan recevrait la même demande deux fois.
+       */
+      notifie: boolean;
+      reference?: string | null;
+    };
 
 export async function forwardToAsapDevis(lead: AsapDevisLead): Promise<AsapDevisResult> {
   const base = ENV.asapDevisApiUrl;
@@ -36,8 +47,17 @@ export async function forwardToAsapDevis(lead: AsapDevisLead): Promise<AsapDevis
       console.error("[asap-devis] forward HTTP", r.status);
       return { forwarded: false };
     }
-    const data = (await r.json()) as { estimation?: boolean; reference_interne?: string | null };
-    return { forwarded: true, estimation: Boolean(data.estimation), reference: data.reference_interne ?? null };
+    const data = (await r.json()) as {
+      estimation?: boolean;
+      notifie?: boolean;
+      reference_interne?: string | null;
+    };
+    return {
+      forwarded: true,
+      estimation: Boolean(data.estimation),
+      notifie: Boolean(data.notifie),
+      reference: data.reference_interne ?? null,
+    };
   } catch (err) {
     console.error("[asap-devis] forward échec:", err);
     return { forwarded: false };

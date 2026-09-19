@@ -45,12 +45,14 @@ export const appRouter = router({
         });
 
         // ASap Devis (opt-in) : si le service central est configuré ET qu'il a
-        // généré une estimation, il envoie déjà l'email récap + PDF à Silva —
-        // on évite le doublon. Sinon, comportement historique (email simple).
+        // déjà envoyé un email — estimation chiffrée à Silva, ou fiche de
+        // demande à l'artisan en formule « formulaire » — on évite le doublon.
+        // Sinon, comportement historique (email simple), qui reste le filet
+        // quand le forward échoue.
         const asap = await forwardToAsapDevis(quoteData);
 
         let emailSent = false;
-        if (asap.forwarded && asap.estimation) {
+        if (asap.forwarded && (asap.estimation || asap.notifie)) {
           emailSent = true; // email envoyé par asap-devis-api (avec PDF)
         } else {
           try {
