@@ -1,20 +1,23 @@
 /**
  * DPM Marigot – Bandeau des partenaires
- * Direction « Le Nuancier » : bande pleine largeur, séparateur à 3 px.
+ * Direction « Le Nuancier » : bordure franche à 3 px, pas de coin arrondi.
  *
  * Créé le 2026-09-19, intercalé entre « 04 — Le showroom » et « 05 — Devis »
  * pour que l'argument assurance tombe juste avant la demande de devis.
  * Le bandeau ne porte pas de numéro de section : la numérotation 04/05/06
  * déjà en place reste inchangée.
  *
- * ⚠️ Définition des logos. DPM n'a fourni qu'une image composite
- * (assets/partenaires et services.png, 597 px de large pour dix logos). Les six
- * PNG servis ici en sont découpés : chacun pèse 45 à 106 px de large dans la
- * source, agrandi ×3 au découpage pour que le navigateur sous-échantillonne au
- * lieu de sur-échantillonner. Le filet sous « Dynaren » fait 3 px de haut dans
- * la source et reste illisible à l'écran — c'est la source qui le veut, pas le
- * découpage. Les vrais fichiers (vectoriels ou haute définition) sont à demander
- * à DPM ; ils se remplacent ici sans toucher au composant.
+ * Refondu le 2026-09-19 (2e passe) au format du ticker d'ASap FC : une
+ * étiquette pleine qui ne bouge pas à gauche, la piste qui défile juste à sa
+ * droite. La première version empilait le titre au-dessus d'une bande pleine
+ * largeur — deux fois plus haute pour la même information.
+ *
+ * ⚠️ Définition des logos. Les six PNG servis ici sont découpés de l'image
+ * composite fournie par DPM (assets/partenaires et services.png, 597 px de
+ * large pour dix logos), détourés et agrandis ×3 pour que le navigateur
+ * sous-échantillonne au lieu de sur-échantillonner. Silva doit fournir des
+ * découpes propres : elles se déposent dans client/public/images/partenaires/
+ * sous les mêmes noms, et seules les hauteurs ci-dessous sont à réajuster.
  *
  * Hauteurs d'affichage : normalisées à l'œil, pas en pixels. Un logo à
  * pictogramme (MAIF) supporte d'être plus haut qu'un logo purement
@@ -31,12 +34,12 @@ type Partenaire = {
 };
 
 const PARTENAIRES: Partenaire[] = [
-  { nom: "MAIF", fichier: "maif", hauteur: 34, largeur: 44 },
-  { nom: "CET Cerutti", fichier: "cet-cerutti", hauteur: 22, largeur: 82 },
-  { nom: "Symabat", fichier: "symabat", hauteur: 18, largeur: 127 },
-  { nom: "Polyexpert", fichier: "polyexpert", hauteur: 20, largeur: 85 },
-  { nom: "Eurexo", fichier: "eurexo", hauteur: 19, largeur: 94 },
-  { nom: "Dynaren", fichier: "dynaren", hauteur: 18, largeur: 104 },
+  { nom: "MAIF", fichier: "maif", hauteur: 26, largeur: 33 },
+  { nom: "CET Cerutti", fichier: "cet-cerutti", hauteur: 17, largeur: 63 },
+  { nom: "Symabat", fichier: "symabat", hauteur: 14, largeur: 99 },
+  { nom: "Polyexpert", fichier: "polyexpert", hauteur: 15, largeur: 64 },
+  { nom: "Eurexo", fichier: "eurexo", hauteur: 15, largeur: 74 },
+  { nom: "Dynaren", fichier: "dynaren", hauteur: 14, largeur: 81 },
 ];
 
 function Groupe({ copie = false }: { copie?: boolean }) {
@@ -67,17 +70,17 @@ export default function PartenairesBand() {
   return (
     <section
       aria-label="Nos partenaires"
-      className="bg-creme-2 border-b-[3px] border-encre py-10 lg:py-12"
+      className="bg-creme-2 border-b-[3px] border-encre py-8 lg:py-10"
     >
       <div className="container">
-        <p className="section-label mb-6">Nos partenaires</p>
-      </div>
-
-      {/* pleine largeur : la piste sort du conteneur pour filer bord à bord */}
-      <div className="bandeau-partenaires">
-        <div className="piste-partenaires">
-          <Groupe />
-          <Groupe copie />
+        <div className="barre-partenaires">
+          <p className="bp-etiquette">Nos partenaires</p>
+          <div className="bandeau-partenaires">
+            <div className="piste-partenaires">
+              <Groupe />
+              <Groupe copie />
+            </div>
+          </div>
         </div>
       </div>
     </section>
