@@ -420,13 +420,22 @@
   animation-play-state: paused;
 }
 
+/* Chaque groupe couvre au moins toute la largeur visible. Sans ça, les six
+   logos tiennent sur moins d'un écran : la seconde copie entre par le milieu
+   et le même partenaire s'affiche deux fois en même temps.
+   space-around répartit les logos sur toute la largeur, donc le premier et le
+   dernier vont jusqu'aux extrémités, et l'écart au raccord entre deux groupes
+   vaut une demi-part de chaque côté — soit le même qu'ailleurs. */
 .groupe-partenaires {
   display: flex;
   align-items: center;
-  gap: 2.75rem;
+  flex: none;
+  min-width: 100vw;
+  justify-content: space-around;
+  /* plancher d'écart quand l'écran est trop étroit pour que space-around
+     ait quoi que ce soit à répartir */
+  gap: 3rem;
   padding: 0.85rem 0;
-  /* même écart de part et d'autre du raccord entre les deux groupes */
-  padding-right: 2.75rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -451,8 +460,10 @@
   }
   .groupe-partenaires {
     /* sans cette largeur, le groupe garde celle de son contenu et
-       justify-content n'a rien à centrer : les logos restent collés à gauche */
+       justify-content n'a rien à centrer : les logos restent collés à gauche.
+       min-width est remis à zéro, sinon le groupe déborde de la barre. */
     width: 100%;
+    min-width: 0;
     flex-wrap: wrap;
     justify-content: center;
     row-gap: 1.25rem;

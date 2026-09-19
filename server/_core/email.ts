@@ -28,7 +28,10 @@ export async function sendQuoteEmail(data: QuoteEmailInput): Promise<void> {
     from: ENV.emailFrom,
     to: [to],
     subject: `Nouvelle demande de devis — ${data.nom}`,
-    ...(data.email ? { reply_to: data.email } : {}),
+    // camelCase obligatoire : le SDK Resend v6 lit `replyTo` et le convertit
+    // lui-même en `reply_to` pour l'API. En snake_case le champ est ignoré
+    // sans erreur — le Reply-To n'a donc jamais été posé jusqu'au 19/09.
+    ...(data.email ? { replyTo: data.email } : {}),
     text: buildEmailText(data),
   });
 
