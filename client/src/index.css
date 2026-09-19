@@ -354,10 +354,12 @@
   }
 }
 
+/* Pleine largeur, sans marge autour : la barre fait elle-même la césure entre
+   le showroom et le devis. Pas de bordure haute — la section précédente porte
+   déjà son border-b, deux traits de 3 px en donneraient un de 6. */
 .barre-partenaires {
   display: flex;
   align-items: stretch;
-  border: 3px solid var(--color-encre);
   background: #fff;
   overflow: hidden;
 }

@@ -12,6 +12,12 @@
  * droite. La première version empilait le titre au-dessus d'une bande pleine
  * largeur — deux fois plus haute pour la même information.
  *
+ * 3e passe le même jour : plus aucun espace autour. La barre va d'un bord à
+ * l'autre et fait elle-même la césure entre le showroom et le devis, donc pas
+ * de padding de section, pas de conteneur, et une seule bordure — celle du
+ * bas. WhyUsSection porte déjà son border-b : en ajouter une en haut ici
+ * donnerait un trait de 6 px au lieu de 3.
+ *
  * ⚠️ Définition des logos. Les six PNG servis ici sont découpés de l'image
  * composite fournie par DPM (assets/partenaires et services.png, 597 px de
  * large pour dix logos), détourés et agrandis ×3 pour que le navigateur
@@ -68,18 +74,13 @@ function Groupe({ copie = false }: { copie?: boolean }) {
 
 export default function PartenairesBand() {
   return (
-    <section
-      aria-label="Nos partenaires"
-      className="bg-creme-2 border-b-[3px] border-encre py-8 lg:py-10"
-    >
-      <div className="container">
-        <div className="barre-partenaires">
-          <p className="bp-etiquette">Nos partenaires</p>
-          <div className="bandeau-partenaires">
-            <div className="piste-partenaires">
-              <Groupe />
-              <Groupe copie />
-            </div>
+    <section aria-label="Nos partenaires" className="border-b-[3px] border-encre">
+      <div className="barre-partenaires">
+        <p className="bp-etiquette">Nos partenaires</p>
+        <div className="bandeau-partenaires">
+          <div className="piste-partenaires">
+            <Groupe />
+            <Groupe copie />
           </div>
         </div>
       </div>
