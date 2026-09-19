@@ -45,7 +45,7 @@ export default function TestimonialsSection() {
     <section id="avis" className="bg-ocre border-y-[3px] border-encre py-20 lg:py-24">
       <div className="container" ref={ref}>
         <div
-          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12"
+          className="mb-12"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -58,10 +58,6 @@ export default function TestimonialsSection() {
               Nos avis, tels quels.
             </h2>
           </div>
-          <p className="text-encre/75 max-w-sm text-sm leading-relaxed">
-            Notre présence sur les avis en ligne est récente. Nous préférons vous montrer les
-            chantiers plutôt qu'une moyenne fabriquée.
-          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-7 mb-14">

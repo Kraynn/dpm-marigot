@@ -1,7 +1,8 @@
 /**
  * DPM Marigot – Home Page
  * Design: "Chantier Propre" – Industrial Precision
- * Sections: Navbar → Hero → Testimonials → Services → Gallery → Process → WhyUs → Contact → Map → FAQ → Footer
+ * Sections: Navbar → Hero → Testimonials → Services → Gallery → Process → WhyUs
+ *           → Partenaires → Contact → Map → FAQ → Footer
  * + FloatingCTA (mobile bottom bar + WhatsApp)
  */
 import Navbar from "@/components/Navbar";
@@ -11,6 +12,7 @@ import ServicesSection from "@/components/ServicesSection";
 import RealisationsGallery from "@/components/RealisationsGallery";
 import ProcessSection from "@/components/ProcessSection";
 import WhyUsSection from "@/components/WhyUsSection";
+import PartenairesBand from "@/components/PartenairesBand";
 import ContactSection from "@/components/ContactSection";
 import MapSection from "@/components/MapSection";
 import FAQSection from "@/components/FAQSection";
@@ -27,6 +29,7 @@ export default function Home() {
       <RealisationsGallery />
       <ProcessSection />
       <WhyUsSection />
+      <PartenairesBand />
       <ContactSection />
       <MapSection />
       <FAQSection />

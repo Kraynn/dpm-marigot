@@ -68,7 +68,7 @@ export default function ServicesSection() {
     <section id="services" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
         <div
-          className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
+          className="mb-12"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -81,10 +81,6 @@ export default function ServicesSection() {
               Quatre savoir-faire, un seul interlocuteur.
             </h2>
           </div>
-          <p className="text-encre/70 max-w-sm text-sm leading-relaxed">
-            Vous ne coordonnez pas trois entreprises. Nous prenons le chantier du diagnostic à la
-            finition.
-          </p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

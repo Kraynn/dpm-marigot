@@ -339,6 +339,55 @@
   animation: fadeInUp 0.6s ease forwards;
 }
 
+/* ── Bandeau partenaires : défilement continu ─────────────
+   Deux groupes identiques côte à côte ; la piste se translate d'exactement
+   une largeur de groupe, ce qui fait boucler le défilement sans raccord.
+   Le second groupe est un doublon visuel : il est marqué aria-hidden. */
+@keyframes defile-partenaires {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.bandeau-partenaires {
+  overflow: hidden;
+  /* les logos entrent et sortent en fondu plutôt qu'en coupe nette */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 4rem,
+    #000 calc(100% - 4rem),
+    transparent
+  );
+}
+
+.piste-partenaires {
+  display: flex;
+  width: max-content;
+  animation: defile-partenaires 32s linear infinite;
+}
+.piste-partenaires:hover {
+  animation-play-state: paused;
+}
+
+.groupe-partenaires {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+  /* même écart de part et d'autre du raccord entre les deux groupes */
+  padding-right: 3.5rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     animation: none;
@@ -347,5 +396,27 @@
   .cta-btn-ghost,
   .cta-arrow {
     transition: none;
+  }
+  /* Sans animation, une piste figée masquerait la moitié des logos :
+     on retombe sur une grille centrée qui les montre tous. */
+  .bandeau-partenaires {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .piste-partenaires {
+    animation: none;
+    width: 100%;
+  }
+  .groupe-partenaires {
+    /* sans cette largeur, le groupe garde celle de son contenu et
+       justify-content n'a rien à centrer : les logos restent collés à gauche */
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 2rem;
+    padding: 0 1rem;
+  }
+  .piste-partenaires [data-copie] {
+    display: none;
   }
 }

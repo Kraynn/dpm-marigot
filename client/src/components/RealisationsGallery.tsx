@@ -145,17 +145,13 @@ export default function RealisationsGallery() {
   return (
     <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container">
-        <div className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        <div className="mb-12">
           <div>
             <p className="section-num mb-2">02 — Réalisations</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[14ch]">
               Avant / après, sans retouche.
             </h2>
           </div>
-          <p className="text-encre/70 max-w-sm text-sm leading-relaxed">
-            Des chantiers réellement réalisés par DPM Marigot, photographiés sur place. Glissez le
-            curseur pour voir la transformation.
-          </p>
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
