@@ -411,10 +411,13 @@
   );
 }
 
+/* 45 s et non 30 : la piste parcourt une largeur de groupe, soit au moins
+   100vw, donc ~32 px/s sur un écran de 1440 px là où 30 s en donnaient 48.
+   Ralenti le 2026-09-20 à la demande de Silva. */
 .piste-partenaires {
   display: flex;
   width: max-content;
-  animation: defile-partenaires 30s linear infinite;
+  animation: defile-partenaires 45s linear infinite;
 }
 .piste-partenaires:hover {
   animation-play-state: paused;
