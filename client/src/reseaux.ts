@@ -11,13 +11,18 @@
  * le vide est pire que pas d'icône. Le composant, lui, est prêt — il n'y a
  * qu'une ligne à remplir ici, et l'URL à ajouter au `sameAs` du JSON-LD.
  *
- * Instagram : demandé à DPM dans la relance du 22/09, pas encore reçu. Aucun
- * lien Instagram n'apparaît non plus sur leur page Facebook.
+ * Instagram : fournie par Silva le 2026-09-21, vérifiée au navigateur le même
+ * jour — le compte rend « Dpm Marigot (@dpmmarigotrenovinterieure) », 97
+ * abonnés, 54 publications. Elle ne figurait nulle part sur leur page Facebook,
+ * d'où l'attente jusqu'ici.
  * Facebook : https://www.facebook.com/dpmmarigot — présente dans le dépôt
  * depuis l'origine, jamais contrôlée jusqu'au 2026-09-21. Vérifiée ce jour-là
  * au navigateur (curl reçoit un 400 de Facebook, ce qui ne prouve rien) : la
  * page rend le titre « DPM Marigot - Décoration, Peinture, Menuiserie |
  * Le Mesnil-Saint-Denis ». C'est bien la bonne page.
+ *
+ * L'ordre du tableau est l'ordre d'affichage : Instagram à gauche de Facebook,
+ * demandé par Silva le 2026-09-21.
  */
 
 export type Reseau = {
@@ -35,12 +40,12 @@ export const RESEAUX: Record<"facebook" | "instagram", Reseau> = {
   },
   instagram: {
     nom: "Instagram",
-    url: null,
+    url: "https://www.instagram.com/dpmmarigotrenovinterieure/",
     libelle: "DPM Marigot sur Instagram (nouvel onglet)",
   },
 };
 
 /** Les réseaux dont l'URL est connue, dans l'ordre d'affichage. */
-export const RESEAUX_CONNUS = [RESEAUX.facebook, RESEAUX.instagram].filter(
+export const RESEAUX_CONNUS = [RESEAUX.instagram, RESEAUX.facebook].filter(
   (r): r is Reseau & { url: string } => r.url !== null,
 );
