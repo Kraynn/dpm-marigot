@@ -3,6 +3,13 @@
  * Direction « Le Nuancier » : accordéon à bordures franches.
  * Réponses passées au stop-slop : plus d'« absolument », de « n'hésitez pas »,
  * de « réponse garantie » ni de « tout est transparent ». On répond, c'est tout.
+ *
+ * 2026-09-21 : « Peut-on visiter le showroom ? » devient « Quand peut-on
+ * passer ? » et donne les horaires — c'est la question qu'on se pose vraiment.
+ * Sa dernière phrase, « Aucun rendez-vous n'est obligatoire », est retirée :
+ * l'affiche du client porte « sauf RDV les mercredi et vendredi », donc on n'en
+ * sait rien. Ajout d'une question sur le point relais colis : c'est ce qu'un
+ * voisin cherche, et ça n'était écrit nulle part.
  */
 import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -27,8 +34,12 @@ const faqs = [
     a: "Oui, c'est une de nos spécialités : dépose des revêtements touchés, reprise des plafonds et des murs, remise en peinture. Nous connaissons le déroulé côté assurance et nous vous accompagnons dans les démarches.",
   },
   {
-    q: "Peut-on visiter le showroom ?",
-    a: "Oui, il est ouvert au public au 92, Avenue Habert de Montmort au Mesnil-Saint-Denis. Vous y verrez notre décoration et les collections de revêtements de sols et de murs. Aucun rendez-vous n'est obligatoire.",
+    q: "Quand peut-on passer au showroom ?",
+    a: "Du mardi au vendredi, de 9h00 à 18h30, au 92, Avenue Habert de Montmort au Mesnil-Saint-Denis. Vous y verrez notre décoration et les collections de revêtements de sols et de murs.",
+  },
+  {
+    q: "Peut-on retirer un colis chez vous ?",
+    a: "Oui, le showroom est un point relais colis : Pickup, Chronopost, Colissimo et DPD. Le retrait et le dépôt se font aux horaires d'ouverture, du mardi au vendredi de 9h00 à 18h30.",
   },
   {
     q: "Le devis est-il vraiment gratuit ?",

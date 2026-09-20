@@ -2,10 +2,23 @@
  * DPM Marigot – Navbar
  * Direction « Le Nuancier » : bande de nuancier en tête, cube terre cuite,
  * bouton téléphone à ombre dure. Le numéro reste cliquable en permanence.
+ *
+ * 2026-09-21 : les réseaux sociaux entrent dans le header. Icônes lucide, donc
+ * du SVG inline — pas de police d'icônes. Les URL vivent dans src/reseaux.ts ;
+ * un réseau dont l'URL vaut `null` n'est pas rendu du tout (aujourd'hui :
+ * Instagram). Sur desktop elles s'intercalent entre la nav et le bouton
+ * téléphone ; sur mobile elles passent dans le menu burger, la barre étant
+ * déjà pleine à 375 px avec le cube, le bouton d'appel et le burger.
  */
 import { useState, useEffect } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
+import { RESEAUX_CONNUS } from "@/reseaux";
+
+const ICONE_RESEAU: Record<string, typeof Facebook> = {
+  Facebook,
+  Instagram,
+};
 
 const navLinks = [
   { label: "Services", href: "#services" },
@@ -75,8 +88,30 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Téléphone – toujours visible, toujours cliquable */}
+          {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
           <div className="flex items-center gap-3">
+            {RESEAUX_CONNUS.length > 0 && (
+              <ul className="hidden lg:flex items-center gap-1.5 mr-1">
+                {RESEAUX_CONNUS.map((r) => {
+                  const Icone = ICONE_RESEAU[r.nom];
+                  return (
+                    <li key={r.nom}>
+                      <a
+                        href={r.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={r.libelle}
+                        title={r.nom}
+                        className="inline-flex items-center justify-center w-9 h-9 border-2 border-encre text-encre hover:bg-encre hover:text-creme transition-colors"
+                      >
+                        <Icone size={17} aria-hidden />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
             <a
               href="tel:+33185830355"
               className="hidden md:inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-5 py-3 border-[3px] border-encre shadow-[5px_5px_0_var(--color-terre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-terre)] transition-all whitespace-nowrap"
@@ -134,6 +169,28 @@ export default function Navbar() {
                 <span className="cta-arrow">→</span>
               </a>
             </div>
+
+            {RESEAUX_CONNUS.length > 0 && (
+              <ul className="flex items-center gap-2.5 pt-4 mt-2 border-t-2 border-encre/15">
+                {RESEAUX_CONNUS.map((r) => {
+                  const Icone = ICONE_RESEAU[r.nom];
+                  return (
+                    <li key={r.nom}>
+                      <a
+                        href={r.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={r.libelle}
+                        className="inline-flex items-center gap-2.5 px-3 py-2.5 border-2 border-encre text-encre text-sm font-medium"
+                      >
+                        <Icone size={17} aria-hidden />
+                        {r.nom}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
       )}

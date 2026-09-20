@@ -2,17 +2,31 @@
  * DPM Marigot – Footer
  * Direction « Le Nuancier » : bande de nuancier inversée, bandeau de rappel terre
  * cuite, puis pied encre. Le téléphone est cliquable ici aussi (4e emplacement).
+ *
+ * 2026-09-21 : les horaires rejoignent le bloc de contact, le point relais colis
+ * rejoint la colonne Services (avec sa propre ancre, ce n'est pas un métier), et
+ * les réseaux ne sont plus écrits en dur — ils viennent de src/reseaux.ts, comme
+ * dans la Navbar.
  */
-import { ArrowRight, Phone, Mail, MapPin, Facebook } from "lucide-react";
+import { ArrowRight, Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
+import { RESEAUX_CONNUS } from "@/reseaux";
 
-const services = [
-  "Peinture intérieure",
-  "Peinture extérieure",
-  "Décoration",
-  "Sols & murs",
-  "Menuiserie",
-  "Dégâts des eaux",
+const ICONE_RESEAU: Record<string, typeof Facebook> = {
+  Facebook,
+  Instagram,
+};
+
+// Les six premiers pointent vers « 01 — Nos métiers ». Le point relais colis
+// n'est pas un métier : il a son propre bandeau, et sa propre ancre.
+const services: { label: string; ancre: string }[] = [
+  { label: "Peinture intérieure", ancre: "#services" },
+  { label: "Peinture extérieure", ancre: "#services" },
+  { label: "Décoration", ancre: "#services" },
+  { label: "Sols & murs", ancre: "#services" },
+  { label: "Menuiserie", ancre: "#services" },
+  { label: "Dégâts des eaux", ancre: "#services" },
+  { label: "Point relais colis", ancre: "#relais-colis" },
 ];
 
 const zones = ["Yvelines (78)", "Paris (75)", "Hauts-de-Seine (92)", "Val-d'Oise (95)", "Essonne (91)"];
@@ -95,14 +109,25 @@ export default function Footer() {
                 <MapPin size={15} className="mt-0.5 shrink-0" />
                 92, Avenue Habert de Montmort — Le Mesnil-Saint-Denis (78)
               </span>
-              <a
-                href="https://www.facebook.com/dpmmarigot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-creme/65 hover:text-ocre transition-colors text-sm"
-              >
-                <Facebook size={15} /> Notre page Facebook
-              </a>
+              <span className="flex items-start gap-2.5 text-creme/65 text-sm">
+                <Clock size={15} className="mt-0.5 shrink-0" />
+                Du mardi au vendredi, 9h00 – 18h30
+              </span>
+              {RESEAUX_CONNUS.map((r) => {
+                const Icone = ICONE_RESEAU[r.nom];
+                return (
+                  <a
+                    key={r.nom}
+                    href={r.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={r.libelle}
+                    className="flex items-center gap-2.5 text-creme/65 hover:text-ocre transition-colors text-sm"
+                  >
+                    <Icone size={15} aria-hidden /> Notre page {r.nom}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -111,16 +136,16 @@ export default function Footer() {
             <p className="section-label text-ocre mb-4">Services</p>
             <ul className="flex flex-col gap-2.5">
               {services.map((s) => (
-                <li key={s}>
+                <li key={s.label}>
                   <a
-                    href="#services"
+                    href={s.ancre}
                     onClick={(e) => {
                       e.preventDefault();
-                      scrollTo("#services");
+                      scrollTo(s.ancre);
                     }}
                     className="text-creme/65 hover:text-creme transition-colors text-sm"
                   >
-                    {s}
+                    {s.label}
                   </a>
                 </li>
               ))}

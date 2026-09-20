@@ -8,6 +8,12 @@
  * Le pavé « Entreprise de confiance » a été retiré (stop-slop : « artisans
  * qualifiés », « entre de bonnes mains » ne prouvent rien) et remplacé par
  * l'adresse du showroom, qui est un fait.
+ *
+ * 2026-09-21 : les horaires rejoignent l'adresse ici aussi. C'est la deuxième
+ * des deux cartes qui portent l'adresse du showroom (l'autre est en
+ * WhyUsSection) ; une adresse sans horaires oblige à téléphoner pour savoir
+ * si c'est ouvert. Même valeur qu'en WhyUsSection, même source, même réserve
+ * sur la mention « sur RDV » de l'affiche.
  */
 import { MapPin, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -74,9 +80,13 @@ export default function MapSection() {
                 92, Avenue Habert de Montmort
               </p>
               <p className="text-encre/70 text-sm mt-1 mb-5">Le Mesnil-Saint-Denis (78)</p>
+              <div className="mb-5 pb-5 border-b-2 border-encre/15">
+                <p className="section-label text-taupe mb-1.5">Horaires</p>
+                <p className="text-encre text-sm font-bold">Du mardi au vendredi · 9h00 – 18h30</p>
+              </div>
               <p className="text-encre/70 text-sm leading-relaxed">
                 Ouvert au public. Venez voir les collections de revêtements de sols et de murs avant
-                de choisir.
+                de choisir — et retirez vos colis au passage.
               </p>
               <a
                 href="tel:+33185830355"

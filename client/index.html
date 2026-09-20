@@ -6,7 +6,7 @@
     <title>DPM Marigot – Peinture, décoration et menuiserie au Mesnil-Saint-Denis (78)</title>
     <meta
       name="description"
-      content="Peinture, décoration, menuiserie et revêtements de sols et murs au Mesnil-Saint-Denis (78). Showroom ouvert au public, spécialiste de la remise en état après dégât des eaux. Devis gratuit."
+      content="Peinture, décoration, menuiserie et revêtements de sols et murs au Mesnil-Saint-Denis (78). Showroom ouvert au public du mardi au vendredi, 9h-18h30, et point relais colis Pickup. Spécialiste de la remise en état après dégât des eaux. Devis gratuit."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,22 +15,36 @@
       rel="stylesheet"
     />
     <!-- SEO local : uniquement des informations vérifiées (cf. BUSINESS_INFO.md).
-         Pas de code postal ni d'horaires : non confirmés à la source. -->
+
+         2026-09-21 — deux ajouts, chacun adossé à une source du client :
+         · openingHours "Tu-Fr 09:00-18:30" — affiche fournie par DPM
+           (assets/partenaires et services.png) ET publication de leur page
+           Facebook, qui écrit « Ouvert du mardi au vendredi de 9h à 18h30 »
+           sans réserve. L'affiche ajoute « (*sauf RDV les mercredi et
+           vendredi) » : trop ambigu pour être balisé, en clarification.
+           Lundi et samedi ne sont annoncés par aucune source : ils ne sont
+           donc pas déclarés, ni ouverts ni fermés.
+         · postalCode "78320" — même publication Facebook, qui donne l'adresse
+           complète. Il manquait faute de source ; il en a une maintenant.
+         Le point relais colis est décrit, pas balisé : schema.org n'a pas de
+         type qui lui corresponde sans forcer. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "HomeAndConstructionBusiness",
         "name": "DPM Marigot",
-        "description": "Peinture, décoration, menuiserie et revêtements de sols et murs. Showroom ouvert au public au Mesnil-Saint-Denis. Remise en état après dégât des eaux.",
+        "description": "Peinture, décoration, menuiserie et revêtements de sols et murs. Showroom ouvert au public au Mesnil-Saint-Denis, également point relais colis (Pickup, Chronopost, Colissimo, DPD). Remise en état après dégât des eaux.",
         "telephone": "+33185830355",
         "email": "dpmmarigot@gmail.com",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "92, Avenue Habert de Montmort",
           "addressLocality": "Le Mesnil-Saint-Denis",
+          "postalCode": "78320",
           "addressRegion": "Île-de-France",
           "addressCountry": "FR"
         },
+        "openingHours": "Tu-Fr 09:00-18:30",
         "areaServed": "Île-de-France",
         "hasMap": "https://www.google.com/maps/search/?api=1&query=DPM+Marigot+92+Avenue+Habert+de+Montmort+Le+Mesnil-Saint-Denis",
         "sameAs": ["https://www.facebook.com/dpmmarigot"]

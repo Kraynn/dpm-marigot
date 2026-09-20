@@ -8,6 +8,17 @@
  * site : le showroom ouvert au public au Mesnil-Saint-Denis.
  * Copie passée au stop-slop : plus de « nous mettons un point d'honneur »,
  * « service irréprochable », « zéro stress », « entre de bonnes mains ».
+ *
+ * 2026-09-21 : les horaires entrent ici, à côté de l'adresse. Source =
+ * l'affiche du client (assets/partenaires et services.png), qui porte
+ * « Ouverture : du mardi au vendredi de 9h00 à 18h30 (*sauf RDV les mercredi
+ * et vendredi) ». Seule la plage est publiée : la parenthèse est ambiguë
+ * (jours fermés ? sur rendez-vous seulement ?) et part en clarification dans
+ * le mail du 22/09. Lundi et samedi ne sont pas mentionnés par l'affiche, donc
+ * ils ne sont pas annoncés — ni ouverts, ni fermés.
+ * La phrase « Venez nous rendre visite, sans rendez-vous » est retirée : elle
+ * contredisait cette parenthèse. Elle est remplacée par le point relais colis,
+ * l'autre moitié de l'affiche.
  */
 import { ArrowRight, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -69,15 +80,23 @@ export default function WhyUsSection() {
             </h2>
             <p className="text-encre/75 leading-relaxed max-w-lg">
               Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration et y
-              découvrir les diverses collections de revêtements de sols et de murs. Venez nous rendre
-              visite, sans rendez-vous.
+              découvrir les diverses collections de revêtements de sols et de murs. C'est aussi
+              votre point relais colis.
             </p>
 
-            <div className="mt-7 pt-6 border-t-2 border-encre/20">
-              <p className="font-display text-xl text-encre leading-tight">
-                92, Avenue Habert de Montmort
-              </p>
-              <p className="text-encre/70 text-sm mt-1">Le Mesnil-Saint-Denis (78)</p>
+            <div className="mt-7 pt-6 border-t-2 border-encre/20 flex flex-wrap gap-x-12 gap-y-5">
+              <div>
+                <p className="section-label text-taupe mb-2">Adresse</p>
+                <p className="font-display text-xl text-encre leading-tight">
+                  92, Avenue Habert de Montmort
+                </p>
+                <p className="text-encre/70 text-sm mt-1">Le Mesnil-Saint-Denis (78)</p>
+              </div>
+              <div>
+                <p className="section-label text-taupe mb-2">Horaires</p>
+                <p className="font-display text-xl text-encre leading-tight">9h00 – 18h30</p>
+                <p className="text-encre/70 text-sm mt-1">Du mardi au vendredi</p>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-4 mt-7">

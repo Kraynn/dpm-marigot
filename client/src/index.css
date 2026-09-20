@@ -441,6 +441,145 @@
   padding: 0.85rem 0;
 }
 
+/* ---- Onglets de la section Réalisations -----------------------------------
+   Le filet de 3 px est porté par la liste ; l'onglet actif le recouvre d'un
+   bloc encre qui descend dessus. Pas de coin arrondi, pas de fond gris : un
+   onglet, au sens propre. Le focus reste visible au clavier — c'est la
+   primitive Radix qui gère les flèches, pas nous. */
+.onglet-rea {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-encre) 60%, transparent);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.4rem;
+  margin-bottom: -3px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.onglet-rea:hover {
+  color: var(--color-encre);
+  border-bottom-color: var(--color-trait);
+}
+.onglet-rea[data-state="active"] {
+  color: var(--color-encre);
+  border-bottom-color: var(--color-terre);
+}
+.onglet-rea:focus-visible {
+  outline: 3px solid var(--color-prusse);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .onglet-rea {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ---- Bandeau point relais colis -------------------------------------------
+   Même grammaire que la barre partenaires — étiquette pleine qui ne bouge pas
+   à gauche, contenu à sa droite, une seule bordure (celle du bas, portée par
+   la section) — mais statique et sur fond crème : quatre logos tiennent dans
+   la largeur, et les deux barres qui se suivent doivent rester distinguables.
+   Étiquette prusse pour le service, ocre pour l'assurance. */
+.barre-relais {
+  display: flex;
+  align-items: stretch;
+  background: var(--color-creme);
+  overflow: hidden;
+}
+
+.br-etiquette {
+  flex: none;
+  display: flex;
+  align-items: center;
+  background: var(--color-prusse);
+  color: var(--color-creme);
+  border-right: 3px solid var(--color-encre);
+  padding: 0 1.1rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.br-corps {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  padding: 0.85rem 1.5rem;
+}
+
+.br-texte {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--color-encre) 75%, transparent);
+  margin: 0;
+}
+
+.br-logos {
+  display: flex;
+  align-items: center;
+  gap: 1.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Les deux dimensions viennent du composant, en variables. Elles sont imposées
+   toutes les deux : le ratio du SVG étant fixe, une seule suffirait, mais les
+   déclarer évite le saut de mise en page avant chargement. */
+.bl-logo {
+  height: var(--bl-h);
+  width: var(--bl-w);
+}
+
+/* Sur téléphone, l'étiquette verticale prenait la moitié de la barre et les
+   quatre logos passaient sous 60 px de large. La barre s'empile donc :
+   étiquette pleine largeur, puis le corps. */
+@media (max-width: 767px) {
+  .barre-relais {
+    flex-direction: column;
+  }
+  .br-etiquette {
+    border-right: 0;
+    border-bottom: 3px solid var(--color-encre);
+    padding: 0.55rem 1rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+  .br-corps {
+    padding: 1rem;
+    gap: 0.9rem 1.5rem;
+  }
+  /* À 390 px, les quatre logos à leur taille normale font 363 px pour 358
+     disponibles : le dernier retombait seul sur une deuxième ligne. Un cran
+     de moins les remet sur une seule. Le repli sur deux lignes reste possible
+     en dessous, il n'est simplement plus systématique. */
+  .br-logos {
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    row-gap: 0.9rem;
+  }
+  .bl-logo {
+    height: calc(var(--bl-h) * 0.82);
+    width: calc(var(--bl-w) * 0.82);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     animation: none;

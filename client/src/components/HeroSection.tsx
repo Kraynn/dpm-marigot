@@ -21,15 +21,28 @@ const PHOTO_PLAFOND = "/images/realisations/plafond-apres.jpg";
 
 const faits = [
   { label: "Showroom ouvert au public", fort: true },
+  { label: "Point relais colis", fort: false },
   { label: "Spécialiste dégât des eaux", fort: false },
   { label: "Sols & murs", fort: false },
   { label: "Devis gratuit", fort: false },
 ];
 
+// La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
+// donc son propre déclencheur, et sa propre prise en compte de
+// prefers-reduced-motion (2026-09-21, même raison que dans useScrollReveal).
+const sansAnimation = () =>
+  typeof window !== "undefined" && window.matchMedia
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+
 export default function HeroSection() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(sansAnimation);
 
   useEffect(() => {
+    if (sansAnimation()) {
+      setVisible(true);
+      return;
+    }
     const timer = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
@@ -68,7 +81,8 @@ export default function HeroSection() {
 
             <p className="text-lg text-encre/80 leading-relaxed max-w-lg mt-6">
               Peinture, décoration, menuiserie et revêtements de sols et murs. Notre showroom est
-              ouvert au public : venez voir, toucher et comparer les collections avant de décider.
+              ouvert au public : venez voir, toucher et comparer les collections avant de décider —
+              et récupérer vos colis, c'est aussi un point relais.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 mt-8">
