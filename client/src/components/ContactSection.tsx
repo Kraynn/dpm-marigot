@@ -112,7 +112,7 @@ export default function ContactSection() {
         >
           {/* Colonne gauche : accroche + contacts directs */}
           <div>
-            <p className="section-num text-ocre mb-2">05 — Devis</p>
+            <p className="section-num text-ocre mb-2">Devis</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-creme max-w-[13ch]">
               Parlons de votre chantier.
             </h2>

@@ -52,7 +52,7 @@ export default function ProcessSection() {
           }}
         >
           <div>
-            <p className="section-num text-ocre mb-2">03 — Comment ça se passe</p>
+            <p className="section-num text-ocre mb-2">Comment ça se passe</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-creme max-w-[14ch]">
               Votre chantier en trois étapes.
             </h2>

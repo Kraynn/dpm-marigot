@@ -19,6 +19,15 @@
  * La phrase « Venez nous rendre visite, sans rendez-vous » est retirée : elle
  * contredisait cette parenthèse. Elle est remplacée par le point relais colis,
  * l'autre moitié de l'affiche.
+ *
+ * 2026-09-21, second passage : la section et la bannière échangent leur
+ * contenu, à la demande de Silva. **L'adresse et les horaires remontent en
+ * bannière** — c'est ce qu'un visiteur de commerce cherche en premier — et
+ * cette section reçoit en échange le texte de présentation des métiers et les
+ * badges de réassurance. Elle gagne aussi l'id `#showroom` : le lien
+ * « Showroom » de l'en-tête et le bouton « Visiter le showroom » de la bannière
+ * pointaient jusqu'ici sur la carte, en bas de page ; ils arrivent maintenant
+ * ici, où le showroom est réellement décrit et montré.
  */
 import { ArrowRight, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -27,6 +36,15 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 // La section parle du showroom au 92 avenue Habert de Montmort, elle montre donc
 // la vitrine et son enseigne, pas un exemple de décoration.
 const PHOTO_SHOWROOM = "/images/showroom-devanture.webp";
+
+// Les badges de réassurance, descendus de la bannière le 2026-09-21.
+const faits = [
+  { label: "Showroom ouvert au public", fort: true },
+  { label: "Point relais colis", fort: false },
+  { label: "Spécialiste dégât des eaux", fort: false },
+  { label: "Sols & murs", fort: false },
+  { label: "Devis gratuit", fort: false },
+];
 
 const engagements = [
   {
@@ -64,7 +82,7 @@ export default function WhyUsSection() {
   };
 
   return (
-    <section className="bg-creme-2 py-20 lg:py-24 border-b-[3px] border-encre">
+    <section id="showroom" className="bg-creme-2 py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container" ref={ref}>
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
           <div
@@ -74,29 +92,25 @@ export default function WhyUsSection() {
               transition: "opacity 0.7s ease, transform 0.7s ease",
             }}
           >
-            <p className="section-num mb-2">04 — Le showroom</p>
+            <p className="section-num mb-2">Le showroom</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre mb-5 max-w-[15ch]">
               Une teinte ne se choisit pas sur un écran.
             </h2>
             <p className="text-encre/75 leading-relaxed max-w-lg">
-              Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration et y
-              découvrir les diverses collections de revêtements de sols et de murs. C'est aussi
-              votre point relais colis.
+              Peinture, décoration, menuiserie et revêtements de sols et murs. Notre showroom est
+              ouvert au public : venez voir, toucher et comparer les collections avant de décider —
+              et récupérer vos colis, c'est aussi un point relais.
             </p>
 
-            <div className="mt-7 pt-6 border-t-2 border-encre/20 flex flex-wrap gap-x-12 gap-y-5">
-              <div>
-                <p className="section-label text-taupe mb-2">Adresse</p>
-                <p className="font-display text-xl text-encre leading-tight">
-                  92, Avenue Habert de Montmort
-                </p>
-                <p className="text-encre/70 text-sm mt-1">Le Mesnil-Saint-Denis (78)</p>
-              </div>
-              <div>
-                <p className="section-label text-taupe mb-2">Horaires</p>
-                <p className="font-display text-xl text-encre leading-tight">9h00 – 18h30</p>
-                <p className="text-encre/70 text-sm mt-1">Du mardi au vendredi</p>
-              </div>
+            <div className="flex flex-wrap gap-2.5 mt-7">
+              {faits.map((f) => (
+                <span
+                  key={f.label}
+                  className={f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"}
+                >
+                  {f.label}
+                </span>
+              ))}
             </div>
 
             <div className="flex flex-wrap items-center gap-4 mt-7">

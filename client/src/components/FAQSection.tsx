@@ -75,7 +75,7 @@ export default function FAQSection() {
               transition: "opacity 0.6s ease, transform 0.6s ease",
             }}
           >
-            <p className="section-num mb-2">07 — Questions fréquentes</p>
+            <p className="section-num mb-2">Questions fréquentes</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre mb-5 max-w-[12ch]">
               Vous avez des questions ?
             </h2>

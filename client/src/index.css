@@ -548,7 +548,9 @@
     z-index: 5;
     left: 30%;
     top: 0;
-    transform: translateY(-58%) rotate(-2.2deg);
+    /* Même inclinaison que le polaroïd « Salle à manger · après », demandé par
+       Silva le 21/09 : les deux blocs penchent maintenant du même côté. */
+    transform: translateY(-58%) rotate(2.5deg);
     margin: 0;
     width: 268px;
     max-width: none;

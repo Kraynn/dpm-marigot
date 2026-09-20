@@ -9,6 +9,16 @@
  *   - la mention « +10 ans d'expérience terrain », non sourcée.
  * Remplacés par deux faits vérifiables : le showroom ouvert au public et la
  * spécialité dégât des eaux.
+ *
+ * 2026-09-21, second passage : la bannière et la section « Le showroom »
+ * échangent leur contenu, à la demande de Silva. La bannière prend le texte du
+ * showroom et surtout **l'adresse et les horaires**, qui étaient jusqu'ici à
+ * mi-page ; les badges de réassurance descendent en section showroom. Pour un
+ * commerce dont la moitié des visites cherchent « c'est où, c'est ouvert
+ * quand », ces deux lignes gagnent à être au-dessus de la ligne de flottaison.
+ * Les deux boutons restent ici — « Demander un devis » est la conversion, et
+ * Silva a demandé que « Visiter le showroom » reste aussi. Ce dernier ne pointe
+ * plus vers la carte mais vers la section showroom (#showroom).
  */
 import { useEffect, useState } from "react";
 import { ArrowRight, Phone } from "lucide-react";
@@ -18,14 +28,6 @@ import { ArrowRight, Phone } from "lucide-react";
 // mettait en avant le dégât, pas la reprise.
 const PHOTO_SALLE_A_MANGER = "/images/realisations/salle-a-manger-apres.jpg";
 const PHOTO_PLAFOND = "/images/realisations/plafond-apres.jpg";
-
-const faits = [
-  { label: "Showroom ouvert au public", fort: true },
-  { label: "Point relais colis", fort: false },
-  { label: "Spécialiste dégât des eaux", fort: false },
-  { label: "Sols & murs", fort: false },
-  { label: "Devis gratuit", fort: false },
-];
 
 // La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
 // donc son propre déclencheur, et sa propre prise en compte de
@@ -80,27 +82,34 @@ export default function HeroSection() {
             </h1>
 
             <p className="text-lg text-encre/80 leading-relaxed max-w-lg mt-6">
-              Peinture, décoration, menuiserie et revêtements de sols et murs. Notre showroom est
-              ouvert au public : venez voir, toucher et comparer les collections avant de décider —
-              et récupérer vos colis, c'est aussi un point relais.
+              Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration et y
+              découvrir les diverses collections de revêtements de sols et de murs. C'est aussi
+              votre point relais colis.
             </p>
+
+            <div className="mt-7 pt-6 border-t-2 border-encre/15 flex flex-wrap gap-x-12 gap-y-5">
+              <div>
+                <p className="section-label text-taupe mb-2">Adresse</p>
+                <p className="font-display text-xl text-encre leading-tight">
+                  92, Avenue Habert de Montmort
+                </p>
+                <p className="text-encre/70 text-sm mt-1">Le Mesnil-Saint-Denis (78)</p>
+              </div>
+              <div>
+                <p className="section-label text-taupe mb-2">Horaires</p>
+                <p className="font-display text-xl text-encre leading-tight">9h00 – 18h30</p>
+                <p className="text-encre/70 text-sm mt-1">Du mardi au vendredi</p>
+              </div>
+            </div>
 
             <div className="flex flex-wrap items-center gap-4 mt-8">
               <button onClick={() => scrollTo("#contact")} className="cta-btn text-base">
                 Demander un devis
                 <ArrowRight size={18} className="cta-arrow" />
               </button>
-              <button onClick={() => scrollTo("#localisation")} className="cta-btn-ghost text-base">
+              <button onClick={() => scrollTo("#showroom")} className="cta-btn-ghost text-base">
                 Visiter le showroom
               </button>
-            </div>
-
-            <div className="flex flex-wrap gap-2.5 mt-9">
-              {faits.map((f) => (
-                <span key={f.label} className={f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"}>
-                  {f.label}
-                </span>
-              ))}
             </div>
 
             <a

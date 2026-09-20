@@ -23,7 +23,7 @@ const ICONE_RESEAU: Record<string, typeof Facebook> = {
 const navLinks = [
   { label: "Services", href: "#services" },
   { label: "Réalisations", href: "#realisations" },
-  { label: "Showroom", href: "#localisation" },
+  { label: "Showroom", href: "#showroom" },
   { label: "Processus", href: "#processus" },
   { label: "Avis", href: "#avis" },
   { label: "FAQ", href: "#faq" },

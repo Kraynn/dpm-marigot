@@ -38,8 +38,8 @@ export default function Home() {
       <ProcessSection />
       <WhyUsSection />
       <PartenairesBand />
-      <ContactSection />
       <MapSection />
+      <ContactSection />
       <FAQSection />
       <Footer />
       <FloatingCTA />

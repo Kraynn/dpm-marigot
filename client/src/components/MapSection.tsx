@@ -35,7 +35,7 @@ export default function MapSection() {
           }}
         >
           <div>
-            <p className="section-num mb-2">06 — Zone d'intervention</p>
+            <p className="section-num mb-2">Zone d'intervention</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[15ch]">
               Basés au Mesnil-Saint-Denis.
             </h2>

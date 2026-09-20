@@ -203,7 +203,7 @@ export default function RealisationsGallery() {
       <div className="container">
         <div className="mb-12">
           <div>
-            <p className="section-num mb-2">02 — Réalisations</p>
+            <p className="section-num mb-2">Réalisations</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[14ch]">
               Nos chantiers, sans retouche.
             </h2>

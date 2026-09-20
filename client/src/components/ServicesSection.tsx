@@ -76,7 +76,7 @@ export default function ServicesSection() {
           }}
         >
           <div>
-            <p className="section-num mb-2">01 — Nos métiers</p>
+            <p className="section-num mb-2">Nos métiers</p>
             <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre max-w-[16ch]">
               Quatre savoir-faire, un seul interlocuteur.
             </h2>
