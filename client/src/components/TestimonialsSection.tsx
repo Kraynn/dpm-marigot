@@ -24,6 +24,11 @@
  *     C'est ce qui rend la sélection honnête, et le lien « voir plus d'avis »
  *     mène à la fiche complète.
  *
+ * 2026-09-21, plus tard : les deux avis sont désormais en texte intégral,
+ * relevés sur la fiche avec chaque « Plus » déplié (Playwright + Chrome ; un
+ * navigateur headless reçoit un affichage limité de Maps). Les retours à la
+ * ligne de l'auteur sont conservés (`whitespace-pre-line`).
+ *
  * Les trois repères de confiance (« Showroom au Mesnil-Saint-Denis », « Remise
  * en état après sinistre », « Un seul interlocuteur ») ont été retirés le
  * 21/09 à la demande de Silva : les trois faits qu'ils portaient sont déjà dits
@@ -66,16 +71,16 @@ const AVIS: Avis[] = [
     note: 5,
     quand: "il y a un an",
     texte:
-      "J'ai contacté DPM Marigot par hasard car je l'avais choisie pour un colis en relais pick up et je recherchais par ailleurs une entreprise sérieuse pour rénover une chambre suite à un dégât des eaux. J'ai donc demandé un devis et signé pour",
-    tronque: true,
+      "J'ai contacté DPM Marigot par hasard car je l'avais choisie pour un colis en relais pick up et je recherchais par ailleurs une entreprise sérieuse pour rénover une chambre suite à un dégât des eaux. J'ai donc demandé un devis et signé pour les travaux.\nJe suis très satisfaite de la prestation, tant sur le plan du relationnel que de la compétence technique : la responsable est conciliante et de bon conseil, les délais sont respectés et le technicien s'est montré aimable et efficace, le travail est soigné et le chantier laissé propre, rien à dire.\nJe recommande donc cette entreprise et n'hésiterai pas à faire de nouveau appel à eux en cas de besoin.",
+    tronque: false,
   },
   {
     auteur: "JB SP",
     note: 5,
     quand: "il y a un mois",
     texte:
-      "Entreprise mandatée par mon assurance suite à un dégât des eaux, les intervenants de Marigot se signalent d'abord par la qualité de leur contact humain, que ce soit les ouvriers ou le service client. Le travail a été réalisé correctement",
-    tronque: true,
+      "Entreprise mandatée par mon assurance suite à un dégât des eaux, les intervenants de Marigot se signalent d'abord par la qualité de leur contact humain, que ce soit les ouvriers ou le service client. Le travail a été réalisé correctement dans les délais malgré un contexte difficile (canicule), et les intervenants ont pris en compte mes contraintes personnelles.",
+    tronque: false,
   },
 ];
 
@@ -152,7 +157,7 @@ export default function TestimonialsSection() {
               }}
             >
               <Etoiles note={avis.note} />
-              <blockquote className="text-encre/80 text-sm leading-relaxed mt-4 grow">
+              <blockquote className="text-encre/80 text-sm leading-relaxed mt-4 grow whitespace-pre-line">
                 «&nbsp;{avis.texte}
                 {avis.tronque ? "…" : ""}&nbsp;»
               </blockquote>

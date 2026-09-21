@@ -42,12 +42,19 @@ import PartenairesBand from "@/components/PartenairesBand";
 const PHOTO_SHOWROOM = "/images/showroom-devanture.webp";
 
 // Les badges de réassurance, descendus de la bannière le 2026-09-21.
+// Rangés en deux lignes imposées (demande de Silva, même jour) : le lieu
+// d'abord, puis le devis suivi des spécialités. Chaque ligne peut encore
+// passer à la ligne sur un écran étroit.
 const faits = [
-  { label: "Showroom ouvert au public", fort: true },
-  { label: "Point relais colis", fort: false },
-  { label: "Spécialiste dégât des eaux", fort: false },
-  { label: "Sols & murs", fort: false },
-  { label: "Devis gratuit", fort: false },
+  [
+    { label: "Showroom ouvert au public", fort: true },
+    { label: "Point relais colis", fort: false },
+  ],
+  [
+    { label: "Devis gratuit", fort: false },
+    { label: "Spécialiste dégât des eaux", fort: false },
+    { label: "Sols & murs", fort: false },
+  ],
 ];
 
 const engagements = [
@@ -110,16 +117,20 @@ export default function WhyUsSection() {
               colis, c'est aussi un point relais.
             </p>
 
-            <div className="flex flex-wrap gap-2.5 mt-7">
-              {faits.map((f) => (
-                <span
-                  key={f.label}
-                  className={
-                    f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"
-                  }
-                >
-                  {f.label}
-                </span>
+            <div className="flex flex-col gap-2.5 mt-7">
+              {faits.map((ligne, i) => (
+                <div key={i} className="flex flex-wrap gap-2.5">
+                  {ligne.map((f) => (
+                    <span
+                      key={f.label}
+                      className={
+                        f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"
+                      }
+                    >
+                      {f.label}
+                    </span>
+                  ))}
+                </div>
               ))}
             </div>
 
