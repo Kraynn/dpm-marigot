@@ -86,7 +86,9 @@ function Etoiles({ note, taille = 15 }: { note: number; taille?: number }) {
         <Star
           key={n}
           size={taille}
-          className={n <= Math.round(note) ? "fill-encre text-encre" : "text-encre/25"}
+          className={
+            n <= Math.round(note) ? "fill-encre text-encre" : "text-encre/25"
+          }
         />
       ))}
     </span>
@@ -125,7 +127,9 @@ export default function TestimonialsSection() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6">
             <Etoiles note={NOTE.valeur} taille={20} />
             <p className="text-encre font-bold text-lg leading-none tabular-nums">
-              {NOTE.valeur.toLocaleString("fr-FR", { minimumFractionDigits: 1 })}
+              {NOTE.valeur.toLocaleString("fr-FR", {
+                minimumFractionDigits: 1,
+              })}
               <span className="text-encre/60 font-normal text-sm">
                 {" "}
                 · {NOTE.total} avis Google
@@ -153,7 +157,9 @@ export default function TestimonialsSection() {
                 {avis.tronque ? "…" : ""}&nbsp;»
               </blockquote>
               <figcaption className="mt-5 pt-4 border-t-2 border-encre/15">
-                <span className="block font-bold text-encre text-sm">{avis.auteur}</span>
+                <span className="block font-bold text-encre text-sm">
+                  {avis.auteur}
+                </span>
                 <span className="block text-encre/55 text-xs mt-0.5">
                   {avis.quand} · sur Google
                 </span>
@@ -162,63 +168,68 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
+        {/* 2026-09-21 : la bannière bleue et « Voir plus d'avis » passent sur
+            la même ligne pour gagner de la hauteur, demandé par Silva. Le texte
+            tient en une ligne, et les trois boutons se rangent à droite du texte
+            quand la largeur le permet (xl), dessous sinon — c'est flex-wrap qui
+            décide, sans point de rupture codé en dur. */}
         <div
-          className="flex justify-center mb-14"
-          style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease 0.35s" }}
+          className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(24px)",
+            transition: "opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s",
+          }}
         >
+          <div className="flex-1 min-w-0 bg-prusse text-creme border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)] p-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-5">
+            <div>
+              <h3 className="text-2xl text-creme mb-1.5">
+                Vous avez fait appel à nous ?
+              </h3>
+              <p className="text-creme/80 text-sm leading-relaxed">
+                Laissez-nous un avis si vous avez aimé notre travail.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={GOOGLE_ECRIRE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-creme text-encre font-bold text-sm px-5 py-3 border-[3px] border-encre hover:bg-ocre transition-colors"
+              >
+                <Star size={16} />
+                Sur Google
+              </a>
+              <a
+                href={RESEAUX.facebook.url ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-transparent text-creme font-bold text-sm px-5 py-3 border-[3px] border-creme hover:bg-creme hover:text-encre transition-colors"
+              >
+                <Facebook size={16} />
+                Sur Facebook
+              </a>
+              <a
+                href={RESEAUX.instagram.url ?? undefined}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-transparent text-creme font-bold text-sm px-5 py-3 border-[3px] border-creme hover:bg-creme hover:text-encre transition-colors"
+              >
+                <Instagram size={16} />
+                Sur Instagram
+              </a>
+            </div>
+          </div>
+
           <a
             href={GOOGLE_FICHE}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors"
+            className="self-center shrink-0 inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors whitespace-nowrap"
           >
             Voir plus d'avis
             <ArrowRight size={16} />
           </a>
-        </div>
-
-        <div
-          className="bg-prusse text-creme border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)] p-7"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(24px)",
-            transition: "opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s",
-          }}
-        >
-          <h3 className="text-2xl text-creme mb-3">Vous avez fait appel à nous ?</h3>
-          <p className="text-creme/80 text-sm leading-relaxed max-w-xl">
-            Chaque retour compte et aide les prochains clients à se décider. Un mot, là où ça vous
-            arrange.
-          </p>
-          <div className="flex flex-wrap gap-3 mt-6">
-            <a
-              href={GOOGLE_ECRIRE}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-creme text-encre font-bold text-sm px-5 py-3 border-[3px] border-encre hover:bg-ocre transition-colors"
-            >
-              <Star size={16} />
-              Sur Google
-            </a>
-            <a
-              href={RESEAUX.facebook.url ?? undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-transparent text-creme font-bold text-sm px-5 py-3 border-[3px] border-creme hover:bg-creme hover:text-encre transition-colors"
-            >
-              <Facebook size={16} />
-              Sur Facebook
-            </a>
-            <a
-              href={RESEAUX.instagram.url ?? undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-transparent text-creme font-bold text-sm px-5 py-3 border-[3px] border-creme hover:bg-creme hover:text-encre transition-colors"
-            >
-              <Instagram size={16} />
-              Sur Instagram
-            </a>
-          </div>
         </div>
 
         <div className="mt-12">

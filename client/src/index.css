@@ -490,15 +490,19 @@
 
    Sous 1024 px : en flux normal, pleine largeur, à plat. La gouttière où elle
    se loge n'existe plus, et sous 640 px la colonne collage de la bannière
-   disparaît tout à fait. */
+   disparaît tout à fait.
+
+   Agrandie d'environ 15 % le 21/09 à la demande de Silva (« un peu ») :
+   carte, enseigne Pickup et logos transporteurs, ces derniers par un
+   facteur 1,2 appliqué aux dimensions déclarées dans PointRelaisCard.tsx. */
 .carte-relais {
   background: #fff;
   border: 3px solid var(--color-encre);
   box-shadow: 8px 8px 0 var(--color-prusse);
-  padding: 1rem 1.25rem 1.15rem;
+  padding: 1.2rem 1.5rem 1.35rem;
   text-align: center;
   margin: 0 auto 2.5rem;
-  max-width: 320px;
+  max-width: 360px;
 }
 
 .cr-etiquette {
@@ -513,7 +517,7 @@
 
 .cr-pickup {
   display: block;
-  height: 44px;
+  height: 54px;
   width: auto;
   margin: 0 auto 0.95rem;
 }
@@ -524,7 +528,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.1rem;
+  gap: 1.3rem;
   margin: 0;
   padding: 0.9rem 0 0;
   list-style: none;
@@ -532,8 +536,8 @@
 }
 
 .cr-logo {
-  height: var(--cr-h);
-  width: var(--cr-w);
+  height: calc(var(--cr-h) * 1.2);
+  width: calc(var(--cr-w) * 1.2);
   max-width: none;
   object-fit: contain;
 }
@@ -552,7 +556,7 @@
        Silva le 21/09 : les deux blocs penchent maintenant du même côté. */
     transform: translateY(-58%) rotate(2.5deg);
     margin: 0;
-    width: 268px;
+    width: 300px;
     max-width: none;
   }
 }
@@ -560,7 +564,7 @@
 @media (min-width: 1280px) {
   .carte-relais {
     left: 32%;
-    width: 292px;
+    width: 330px;
   }
 }
 

@@ -40,6 +40,14 @@
  * le bandeau à 81 px, lui faisait perdre son rôle de respiration blanche entre
  * le showroom et le devis, et ne laissait que deux partenaires visibles sur
  * téléphone. Les logos détourés sont assez homogènes pour s'en passer.
+ *
+ * 5e passe le 2026-09-21 : le bandeau entre DANS la section showroom, dont il
+ * devient le pied. Silva voyait un vide entre la fin du showroom et la barre —
+ * c'était le padding bas de la section — et voulait que les partenaires
+ * s'affichent d'emblée quand on arrive par « Showroom » ou « Visiter le
+ * showroom ». Il est donc rendu par WhyUsSection, qui n'a plus de padding bas.
+ * Les traits s'inversent : le bandeau porte la bordure haute (le crème du
+ * showroom au-dessus), et la bordure basse est celle de la section.
  */
 
 type Partenaire = {
@@ -86,7 +94,7 @@ function Groupe({ copie = false }: { copie?: boolean }) {
 
 export default function PartenairesBand() {
   return (
-    <section aria-label="Nos partenaires" className="border-b-[3px] border-encre">
+    <div role="region" aria-label="Nos partenaires" className="border-t-[3px] border-encre">
       <div className="barre-partenaires">
         <p className="bp-etiquette">Nos partenaires</p>
         <div className="bandeau-partenaires">
@@ -96,6 +104,6 @@ export default function PartenairesBand() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

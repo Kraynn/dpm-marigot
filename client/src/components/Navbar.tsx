@@ -20,12 +20,13 @@ const ICONE_RESEAU: Record<string, typeof Facebook> = {
   Instagram,
 };
 
+// 2026-09-21 : « Avis » passe en tête et « Processus » sort de l'en-tête, à la
+// demande de Silva. La section Processus reste dans la page, sans lien direct.
 const navLinks = [
+  { label: "Avis", href: "#avis" },
   { label: "Services", href: "#services" },
   { label: "Réalisations", href: "#realisations" },
   { label: "Showroom", href: "#showroom" },
-  { label: "Processus", href: "#processus" },
-  { label: "Avis", href: "#avis" },
   { label: "FAQ", href: "#faq" },
 ];
 

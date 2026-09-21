@@ -28,9 +28,13 @@
  * « Showroom » de l'en-tête et le bouton « Visiter le showroom » de la bannière
  * pointaient jusqu'ici sur la carte, en bas de page ; ils arrivent maintenant
  * ici, où le showroom est réellement décrit et montré.
+ *
+ * 2026-09-21, troisième passage : le bandeau des partenaires devient le pied
+ * de cette section (voir PartenairesBand.tsx). Plus de padding bas ici.
  */
 import { ArrowRight, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import PartenairesBand from "@/components/PartenairesBand";
 
 // Le 2026-09-19 : la vraie devanture remplace une photo d'intérieur générique.
 // La section parle du showroom au 92 avenue Habert de Montmort, elle montre donc
@@ -82,9 +86,12 @@ export default function WhyUsSection() {
   };
 
   return (
-    <section id="showroom" className="bg-creme-2 py-20 lg:py-24 border-b-[3px] border-encre">
-      <div className="container" ref={ref}>
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
+    <section
+      id="showroom"
+      className="bg-creme-2 pt-20 lg:pt-24 border-b-[3px] border-encre"
+    >
+      <div className="container pb-10" ref={ref}>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-10 lg:mb-12">
           <div
             style={{
               opacity: visible ? 1 : 0,
@@ -93,20 +100,23 @@ export default function WhyUsSection() {
             }}
           >
             <p className="section-num mb-2">Le showroom</p>
-            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre mb-5 max-w-[15ch]">
+            <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre mb-5 max-w-[15ch] lg:max-w-[22ch]">
               Une teinte ne se choisit pas sur un écran.
             </h2>
             <p className="text-encre/75 leading-relaxed max-w-lg">
-              Peinture, décoration, menuiserie et revêtements de sols et murs. Notre showroom est
-              ouvert au public : venez voir, toucher et comparer les collections avant de décider —
-              et récupérer vos colis, c'est aussi un point relais.
+              Peinture, décoration, menuiserie et revêtements de sols et murs.
+              Notre showroom est ouvert au public : venez voir, toucher et
+              comparer les collections avant de décider — et récupérer vos
+              colis, c'est aussi un point relais.
             </p>
 
             <div className="flex flex-wrap gap-2.5 mt-7">
               {faits.map((f) => (
                 <span
                   key={f.label}
-                  className={f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"}
+                  className={
+                    f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"
+                  }
                 >
                   {f.label}
                 </span>
@@ -129,7 +139,9 @@ export default function WhyUsSection() {
             className="bg-white border-[3px] border-encre p-3 shadow-[9px_9px_0_var(--color-ocre)] rotate-[1.2deg]"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "rotate(1.2deg)" : "rotate(1.2deg) translateY(24px)",
+              transform: visible
+                ? "rotate(1.2deg)"
+                : "rotate(1.2deg) translateY(24px)",
               transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
             }}
           >
@@ -138,7 +150,7 @@ export default function WhyUsSection() {
               alt="La devanture du showroom DPM Marigot, enseigne « Travaux de rénovation intérieure », nuanciers et collections en vitrine"
               loading="lazy"
               decoding="async"
-              className="w-full h-[300px] lg:h-[360px] object-cover"
+              className="w-full h-[300px] lg:h-[320px] object-cover"
             />
             <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-3 pb-1 text-encre">
               Le showroom · 92 avenue Habert de Montmort
@@ -147,8 +159,11 @@ export default function WhyUsSection() {
         </div>
 
         <div
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-7 pt-12 border-t-[3px] border-encre"
-          style={{ opacity: visible ? 1 : 0, transition: "opacity 0.6s ease 0.35s" }}
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 pt-8 lg:pt-9 border-t-[3px] border-encre"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.6s ease 0.35s",
+          }}
         >
           {engagements.map((f, i) => (
             <div key={f.title} className="flex gap-4">
@@ -157,12 +172,18 @@ export default function WhyUsSection() {
               </span>
               <div>
                 <p className="font-bold text-encre text-sm">{f.title}</p>
-                <p className="text-encre/65 text-xs mt-1 leading-relaxed">{f.desc}</p>
+                <p className="text-encre/65 text-xs mt-1 leading-relaxed">
+                  {f.desc}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Les partenaires ferment la section (21/09) : le padding bas est porté
+          par le conteneur, pas par la section, pour que la barre touche le bord. */}
+      <PartenairesBand />
     </section>
   );
 }
