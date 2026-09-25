@@ -8,10 +8,23 @@
  *   → fiche PDF + envoi Resend à l'artisan + accusé au client
  *   → enregistrerLead → Supabase, table `leads` (région eu-west-3, Paris).
  *
- * Deux faits mesurés le 25/09 sur la production, qui fondent la section 7 :
- *   - aucun cookie n'est posé, localStorage et sessionStorage restent vides ;
- *   - la seule ressource tierce chargée sans action du visiteur est Google Fonts,
- *     la carte Google ne se chargeant plus que sur clic (MapSection.tsx).
+ * Section 7, état au 26/09/2026 — À LIRE AVANT DE LA MODIFIER.
+ *
+ * Mesuré sur la production le 25/09 : le site lui-même ne pose aucun cookie,
+ * localStorage et sessionStorage restent vides. En revanche la carte de la page
+ * d'accueil est repassée en chargement automatique (arbitrage d'Anthony du
+ * 26/09, cf. MapSection.tsx) : la page contacte donc un tiers dès son ouverture,
+ * et lui transmet l'adresse IP du visiteur sans action de sa part.
+ *
+ * La section 7 a été reformulée en conséquence, et elle est volontairement
+ * générique : elle ne nomme plus le fournisseur de la carte, sur demande
+ * d'Anthony. Elle dit en revanche que des contenus tiers sont chargés, qu'ils
+ * reçoivent l'adresse IP et qu'ils peuvent poser leurs propres cookies — ce qui
+ * est vrai et vérifiable.
+ *
+ * NE PAS y rétablir « ce site ne dépose aucun cookie » sans qualificatif, ni
+ * « aucune donnée n'est envoyée sans votre action » : les deux étaient exacts
+ * tant que la carte était derrière un clic, et sont devenus faux depuis.
  *
  * Créé le 25/09/2026.
  */
@@ -197,27 +210,18 @@ export default function Confidentialite() {
       <h2>7. Cookies et traceurs</h2>
       <div className="encadre">
         <p>
-          <strong>Ce site ne dépose aucun cookie</strong> et n'écrit rien dans la mémoire de
-          votre navigateur. Il n'y a ni mesure d'audience, ni pixel publicitaire, ni bouton de
-          réseau social traçant. C'est pourquoi vous ne voyez pas de bandeau de consentement :
-          il n'y a rien à consentir.
+          <strong>Ce site ne dépose aucun cookie de son fait</strong> et n'écrit rien dans la
+          mémoire de votre navigateur. Il n'y a ni mesure d'audience, ni pixel publicitaire, ni
+          bouton de réseau social traçant : nous ne suivons pas votre navigation.
         </p>
       </div>
       <p>
-        Deux ressources sont servies par des tiers, et méritent d'être nommées :
+        Certaines ressources de la page — polices de caractères, contenus intégrés — sont
+        servies par des prestataires tiers. Les afficher suppose que votre navigateur les
+        contacte, ce qui leur transmet votre adresse IP, et ces prestataires peuvent appliquer
+        leurs propres règles en matière de cookies. Vous pouvez vous y opposer par les réglages
+        de votre navigateur.
       </p>
-      <ul>
-        <li>
-          <strong>Google Fonts</strong> fournit les deux polices de caractères du site. Votre
-          adresse IP est transmise à Google pour les télécharger. Aucun cookie n'est posé.
-        </li>
-        <li>
-          <strong>La carte Google Maps</strong> de la page d'accueil{" "}
-          <strong>ne se charge pas toute seule</strong> : tant que vous ne cliquez pas sur
-          « Afficher la carte Google », aucune donnée n'est envoyée à Google. L'adresse et
-          l'itinéraire restent accessibles sans elle.
-        </li>
-      </ul>
 
       <h2>8. Sécurité</h2>
       <p>
