@@ -11,6 +11,7 @@
  * déjà pleine à 375 px avec le cube, le bouton d'appel et le burger.
  */
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
 import { RESEAUX_CONNUS } from "@/reseaux";
@@ -30,8 +31,29 @@ const navLinks = [
   { label: "FAQ", href: "#faq" },
 ];
 
+/**
+ * Vise une ancre, en attendant que l'accueil soit monté.
+ *
+ * Depuis une page légale, le clic déclenche d'abord une navigation : la section
+ * visée n'existe pas encore au moment du clic. On réessaie à chaque image, vingt
+ * fois au plus — largement assez pour un rendu, et borné pour ne jamais tourner
+ * en boucle si l'ancre n'existe pas du tout.
+ */
+function viserAncre(href: string, essaisRestants = 20) {
+  const el = document.querySelector(href);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+  if (essaisRestants > 0) {
+    requestAnimationFrame(() => viserAncre(href, essaisRestants - 1));
+  }
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [emplacement, naviguer] = useLocation();
+  const surAccueil = emplacement === "/";
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -40,10 +62,33 @@ export default function Navbar() {
     };
   }, [open]);
 
+  /**
+   * Les liens de la barre pointent tous vers des sections de l'accueil.
+   * Sur les pages légales (26/09/2026), ces sections n'existent pas : le
+   * `querySelector` rendait `null` et le clic ne faisait RIEN — six liens morts,
+   * logo compris, sur des pages dont on ne pouvait plus sortir autrement qu'avec
+   * le bouton « retour » du navigateur ou le lien en bas de page.
+   * Depuis une page légale, on revient donc d'abord à l'accueil, puis on vise.
+   */
   const handleLink = (href: string) => {
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (surAccueil) {
+      viserAncre(href);
+      return;
+    }
+    naviguer("/");
+    viserAncre(href);
+  };
+
+  /** Le logo ramène à l'accueil : en haut si on y est, sur l'accueil sinon. */
+  const handleLogo = () => {
+    setOpen(false);
+    if (surAccueil) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    naviguer("/");
+    window.scrollTo({ top: 0 });
   };
 
   return (
@@ -54,11 +99,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 lg:h-[74px] gap-4">
           {/* Marque – wordmark provisoire, le logo client reste à récupérer */}
           <a
-            href="#"
+            href="/"
+            aria-label="DPM Marigot — retour à l'accueil"
             className="flex items-center gap-3 shrink-0"
             onClick={(e) => {
               e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              handleLogo();
             }}
           >
             <span className="w-10 h-10 bg-terre border-[3px] border-encre shadow-[4px_4px_0_var(--color-encre)] grid place-items-center text-creme font-display text-lg -rotate-[3deg]">
@@ -77,7 +123,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={surAccueil ? link.href : `/${link.href}`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleLink(link.href);
@@ -147,7 +193,7 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={surAccueil ? link.href : `/${link.href}`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleLink(link.href);
@@ -159,7 +205,7 @@ export default function Navbar() {
             ))}
             <div className="pt-4 mt-2 border-t-2 border-encre">
               <a
-                href="#contact"
+                href={surAccueil ? "#contact" : "/#contact"}
                 onClick={(e) => {
                   e.preventDefault();
                   handleLink("#contact");
