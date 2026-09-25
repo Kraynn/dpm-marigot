@@ -38,6 +38,7 @@
  * Cette section sert aussi d'ancrage à la carte « Point relais » incrustée :
  * c'est elle qui porte `relative`. Voir PointRelaisCard.tsx.
  */
+import { useState } from "react";
 import { ArrowRight, Facebook, Instagram, Star } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import PointRelaisCard from "@/components/PointRelaisCard";
@@ -63,6 +64,21 @@ type Avis = {
   texte: string;
   /** vrai quand Google a coupé le texte : l'ellipse est alors de son fait */
   tronque: boolean;
+  /**
+   * Photo de profil, RELEVÉE sur la fiche Google le 26/09/2026 et servie par
+   * Google, jamais recopiée chez nous. Deux raisons de ne pas la réhéberger :
+   * on ne republie pas l'image d'une personne sur un site commercial, et une
+   * photo changée ou retirée doit disparaître d'ici aussi.
+   *
+   * Ce qu'on affiche est donc exactement ce que Google affiche. Au relevé,
+   * « JB SP » a une vraie photo et « Christine Verguet » le monogramme généré
+   * par Google — les deux sont repris tels quels, sans uniformisation.
+   *
+   * `null` = pas d'avatar relevé : la carte rend alors les initiales. On ne met
+   * JAMAIS une photo d'illustration à la place de quelqu'un (cf. l'épisode des
+   * avis inventés en tête de fichier).
+   */
+  avatar: string | null;
 };
 
 const AVIS: Avis[] = [
@@ -73,6 +89,8 @@ const AVIS: Avis[] = [
     texte:
       "J'ai contacté DPM Marigot par hasard car je l'avais choisie pour un colis en relais pick up et je recherchais par ailleurs une entreprise sérieuse pour rénover une chambre suite à un dégât des eaux. J'ai donc demandé un devis et signé pour les travaux.\nJe suis très satisfaite de la prestation, tant sur le plan du relationnel que de la compétence technique : la responsable est conciliante et de bon conseil, les délais sont respectés et le technicien s'est montré aimable et efficace, le travail est soigné et le chantier laissé propre, rien à dire.\nJe recommande donc cette entreprise et n'hésiterai pas à faire de nouveau appel à eux en cas de besoin.",
     tronque: false,
+    avatar:
+      "https://lh3.googleusercontent.com/a/ACg8ocISQ5RbnJWVZliQ8PNA1p2CXskEUes8FS7Dbq3af7IWwTxiuw=w144-h144-p-rp-mo-br100",
   },
   {
     auteur: "JB SP",
@@ -81,8 +99,75 @@ const AVIS: Avis[] = [
     texte:
       "Entreprise mandatée par mon assurance suite à un dégât des eaux, les intervenants de Marigot se signalent d'abord par la qualité de leur contact humain, que ce soit les ouvriers ou le service client. Le travail a été réalisé correctement dans les délais malgré un contexte difficile (canicule), et les intervenants ont pris en compte mes contraintes personnelles.",
     tronque: false,
+    avatar:
+      "https://lh3.googleusercontent.com/a-/ALV-UjUZMcQLnX66Luk5fxyvKpCArG5-uTUcGV7dL16Ce7z6MZL37qvV=w144-h144-p-rp-mo-br100",
   },
 ];
+
+/**
+ * Le « G » de Google, en SVG inline aux couleurs officielles.
+ * Inline plutôt qu'en image distante : c'est une requête tierce de moins, et le
+ * logo ne casse pas si Google change une URL.
+ */
+function MarqueGoogle() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 48 48" aria-hidden focusable="false">
+      <path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-2.7-.4-3.9H24v7.1h12.1c-.2 1.8-1.6 4.5-4.5 6.3l-.1.3 6.5 5 .5.1c4.1-3.8 6.6-9.4 6.6-15.9Z" />
+      <path fill="#34A853" d="M24 46c5.9 0 10.9-1.9 14.5-5.3l-6.9-5.4c-1.8 1.3-4.3 2.2-7.6 2.2-5.8 0-10.7-3.8-12.5-9.1l-.3.1-6.7 5.2-.1.3C7.9 41 15.4 46 24 46Z" />
+      <path fill="#FBBC05" d="M11.5 28.4c-.5-1.4-.7-2.9-.7-4.4 0-1.5.3-3 .7-4.4v-.3l-6.8-5.3-.2.1a22 22 0 0 0 0 19.8l7-5.5Z" />
+      <path fill="#EA4335" d="M24 10.5c4.1 0 6.9 1.8 8.5 3.3l6.2-6C34.9 4.3 29.9 2 24 2 15.4 2 7.9 7 4.5 14.1l7 5.5c1.8-5.3 6.7-9.1 12.5-9.1Z" />
+    </svg>
+  );
+}
+
+/** Initiales d'un nom, pour le repli quand la photo ne charge pas. */
+function initiales(nom: string) {
+  return nom
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((m) => m[0].toUpperCase())
+    .join("");
+}
+
+/**
+ * Photo de profil de l'auteur, servie par Google.
+ *
+ * `onError` est le point important : le jour où la personne change ou retire sa
+ * photo, l'URL rend une erreur. Sans repli on afficherait une image cassée sur
+ * le site d'un client ; avec, la carte retombe sur les initiales et personne ne
+ * voit rien. Même mécanique que le repli des photos de réalisations.
+ */
+function Avatar({ avis }: { avis: Avis }) {
+  const [casse, setCasse] = useState(false);
+  const montrerPhoto = Boolean(avis.avatar) && !casse;
+
+  return (
+    <span className="relative shrink-0">
+      <span className="absolute inset-0 translate-x-[3px] translate-y-[3px] rounded-full bg-terre" aria-hidden />
+      {montrerPhoto ? (
+        <img
+          src={avis.avatar as string}
+          alt=""
+          aria-hidden
+          width={52}
+          height={52}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setCasse(true)}
+          className="relative w-[52px] h-[52px] rounded-full border-[3px] border-encre object-cover bg-creme block"
+        />
+      ) : (
+        <span
+          aria-hidden
+          className="relative w-[52px] h-[52px] rounded-full border-[3px] border-encre bg-prusse text-creme grid place-items-center font-display text-lg leading-none"
+        >
+          {initiales(avis.auteur)}
+        </span>
+      )}
+    </span>
+  );
+}
 
 function Etoiles({ note, taille = 15 }: { note: number; taille?: number }) {
   return (
@@ -143,11 +228,17 @@ export default function TestimonialsSection() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-7 mb-10">
+        {/* 2026-09-26 : l'identité de l'auteur remonte EN TÊTE de la carte, avec
+            sa photo de profil Google. C'est l'ordre dans lequel un avis se lit —
+            on regarde qui parle avant ce qui est dit — et c'est ce qui donne sa
+            valeur à un avis nominatif. Les cartes ne sont plus étirées à la même
+            hauteur (`items-start`) : les deux avis n'ont pas la même longueur,
+            et forcer l'égalité creusait un vide sous le plus court. */}
+        <div className="grid md:grid-cols-2 items-start gap-7 mb-10">
           {AVIS.map((avis, i) => (
             <figure
               key={avis.auteur}
-              className="card-hard card-hard-prusse p-7 flex flex-col"
+              className="relative card-hard card-hard-prusse p-7 pt-8 overflow-hidden"
               style={{
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -156,19 +247,48 @@ export default function TestimonialsSection() {
                 }s`,
               }}
             >
-              <Etoiles note={avis.note} />
-              <blockquote className="text-encre/80 text-sm leading-relaxed mt-4 grow whitespace-pre-line">
-                «&nbsp;{avis.texte}
-                {avis.tronque ? "…" : ""}&nbsp;»
+              {/* Un filet de nuancier en tête de carte, comme la barre du site.
+                  Un guillemet en filigrane a été essayé le 26/09 : rogné par
+                  `overflow-hidden` et en collision avec la pastille Google, il
+                  ressemblait à un accident de mise en page. Retiré. */}
+              <span
+                aria-hidden
+                className="absolute top-0 left-0 right-0 h-[6px] flex"
+              >
+                <i className="flex-1 bg-terre" />
+                <i className="flex-1 bg-prusse" />
+                <i className="flex-1 bg-ocre" />
+                <i className="flex-1 bg-encre" />
+              </span>
+
+              <header className="relative flex items-start gap-4 pb-5 mb-5 border-b-2 border-encre/15">
+                <Avatar avis={avis} />
+                <div className="min-w-0 flex-1">
+                  <span className="block font-display text-lg text-encre leading-tight truncate">
+                    {avis.auteur}
+                  </span>
+                  {/* `whitespace-nowrap` sur l'ancienneté : sans lui, « il y a un
+                      mois » se coupait au milieu à 390 px. */}
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
+                    <Etoiles note={avis.note} taille={14} />
+                    <span className="text-encre/55 text-xs whitespace-nowrap">
+                      {avis.quand}
+                    </span>
+                  </span>
+                </div>
+                <span
+                  className="shrink-0 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.1em] text-encre/45 font-bold"
+                  title="Avis publié sur Google"
+                >
+                  <MarqueGoogle />
+                  <span className="hidden sm:inline">Google</span>
+                </span>
+              </header>
+
+              <blockquote className="relative text-encre/85 text-[0.94rem] leading-[1.75] whitespace-pre-line">
+                {avis.texte}
+                {avis.tronque ? "…" : ""}
               </blockquote>
-              <figcaption className="mt-5 pt-4 border-t-2 border-encre/15">
-                <span className="block font-bold text-encre text-sm">
-                  {avis.auteur}
-                </span>
-                <span className="block text-encre/55 text-xs mt-0.5">
-                  {avis.quand} · sur Google
-                </span>
-              </figcaption>
             </figure>
           ))}
         </div>
