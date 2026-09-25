@@ -7,10 +7,15 @@
  * RIEN ne doit être deviné ici — un SIRET inventé sur une page de mentions
  * légales est une fausse déclaration publiée.
  *
- * Même liste de manques que `asap-devis/app/pricing/dpm-marigot.json`
- * (clé `artisan._todo_legal`), qui bloque déjà l'envoi de devis contractuels.
+ * À rapprocher de `asap-devis/app/pricing/dpm-marigot.json` (clé `artisan._todo_legal`),
+ * qui bloque déjà l'envoi de devis contractuels pour un manque voisin. Les deux listes
+ * ne sont PAS identiques et il ne faut pas les croire interchangeables :
+ *   - `_todo_legal` réclame SIRET, APE, assurance décennale, médiateur, logo ;
+ *   - ici s'ajoutent la dénomination légale, la TVA et le directeur de la publication,
+ *     que la LCEN impose à une page de mentions légales et qu'un devis n'exige pas.
+ * Une seule réponse de DPM remplit les deux.
  *
- * Créé le 25/09/2026.
+ * Créé le 25/09/2026, complété le même jour (médiateur) après relecture adverse.
  */
 
 export type ChampLegal = string | null;
@@ -39,6 +44,21 @@ export const DPM = {
 
   /** Assurance décennale : assureur + n° de police + zone couverte. */
   assuranceDecennale: null as ChampLegal,
+
+  /**
+   * Médiateur de la consommation : nom et adresse (site ou postale).
+   *
+   * OBLIGATOIRE ici, et c'est le manque le plus facile à rater : DPM vend à des
+   * PARTICULIERS. L'article L.616-1 du code de la consommation impose à tout
+   * professionnel de communiquer les coordonnées du médiateur dont il relève, sur son
+   * site et sur ses documents contractuels. L'adhésion est payante et annuelle.
+   *
+   * Ne pas confondre avec le contrat ASap ↔ DPM, qui est B2B : là, aucun médiateur
+   * n'est requis, et les conditions de prestation le disent. Les deux coexistent.
+   *
+   * `artisan.mediateur` de la grille de prix ASap Devis porte le même manque.
+   */
+  mediateur: null as ChampLegal,
 
   /** Vérifiés et publiés sur le site depuis l'origine. */
   adresse: "92, Avenue Habert de Montmort, 78320 Le Mesnil-Saint-Denis",

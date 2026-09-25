@@ -83,7 +83,18 @@ export default function MentionsLegales() {
         Assurance décennale : <Champ valeur={DPM.assuranceDecennale} />
       </p>
 
-      <h2>6. Propriété intellectuelle</h2>
+      <h2>6. Médiation de la consommation</h2>
+      <p>
+        Conformément à l'article L.616-1 du code de la consommation, tout consommateur a
+        le droit de recourir gratuitement à un médiateur de la consommation en vue de la
+        résolution amiable d'un litige l'opposant à {DPM.nomCommercial}, après avoir tenté
+        de le résoudre directement auprès de l'entreprise.
+      </p>
+      <p>
+        Médiateur dont relève {DPM.nomCommercial} : <Champ valeur={DPM.mediateur} />
+      </p>
+
+      <h2>7. Propriété intellectuelle</h2>
       <p>
         L'ensemble des éléments composant ce site — structure, textes, photographies,
         graphismes, code — est protégé par le droit de la propriété intellectuelle. Toute
@@ -96,7 +107,7 @@ export default function MentionsLegales() {
         leurs titulaires respectifs et sont reproduits à des fins d'identification.
       </p>
 
-      <h2>7. Responsabilité</h2>
+      <h2>8. Responsabilité</h2>
       <p>
         {DPM.nomCommercial} s'efforce d'assurer l'exactitude des informations publiées sur ce
         site, sans pouvoir en garantir l'exhaustivité ni l'actualité permanente. Les prix,
@@ -104,14 +115,14 @@ export default function MentionsLegales() {
         offre contractuelle : seul un devis signé engage l'entreprise.
       </p>
 
-      <h2>8. Données personnelles</h2>
+      <h2>9. Données personnelles</h2>
       <p>
         Les traitements de données personnelles mis en œuvre par ce site, ainsi que l'absence de
         traceurs, sont décrits dans la{" "}
         <a href="/confidentialite">politique de confidentialité</a>.
       </p>
 
-      <h2>9. Signalement</h2>
+      <h2>10. Signalement</h2>
       <p>
         Toute demande relative à un contenu publié sur ce site peut être adressée à{" "}
         <a href={`mailto:${DPM.email}`}>{DPM.email}</a>. Elle sera examinée dans les meilleurs
