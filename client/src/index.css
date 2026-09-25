@@ -603,3 +603,107 @@
     display: none;
   }
 }
+
+/* ── Pages légales (25/09/2026) ─────────────────────────────
+   Un seul bloc de typographie pour les mentions légales et la politique de
+   confidentialité : ces pages sont du texte suivi, pas des sections vendeuses.
+   Volontairement en dehors de @layer components — elles ne composent avec rien. */
+.page-legale h2 {
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--color-encre);
+  margin-top: 2.75rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid color-mix(in srgb, var(--color-encre) 15%, transparent);
+}
+.page-legale h2:first-child {
+  margin-top: 0;
+}
+.page-legale h3 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-encre);
+  margin-top: 1.9rem;
+  margin-bottom: 0.5rem;
+}
+.page-legale p,
+.page-legale li {
+  color: color-mix(in srgb, var(--color-encre) 78%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+.page-legale p {
+  margin-bottom: 0.9rem;
+}
+.page-legale ul {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+}
+.page-legale ul li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+.page-legale ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-ocre);
+}
+.page-legale strong {
+  color: var(--color-encre);
+  font-weight: 700;
+}
+.page-legale a {
+  color: var(--color-terre);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.page-legale a:hover {
+  color: var(--color-encre);
+}
+.page-legale .encadre {
+  background: var(--color-creme);
+  border: 3px solid var(--color-encre);
+  box-shadow: 5px 5px 0 var(--color-ocre);
+  padding: 1.25rem 1.4rem;
+  margin: 1.4rem 0 1.6rem;
+}
+.page-legale .encadre p:last-child {
+  margin-bottom: 0;
+}
+.page-legale .tableau {
+  overflow-x: auto;
+  margin: 1.2rem 0 1.6rem;
+}
+.page-legale table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 34rem;
+}
+.page-legale th,
+.page-legale td {
+  border: 2px solid color-mix(in srgb, var(--color-encre) 15%, transparent);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  color: color-mix(in srgb, var(--color-encre) 78%, transparent);
+}
+.page-legale th {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-prusse);
+  background: var(--color-creme);
+}

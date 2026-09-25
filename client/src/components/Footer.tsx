@@ -8,6 +8,7 @@
  * les réseaux ne sont plus écrits en dur — ils viennent de src/reseaux.ts, comme
  * dans la Navbar.
  */
+import { Link } from "wouter";
 import { ArrowRight, Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
 import { RESEAUX_CONNUS } from "@/reseaux";
@@ -169,13 +170,21 @@ export default function Footer() {
           <p className="text-creme/45 text-xs">
             © {new Date().getFullYear()} DPM Marigot. Tous droits réservés.
           </p>
+          {/* 25/09/2026 : ces deux liens existaient en href="#" depuis l'origine.
+              Les pages existent maintenant. */}
           <div className="flex items-center gap-5">
-            <a href="#" className="text-creme/45 hover:text-creme/80 text-xs transition-colors">
+            <Link
+              href="/mentions-legales"
+              className="text-creme/45 hover:text-creme/80 text-xs transition-colors"
+            >
               Mentions légales
-            </a>
-            <a href="#" className="text-creme/45 hover:text-creme/80 text-xs transition-colors">
+            </Link>
+            <Link
+              href="/confidentialite"
+              className="text-creme/45 hover:text-creme/80 text-xs transition-colors"
+            >
               Politique de confidentialité
-            </a>
+            </Link>
           </div>
         </div>
       </div>

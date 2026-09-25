@@ -11,6 +11,7 @@
  * Tests associés : server/contact.sendQuote.test.ts
  */
 import { useState } from "react";
+import { Link } from "wouter";
 import { ArrowRight, Phone, Mail, MapPin, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -282,6 +283,22 @@ export default function ContactSection() {
 
                 <p className="text-xs text-taupe">
                   Réponse sous 72h. Devis gratuit et sans engagement.
+                </p>
+
+                {/* 25/09/2026 — information au sens de l'art. 13 du RGPD. Pas de case
+                    à cocher : la base légale est l'exécution de mesures précontractuelles
+                    prises à votre demande, pas le consentement. Une case obligatoire
+                    serait juridiquement fausse et ferait chuter le taux de remplissage. */}
+                <p className="text-xs text-taupe">
+                  Vos coordonnées servent uniquement à répondre à cette demande. Elles ne sont
+                  ni revendues, ni utilisées pour de la prospection.{" "}
+                  <Link
+                    href="/confidentialite"
+                    className="underline underline-offset-2 hover:text-encre transition-colors"
+                  >
+                    En savoir plus
+                  </Link>
+                  .
                 </p>
 
                 <button

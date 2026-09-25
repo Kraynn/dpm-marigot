@@ -39,9 +39,15 @@ export const appRouter = router({
 
         const { website: _hp, ...quoteData } = input;
 
+        // 25/09/2026 — minimisation : cette notification ne fait qu'un console.log,
+        // qui finit dans les journaux d'exécution de l'hébergeur. Y écrire le nom,
+        // le téléphone et l'email du demandeur créait une troisième copie de ses
+        // données personnelles, dans le seul endroit qu'on ne sait ni purger ni
+        // montrer à la personne concernée. Seuls restent le type de projet et le
+        // fait qu'un email a été fourni ou non — assez pour diagnostiquer.
         notifyOwner({
           title: "Nouvelle demande de devis",
-          content: `${quoteData.nom} — ${quoteData.projet}\nTél: ${quoteData.telephone}\nEmail: ${quoteData.email ?? "Non fourni"}`,
+          content: `projet: ${quoteData.projet} — email fourni: ${quoteData.email ? "oui" : "non"}`,
         });
 
         // ASap Devis (opt-in) : si le service central est configuré ET qu'il a
