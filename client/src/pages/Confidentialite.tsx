@@ -120,8 +120,9 @@ export default function Confidentialite() {
       </ul>
       <p>
         Vercel et Resend sont des sociétés établies aux États-Unis ; les transferts hors Union
-        européenne qu'elles impliquent sont encadrés par les garanties prévues à leurs contrats
-        de sous-traitance. La base de données, elle, ne quitte pas la France.
+        européenne qu'elles impliquent sont encadrés par les{" "}
+        <strong>clauses contractuelles types</strong> de la Commission européenne. Les données
+        enregistrées en base, elles, sont stockées à Paris.
       </p>
 
       <h2>4. Combien de temps</h2>
