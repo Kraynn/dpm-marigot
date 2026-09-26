@@ -60,7 +60,7 @@ export const DPM = {
    * le 26/09 qu'il n'y ait plus de section dédiée : la mention tient en une ligne
    * dans le bloc « Éditeur », mais elle reste — la LCEN l'exige.
    */
-  directeurPublication: "Gina Piavoux, représentant légal (président de la SAS)" as ChampLegal,
+  directeurPublication: "Gina PIAVOUX (LOPEZ), Président de SAS" as ChampLegal,
 
   /** Assurance décennale : assureur + n° de police + zone couverte. */
   assuranceDecennale: null as ChampLegal,

@@ -120,8 +120,8 @@ export default function MentionsLegales() {
 
       <h2>8. Données personnelles</h2>
       <p>
-        Les traitements de données personnelles mis en œuvre par ce site, ainsi que l'absence de
-        traceurs, sont décrits dans la{" "}
+        Les traitements de données personnelles mis en œuvre par ce site, ainsi que les cookies
+        et les ressources servies par des prestataires tiers, sont décrits dans la{" "}
         <a href="/confidentialite">politique de confidentialité</a>.
       </p>
 
