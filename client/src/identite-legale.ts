@@ -104,5 +104,13 @@ export const HEBERGEUR = {
   contact: "vercel.com/help",
 } as const;
 
+/**
+ * Adresse publique du site, citée par les deux pages légales. Domaine détenu par
+ * DPM (enregistré chez OVH), rattaché au projet Vercel le 26/09/2026. Ne pas
+ * déployer cette valeur avant que `https://dpmmarigot.fr` réponde avec un
+ * certificat valide : une page légale ne doit pas nommer une adresse morte.
+ */
+export const ADRESSE_SITE = "dpmmarigot.fr";
+
 /** Date de version affichée en tête des deux pages légales. */
 export const VERSION_LEGALE = "25 septembre 2026";

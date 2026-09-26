@@ -11,7 +11,7 @@
  * la LCEN l'exige.
  */
 import PageLegale, { Champ } from "@/components/PageLegale";
-import { DPM, EDITEUR_TECHNIQUE, HEBERGEUR } from "@/identite-legale";
+import { ADRESSE_SITE, DPM, EDITEUR_TECHNIQUE, HEBERGEUR } from "@/identite-legale";
 
 export default function MentionsLegales() {
   return (
@@ -21,7 +21,7 @@ export default function MentionsLegales() {
     >
       <h2>1. Éditeur du site</h2>
       <p>
-        Le site accessible à l'adresse <strong>dpm-marigot.vercel.app</strong> est édité par :
+        Le site accessible à l'adresse <strong>{ADRESSE_SITE}</strong> est édité par :
       </p>
       <ul>
         <li>
