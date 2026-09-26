@@ -93,6 +93,11 @@ export default function Confidentialite() {
         </table>
       </div>
       <p>
+        <strong>À noter :</strong> le message libre sert à décrire votre chantier. Merci de
+        n'y inscrire aucune donnée personnelle superflue — informations de santé, coordonnées
+        bancaires, numéros de pièce d'identité ou données concernant d'autres personnes.
+      </p>
+      <p>
         <strong>Finalité :</strong> répondre à votre demande et, le cas échéant, établir un
         devis.
       </p>
@@ -131,12 +136,6 @@ export default function Confidentialite() {
           l'e-mail échoue, pour qu'elle ne soit pas perdue.
         </li>
       </ul>
-      <p>
-        Vercel et Resend sont des sociétés établies aux États-Unis ; les transferts hors Union
-        européenne qu'elles impliquent sont encadrés par les{" "}
-        <strong>clauses contractuelles types</strong> de la Commission européenne. Les données
-        enregistrées en base, elles, sont stockées à Paris.
-      </p>
 
       <h2>4. Combien de temps</h2>
       <div className="tableau">

@@ -2,7 +2,7 @@
 
 ## Contact Information
 - **Phone**: +33 1 85 83 03 55
-- **Email**: dpmmarigot@gmail.com
+- **Email**: contact@dpmmarigot.fr
 - **Address**: 92, Avenue Habert de Montmort, Le Mesnil-Saint-Denis (78), France
 - **Location**: Le Mesnil-Saint-Denis (78)
 

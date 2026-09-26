@@ -84,7 +84,7 @@ export const DPM = {
   adresse: "92, Avenue Habert de Montmort, 78320 Le Mesnil-Saint-Denis",
   telephone: "+33 1 85 83 03 55",
   telephoneAffiche: "01 85 83 03 55",
-  email: "dpmmarigot@gmail.com",
+  email: "contact@dpmmarigot.fr",
 } as const;
 
 /** Conception et maintenance du site. */

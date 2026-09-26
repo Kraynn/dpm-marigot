@@ -38,9 +38,9 @@ const contacts = [
   {
     icon: <Mail size={20} />,
     title: "E-mail",
-    value: "dpmmarigot@gmail.com",
+    value: "contact@dpmmarigot.fr",
     sub: "Réponse sous 72h",
-    href: "mailto:dpmmarigot@gmail.com",
+    href: "mailto:contact@dpmmarigot.fr",
     couleur: "bg-prusse",
   },
   {

@@ -193,6 +193,13 @@ export default function TestimonialsSection() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  /** Apparition commune de la bannière et du lien, après les deux cartes. */
+  const apparition = {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(24px)",
+    transition: "opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s",
+  };
+
   return (
     <section
       id="avis"
@@ -233,8 +240,16 @@ export default function TestimonialsSection() {
             on regarde qui parle avant ce qui est dit — et c'est ce qui donne sa
             valeur à un avis nominatif. Les cartes ne sont plus étirées à la même
             hauteur (`items-start`) : les deux avis n'ont pas la même longueur,
-            et forcer l'égalité creusait un vide sous le plus court. */}
-        <div className="grid md:grid-cols-2 items-start gap-7 mb-10">
+            et forcer l'égalité creusait un vide sous le plus court.
+
+            2026-09-27, demandé par Anthony : en desktop (lg), le second avis
+            s'arrête au même bord droit que la bannière « Vous avez fait appel à
+            nous ? » — plus étroit, donc plus haut. Cartes, bannière et lien
+            partagent pour ça une seule grille à trois colonnes : la première
+            garde sa demi-largeur d'avant (50 % moins la demi-gouttière), la
+            deuxième est ce qui reste avant la colonne du lien « Voir plus
+            d'avis ». L'alignement tient sans largeur codée en dur. */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-[calc(50%-0.875rem)_minmax(0,1fr)_auto] items-start gap-7 lg:gap-y-10">
           {AVIS.map((avis, i) => (
             <figure
               key={avis.auteur}
@@ -291,22 +306,16 @@ export default function TestimonialsSection() {
               </blockquote>
             </figure>
           ))}
-        </div>
 
-        {/* 2026-09-21 : la bannière bleue et « Voir plus d'avis » passent sur
-            la même ligne pour gagner de la hauteur, demandé par Silva. Le texte
-            tient en une ligne, et les trois boutons se rangent à droite du texte
-            quand la largeur le permet (xl), dessous sinon — c'est flex-wrap qui
-            décide, sans point de rupture codé en dur. */}
-        <div
-          className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(24px)",
-            transition: "opacity 0.6s ease 0.35s, transform 0.6s ease 0.35s",
-          }}
-        >
-          <div className="flex-1 min-w-0 bg-prusse text-creme border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)] p-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-5">
+          {/* 2026-09-21 : la bannière bleue et « Voir plus d'avis » passent sur
+              la même ligne pour gagner de la hauteur, demandé par Silva. Le texte
+              tient en une ligne, et les trois boutons se rangent à droite du texte
+              quand la largeur le permet (xl), dessous sinon — c'est flex-wrap qui
+              décide, sans point de rupture codé en dur. */}
+          <div
+            className="md:col-span-2 mt-3 lg:mt-0 min-w-0 bg-prusse text-creme border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)] p-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-5"
+            style={apparition}
+          >
             <div>
               <h3 className="text-2xl text-creme mb-1.5">
                 Vous avez fait appel à nous ?
@@ -350,7 +359,8 @@ export default function TestimonialsSection() {
             href={GOOGLE_FICHE}
             target="_blank"
             rel="noopener noreferrer"
-            className="self-center shrink-0 inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors whitespace-nowrap"
+            style={apparition}
+            className="md:col-span-2 lg:col-span-1 justify-self-center self-center inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors whitespace-nowrap"
           >
             Voir plus d'avis
             <ArrowRight size={16} />

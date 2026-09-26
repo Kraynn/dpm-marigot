@@ -101,10 +101,10 @@ export default function Footer() {
                 <Phone size={15} /> 01 85 83 03 55
               </a>
               <a
-                href="mailto:dpmmarigot@gmail.com"
+                href="mailto:contact@dpmmarigot.fr"
                 className="flex items-center gap-2.5 text-creme/65 hover:text-ocre transition-colors text-sm"
               >
-                <Mail size={15} /> dpmmarigot@gmail.com
+                <Mail size={15} /> contact@dpmmarigot.fr
               </a>
               <span className="flex items-start gap-2.5 text-creme/65 text-sm">
                 <MapPin size={15} className="mt-0.5 shrink-0" />
