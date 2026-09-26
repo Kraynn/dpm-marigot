@@ -13,9 +13,10 @@
  *   - `_todo_legal` réclame SIRET, APE, assurance décennale, médiateur, logo ;
  *   - ici s'ajoutent la dénomination légale, la TVA et le directeur de la publication,
  *     que la LCEN impose à une page de mentions légales et qu'un devis n'exige pas.
- * Une seule réponse de DPM remplit les deux.
  *
  * Créé le 25/09/2026, complété le même jour (médiateur) après relecture adverse.
+ * 26/09/2026 : identité remplie depuis le registre public. Restent à `null` les deux
+ * seules informations qu'aucun registre ne publie — assurance décennale et médiateur.
  */
 
 export type ChampLegal = string | null;
@@ -24,23 +25,42 @@ export const DPM = {
   /** Nom commercial, tel qu'il s'affiche partout sur le site. */
   nomCommercial: "DPM Marigot",
 
-  /** Dénomination légale exacte. Pour une entreprise individuelle, c'est le nom du titulaire. */
-  denominationLegale: null as ChampLegal,
+  /*
+   * Les sept champs suivants sont recopiés du registre public le 26/09/2026 —
+   * annuaire-entreprises.data.gouv.fr/entreprise/dpm-marigot-895094456 (sources
+   * INSEE, INPI, DGFiP), relus aussi par l'API recherche-entreprises.api.gouv.fr.
+   * Le registre dit SAS : la « micro-entreprise » que portait la grille de prix
+   * était fausse. En cas de doute, c'est le registre qui fait foi, pas ce fichier.
+   */
 
-  /** Forme juridique. La grille de prix indique « Entreprise individuelle (micro-entreprise) » — à confirmer par l'entreprise. */
-  formeJuridique: null as ChampLegal,
+  /** Dénomination sociale, telle qu'immatriculée. */
+  denominationLegale: "DPM MARIGOT" as ChampLegal,
+
+  /** Forme juridique. */
+  formeJuridique: "Société par actions simplifiée (SAS)" as ChampLegal,
+
+  /** Capital social — obligatoire pour une société inscrite au registre (LCEN art. 6-III). */
+  capital: "1 000 €" as ChampLegal,
+
+  /** Numéro d'immatriculation. Le registre ne nomme pas le greffe : on ne l'écrit pas. */
+  immatriculation: "RNE n° 895 094 456" as ChampLegal,
 
   /** SIRET du siège (14 chiffres). */
-  siret: null as ChampLegal,
+  siret: "895 094 456 00020" as ChampLegal,
 
   /** Code APE / NAF. */
-  ape: null as ChampLegal,
+  ape: "43.99C" as ChampLegal,
 
-  /** Numéro de TVA intracommunautaire, ou la mention de franchise applicable. */
-  tva: null as ChampLegal,
+  /** Numéro de TVA intracommunautaire. */
+  tva: "FR79 895 094 456" as ChampLegal,
 
-  /** Directeur de la publication (LCEN art. 6-III). */
-  directeurPublication: null as ChampLegal,
+  /**
+   * Directeur de la publication (LCEN art. 6-III) : le représentant légal.
+   * Le registre porte « PIAVOUX (LOPEZ) Gina, Président de SAS ». Anthony a demandé
+   * le 26/09 qu'il n'y ait plus de section dédiée : la mention tient en une ligne
+   * dans le bloc « Éditeur », mais elle reste — la LCEN l'exige.
+   */
+  directeurPublication: "Gina Piavoux, représentant légal (président de la SAS)" as ChampLegal,
 
   /** Assurance décennale : assureur + n° de police + zone couverte. */
   assuranceDecennale: null as ChampLegal,
