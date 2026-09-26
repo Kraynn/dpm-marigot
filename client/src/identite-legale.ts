@@ -105,4 +105,4 @@ export const HEBERGEUR = {
 } as const;
 
 /** Date de version affichée en tête des deux pages légales. */
-export const VERSION_LEGALE = "25 septembre 2026";
+export const VERSION_LEGALE = "26 septembre 2026";
