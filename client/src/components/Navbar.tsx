@@ -1,6 +1,6 @@
 /**
  * DPM Marigot – Navbar
- * Direction « Le Nuancier » : bande de nuancier en tête, cube terre cuite,
+ * Direction « Le Nuancier » : bande de nuancier en tête, logo du client (05/10/2026),
  * bouton téléphone à ombre dure. Le numéro reste cliquable en permanence.
  *
  * 2026-09-21 : les réseaux sociaux entrent dans le header. Icônes lucide, donc
@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
+import NuancierPopup, { BoutonNuancier, useNuancier } from "@/components/NuancierPopup";
 import { RESEAUX_CONNUS } from "@/reseaux";
 
 const ICONE_RESEAU: Record<string, typeof Facebook> = {
@@ -52,6 +53,8 @@ function viserAncre(href: string, essaisRestants = 20) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [nuancierOuvert, setNuancierOuvert] = useState(false);
+  const nuancier = useNuancier();
   const [emplacement, naviguer] = useLocation();
   const surAccueil = emplacement === "/";
 
@@ -97,29 +100,43 @@ export default function Navbar() {
 
       <div className="container">
         <div className="flex items-center justify-between h-16 lg:h-[74px] gap-4">
-          {/* Marque – wordmark provisoire, le logo client reste à récupérer */}
+          {/* Marque – logo du client (reçu le 05/10/2026, assets/mail_recu/).
+              Le rond vient du PDF vectoriel du logo, rendu en WebP 192 px
+              (affiché 44-52 px, donc net jusqu'en 3x). Le script « DPM Marigot »
+              est la police Alex Brush de l'adhésif de porte, convertie en tracés :
+              un SVG de 13 Ko, pas de police web à charger. */}
           <a
             href="/"
             aria-label="DPM Marigot — retour à l'accueil"
-            className="flex items-center gap-3 shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 min-w-0"
             onClick={(e) => {
               e.preventDefault();
               handleLogo();
             }}
           >
-            <span className="w-10 h-10 bg-terre border-[3px] border-encre shadow-[4px_4px_0_var(--color-encre)] grid place-items-center text-creme font-display text-lg -rotate-[3deg]">
-              D
-            </span>
-            <span className="hidden sm:block">
-              <span className="block font-display text-xl leading-tight text-encre">DPM Marigot</span>
-              <span className="block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight">
+            <img
+              src="/images/logo/logo-dpm-rond.webp"
+              alt=""
+              width={192}
+              height={192}
+              className="w-11 h-11 lg:w-[52px] lg:h-[52px] shrink-0"
+            />
+            <span className="flex flex-col min-w-0">
+              <img
+                src="/images/logo/logo-dpm-script.svg"
+                alt="DPM Marigot"
+                width={2040}
+                height={380}
+                className="h-[26px] lg:h-[34px] w-auto self-start"
+              />
+              <span className="hidden sm:block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight mt-0.5">
                 Décoration · Peinture · Menuiserie
               </span>
             </span>
           </a>
 
           {/* Navigation desktop */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -136,7 +153,11 @@ export default function Navbar() {
           </nav>
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 lg:gap-2 xl:gap-3">
+            {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre. */}
+            <span className="hidden lg:inline-flex">
+              <BoutonNuancier onOuvrir={() => setNuancierOuvert(true)} />
+            </span>
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="hidden lg:flex items-center gap-1.5 mr-1">
                 {RESEAUX_CONNUS.map((r) => {
@@ -161,7 +182,7 @@ export default function Navbar() {
 
             <a
               href="tel:+33185830355"
-              className="hidden md:inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-5 py-3 border-[3px] border-encre shadow-[5px_5px_0_var(--color-terre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-terre)] transition-all whitespace-nowrap"
+              className="hidden md:inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-5 lg:px-4 xl:px-5 py-3 border-[3px] border-encre shadow-[5px_5px_0_var(--color-terre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-terre)] transition-all whitespace-nowrap"
             >
               <Phone size={15} />
               01 85 83 03 55
@@ -238,9 +259,27 @@ export default function Navbar() {
                 })}
               </ul>
             )}
+
+            {/* Nuancier : sur mobile, la barre est pleine ; il vit au bas du menu. */}
+            <div className="pt-4">
+              <BoutonNuancier
+                variante="menu"
+                onOuvrir={() => {
+                  setOpen(false);
+                  setNuancierOuvert(true);
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
+
+      <NuancierPopup
+        ouvert={nuancierOuvert}
+        onFermer={() => setNuancierOuvert(false)}
+        actif={nuancier.actif}
+        choisir={nuancier.choisir}
+      />
     </header>
   );
 }

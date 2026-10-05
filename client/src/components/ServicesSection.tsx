@@ -8,8 +8,9 @@
  * servies par un CDN externe (d2xsxph8kpxj0f.cloudfront.net) qui répond 403 depuis :
  * ne jamais réintroduire de dépendance d'image hors du dépôt.
  */
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { TRAVAUX_RENOVATION } from "@/travaux";
 
 const FALLBACK_IMAGE = "/images/services/placeholder.jpg";
 
@@ -120,7 +121,7 @@ export default function ServicesSection() {
                 <p className="text-encre/70 text-sm leading-relaxed">{service.description}</p>
                 <ul className="mt-auto pt-2 flex flex-col gap-1.5">
                   {service.items.map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-encre/60">
+                    <li key={item} className="flex items-center gap-2 text-xs text-encre/75">
                       <span className={`w-1.5 h-1.5 shrink-0 ${service.puce}`} />
                       {item}
                     </li>
@@ -129,6 +130,29 @@ export default function ServicesSection() {
               </div>
             </article>
           ))}
+        </div>
+
+        {/* 05/10/2026 : la liste de l'adhésif vitrine du showroom, reprise mot pour
+            mot (assets/mail_recu/1-Adhésif Vitrine DPM Marigot.pdf). Six de ces
+            dix travaux n'apparaissaient nulle part sur le site. */}
+        <div
+          id="travaux"
+          className="card-hard card-hard-prusse p-6 lg:p-8 mb-12 scroll-mt-28"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(24px)",
+            transition: "opacity 0.6s ease 0.4s, transform 0.6s ease 0.4s",
+          }}
+        >
+          <h3 className="text-[1.6rem] leading-tight text-encre mb-5">Travaux de rénovation</h3>
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-5 gap-x-6 gap-y-2.5">
+            {TRAVAUX_RENOVATION.map((t) => (
+              <li key={t} className="flex items-start gap-2 text-sm text-encre">
+                <Check size={16} className="mt-0.5 shrink-0 text-prusse" aria-hidden />
+                {t}
+              </li>
+            ))}
+          </ul>
         </div>
 
         <button onClick={handleCTA} className="cta-btn text-base">

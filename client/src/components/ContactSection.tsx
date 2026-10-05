@@ -16,6 +16,10 @@ import { ArrowRight, Phone, Mail, MapPin, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { trpc } from "@/lib/trpc";
+import { TRAVAUX_RENOVATION } from "@/travaux";
+
+/** Travaux de l'adhésif déjà présents dans le menu sous un autre libellé. */
+const DEJA_COUVERTS: readonly string[] = ["Peinture, papier peint", "Menuiserie"];
 
 const projectTypes = [
   "Peinture intérieure",
@@ -23,6 +27,8 @@ const projectTypes = [
   "Décoration intérieure",
   "Menuiserie",
   "Rénovation après dégât des eaux",
+  // 05/10/2026 : les travaux de l'adhésif vitrine, sauf ceux déjà couverts ci-dessus
+  ...TRAVAUX_RENOVATION.filter((t) => !DEJA_COUVERTS.includes(t)),
   "Autre",
 ];
 
@@ -31,7 +37,7 @@ const contacts = [
     icon: <Phone size={20} />,
     title: "Appel direct",
     value: "01 85 83 03 55",
-    sub: "Du lundi au samedi",
+    sub: "Du mardi au vendredi, 9h00 – 18h30",
     href: "tel:+33185830355",
     couleur: "bg-terre",
   },
@@ -148,13 +154,13 @@ export default function ContactSection() {
                     {item.icon}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[11px] uppercase tracking-[0.14em] text-creme/50 font-bold">
+                    <span className="block text-[11px] uppercase tracking-[0.14em] text-creme/75 font-bold">
                       {item.title}
                     </span>
                     <span className="block text-creme font-bold text-sm truncate group-hover:text-ocre transition-colors">
                       {item.value}
                     </span>
-                    <span className="block text-creme/50 text-xs truncate">{item.sub}</span>
+                    <span className="block text-creme/70 text-xs truncate">{item.sub}</span>
                   </span>
                 </a>
               ))}

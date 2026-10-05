@@ -216,7 +216,7 @@ export default function TestimonialsSection() {
             transition: "opacity 0.6s ease, transform 0.6s ease",
           }}
         >
-          <p className="section-num mb-2">Ils nous ont fait confiance</p>
+          <p className="section-num text-encre mb-2">Ils nous ont fait confiance</p>
           <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre">
             Nos avis, tels quels.
           </h2>
@@ -227,7 +227,7 @@ export default function TestimonialsSection() {
               {NOTE.valeur.toLocaleString("fr-FR", {
                 minimumFractionDigits: 1,
               })}
-              <span className="text-encre/60 font-normal text-sm">
+              <span className="text-encre/75 font-normal text-sm">
                 {" "}
                 · {NOTE.total} avis Google
               </span>
@@ -286,13 +286,13 @@ export default function TestimonialsSection() {
                       mois » se coupait au milieu à 390 px. */}
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1.5">
                     <Etoiles note={avis.note} taille={14} />
-                    <span className="text-encre/55 text-xs whitespace-nowrap">
+                    <span className="text-encre/70 text-xs whitespace-nowrap">
                       {avis.quand}
                     </span>
                   </span>
                 </div>
                 <span
-                  className="shrink-0 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.1em] text-encre/45 font-bold"
+                  className="shrink-0 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-[0.1em] text-encre/65 font-bold"
                   title="Avis publié sur Google"
                 >
                   <MarqueGoogle />
@@ -320,7 +320,7 @@ export default function TestimonialsSection() {
               <h3 className="text-2xl text-creme mb-1.5">
                 Vous avez fait appel à nous ?
               </h3>
-              <p className="text-creme/80 text-sm leading-relaxed">
+              <p className="text-creme/90 text-sm leading-relaxed">
                 Laissez-nous un avis si vous avez aimé notre travail.
               </p>
             </div>

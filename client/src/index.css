@@ -14,7 +14,7 @@
      prusse   #1F3A52  menuiseries alu anthracite, poussées vers le bleu
      olive    #5E6B45  végétation vue par les baies
      crème    #F3EDE4  plafond repeint
-     taupe    #7A6E62  murs peints
+     taupe    #6F6458  murs peints (#7A6E62 jusqu'au 05/10/2026, assombri pour l'AA : 4,26 -> 4,96 sur la crème)
      encre    #1A1613
 
    Motif signature : la bande de nuancier (.nuancier-bar). DPM vend de la
@@ -32,7 +32,7 @@
   --color-ocre: #c99a3b;
   --color-prusse: #1f3a52;
   --color-olive: #5e6b45;
-  --color-taupe: #7a6e62;
+  --color-taupe: #6f6458;
   --color-trait: #d9cfc0;
   --font-display: "DM Serif Display", Georgia, serif;
   --font-sans: "Space Grotesk", system-ui, sans-serif;
@@ -94,7 +94,7 @@
   --secondary: #eae2d6;
   --secondary-foreground: #1a1613;
   --muted: #eae2d6;
-  --muted-foreground: #7a6e62;
+  --muted-foreground: #6f6458;
   --accent: #c99a3b;
   --accent-foreground: #1a1613;
   --destructive: #a8442f;
@@ -106,7 +106,7 @@
   --chart-2: #c99a3b;
   --chart-3: #1f3a52;
   --chart-4: #5e6b45;
-  --chart-5: #7a6e62;
+  --chart-5: #6f6458;
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1613;
   --sidebar-primary: #a8442f;
@@ -449,7 +449,7 @@
   appearance: none;
   border: 0;
   background: transparent;
-  color: color-mix(in srgb, var(--color-encre) 60%, transparent);
+  color: color-mix(in srgb, var(--color-encre) 72%, transparent);
   font-family: "Space Grotesk", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
@@ -705,4 +705,34 @@
   text-transform: uppercase;
   color: var(--color-prusse);
   background: var(--color-creme);
+}
+
+/* ── Nuancier : défileur de la liste des palettes (05/10/2026) ──
+   Règle de Silva du 03/10/2026 : une liste longue défile avec des bords fondus,
+   jamais de flèches ni de compteur. Le fondu n'apparaît que du côté où il reste
+   du contenu (classes au-debut / a-la-fin posées par NuancierPopup.tsx).
+   Modèle : .defil de diana/app/public/style.css. */
+@property --fondu-haut { syntax: "<length>"; inherits: false; initial-value: 34px; }
+@property --fondu-bas { syntax: "<length>"; inherits: false; initial-value: 34px; }
+.defil-nuancier {
+  --fondu-haut: 34px;
+  --fondu-bas: 34px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  /* place pour l'ombre portée de la vignette choisie, sinon rognée */
+  padding: 4px 8px 10px 2px;
+  margin: -4px -8px 0 -2px;
+  -webkit-mask-image: linear-gradient(transparent, #000 var(--fondu-haut), #000 calc(100% - var(--fondu-bas)), transparent);
+  mask-image: linear-gradient(transparent, #000 var(--fondu-haut), #000 calc(100% - var(--fondu-bas)), transparent);
+  transition: --fondu-haut 0.6s ease, --fondu-bas 0.6s ease;
+}
+.defil-nuancier::-webkit-scrollbar {
+  display: none;
+}
+.defil-nuancier.au-debut {
+  --fondu-haut: 0px;
+}
+.defil-nuancier.a-la-fin {
+  --fondu-bas: 0px;
 }
