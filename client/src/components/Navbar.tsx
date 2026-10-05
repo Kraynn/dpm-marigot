@@ -121,18 +121,15 @@ export default function Navbar() {
               height={192}
               className="w-11 h-11 lg:w-[52px] lg:h-[52px] shrink-0"
             />
-            <span className="flex flex-col min-w-0">
-              <img
-                src="/images/logo/logo-dpm-script.svg"
-                alt="DPM Marigot"
-                width={2040}
-                height={380}
-                className="h-[26px] lg:h-[34px] w-auto self-start"
-              />
-              <span className="hidden sm:block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight mt-0.5">
-                Décoration · Peinture · Menuiserie
-              </span>
-            </span>
+            {/* 05/10/2026 : le slogan « Décoration · Peinture · Menuiserie » quitte
+                l'en-tête pour la bannière, sous le grand logo (demande de Silva). */}
+            <img
+              src="/images/logo/logo-dpm-script.svg"
+              alt="DPM Marigot"
+              width={2040}
+              height={380}
+              className="h-[26px] lg:h-[34px] w-auto"
+            />
           </a>
 
           {/* Navigation desktop */}

@@ -1,7 +1,7 @@
 /**
  * DPM Marigot – Bannière d'accueil
- * Direction « Le Nuancier » : collage de photos inclinées, bande d'échantillons,
- * gros titre en DM Serif Display.
+ * Direction « Le Nuancier » : collage de photos inclinées, logo du client en titre
+ * (05/10/2026, à la place de « La couleur, ça se choisit en vrai. »).
  *
  * Contenu retiré le 2026-08-28 parce qu'invérifiable (cf. design-demos/brand-spec.md) :
  *   - la note « 4,5/5 · +10 clients satisfaits » et ses trois avatars fictifs
@@ -60,37 +60,7 @@ export default function HeroSection() {
       <div className="absolute -top-24 -right-32 w-[460px] h-[460px] rounded-full bg-ocre opacity-25 pointer-events-none" />
 
       <div className="container relative">
-        {/* 05/10/2026, demande de Silva : « le logo au milieu un peu en haut dans le
-            hero […] avec le nom dessus, on comprend direct où on est ». Rond puis
-            script, comme sur l'adhésif de porte. Le rond est servi en 192 ou 384 px
-            selon l'écran (rendus vectoriels du PDF, jamais agrandis). Le script est
-            posé en masque et peint en var(--color-encre) : il suit le nuancier. */}
-        <div
-          data-logo-banniere
-          className="flex flex-col items-center pt-8 lg:pt-10"
-          style={{
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.7s ease",
-          }}
-        >
-          <img
-            src="/images/logo/logo-dpm-rond.webp"
-            srcSet="/images/logo/logo-dpm-rond.webp 192w, /images/logo/logo-dpm-rond-384.webp 384w"
-            sizes="(min-width: 1024px) 128px, 96px"
-            alt=""
-            width={192}
-            height={192}
-            decoding="async"
-            className="w-24 h-24 lg:w-32 lg:h-32"
-          />
-          <span
-            role="img"
-            aria-label="DPM Marigot"
-            className="logo-script-masque block bg-encre h-[38px] lg:h-[48px] aspect-[2040/380] mt-2"
-          />
-        </div>
-
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center pt-8 pb-14 lg:pt-10 lg:pb-20">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center py-12 lg:py-16">
           {/* Colonne texte */}
           <div
             className="flex flex-col"
@@ -105,17 +75,37 @@ export default function HeroSection() {
               Le Mesnil-Saint-Denis · Yvelines
             </p>
 
-            <h1 className="text-[2.5rem] sm:text-5xl lg:text-[3.9rem] leading-[1.04] text-encre">
-              La couleur,
-              <br />
-              ça se choisit <em className="italic text-terre">en vrai.</em>
+            {/* 05/10/2026, demande de Silva : le titre « La couleur, ça se choisit en
+                vrai. » et le paragraphe du showroom laissent la place au logo, rond à
+                gauche et script à droite, avec le slogan dessous (retiré du header).
+                Le <h1> unique de la page porte un nom explicite pour les moteurs et
+                les lecteurs d'écran ; le visuel est masqué à l'arbre d'accessibilité.
+                Rond servi en 192 ou 384 px selon l'écran (rendus vectoriels du PDF,
+                jamais agrandis) ; script en masque, peint en couleur d'encre : il
+                suit le nuancier. */}
+            <h1 data-logo-banniere className="m-0">
+              <span className="sr-only">
+                DPM Marigot, décoration, peinture et menuiserie au Mesnil-Saint-Denis
+              </span>{" "}
+              <span aria-hidden="true" className="flex items-center gap-4 sm:gap-6">
+                <img
+                  src="/images/logo/logo-dpm-rond.webp"
+                  srcSet="/images/logo/logo-dpm-rond.webp 192w, /images/logo/logo-dpm-rond-384.webp 384w"
+                  sizes="(min-width: 1024px) 144px, (min-width: 640px) 120px, 92px"
+                  alt=""
+                  width={192}
+                  height={192}
+                  decoding="async"
+                  className="w-[92px] h-[92px] sm:w-[120px] sm:h-[120px] lg:w-36 lg:h-36 shrink-0"
+                />
+                <span className="flex flex-col min-w-0">
+                  <span className="logo-script-masque block bg-encre h-[42px] sm:h-[58px] lg:h-[72px] aspect-[2040/380] max-w-full" />
+                  <span className="block font-sans text-[10.5px] sm:text-xs lg:text-[13px] font-bold uppercase tracking-[0.14em] text-taupe mt-2 lg:mt-3">
+                    Décoration · Peinture · Menuiserie
+                  </span>
+                </span>
+              </span>
             </h1>
-
-            <p className="text-lg text-encre/80 leading-relaxed max-w-lg mt-6">
-              Notre showroom est ouvert au public. Vous pouvez y apprécier notre décoration et y
-              découvrir les diverses collections de revêtements de sols et de murs. C'est aussi
-              votre point relais colis.
-            </p>
 
             <div className="mt-7 pt-6 border-t-2 border-encre/15 flex flex-wrap gap-x-12 gap-y-5">
               <div>
