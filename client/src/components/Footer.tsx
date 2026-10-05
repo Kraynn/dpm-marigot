@@ -78,27 +78,23 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Marque */}
           <div className="lg:col-span-2">
-            {/* Logo du client sur un cartouche crème : le rond bleu pétrole et le
-                script sont faits pour un fond clair, ils disparaîtraient sur l'encre. */}
-            <div className="inline-flex items-center gap-3 mb-5 bg-creme border-[3px] border-creme px-4 py-3">
-              <img
-                src="/images/logo/logo-dpm-rond.webp"
-                alt=""
-                width={192}
-                height={192}
-                loading="lazy"
-                className="w-14 h-14 shrink-0"
-              />
-              <span className="flex flex-col">
-                <img
-                  src="/images/logo/logo-dpm-script.svg"
-                  alt="DPM Marigot"
-                  width={2040}
-                  height={380}
-                  loading="lazy"
-                  className="h-8 w-auto self-start"
-                />
-                <span className="block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight mt-1">
+            {/* 05/10/2026 : le cartouche crème est retiré (Silva : il cassait la couleur
+                du fond). Le logo se pose sur l'encre comme dans la bannière, rond à
+                gauche, script à droite, slogan dessous. Le rond bleu pétrole y serait
+                invisible (1,28:1) : il passe en monochrome clair par un masque
+                (logo-dpm-rond-masque.png, tiré du PDF ; le pinceau se lit en réserve),
+                peint en crème comme le script. Le slogan reprend l'ocre des titres
+                « Services » et « Zone d'intervention ». */}
+            <div
+              role="img"
+              aria-label="DPM Marigot — Décoration, peinture, menuiserie"
+              data-logo-pied
+              className="flex items-center gap-3.5 mb-5"
+            >
+              <span aria-hidden className="logo-rond-masque block bg-creme w-14 h-14 shrink-0" />
+              <span aria-hidden className="flex flex-col">
+                <span className="logo-script-masque block bg-creme h-8 aspect-[2040/380] self-start" />
+                <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-ocre leading-tight mt-1.5">
                   Décoration · Peinture · Menuiserie
                 </span>
               </span>

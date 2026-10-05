@@ -713,6 +713,11 @@
   -webkit-mask: url("/images/logo/logo-dpm-script.svg") center / contain no-repeat;
   mask: url("/images/logo/logo-dpm-script.svg") center / contain no-repeat;
 }
+/* Rond du logo en monochrome, pour un fond sombre (pied de page, 05/10/2026). */
+.logo-rond-masque {
+  -webkit-mask: url("/images/logo/logo-dpm-rond-masque.png") center / contain no-repeat;
+  mask: url("/images/logo/logo-dpm-rond-masque.png") center / contain no-repeat;
+}
 
 /* ── Nuancier : défileur de la liste des palettes (05/10/2026) ──
    Règle de Silva du 03/10/2026 : une liste longue défile avec des bords fondus,
