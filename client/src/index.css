@@ -707,6 +707,13 @@
   background: var(--color-creme);
 }
 
+/* ── Logo de la bannière (05/10/2026) : le script « DPM Marigot » sert de masque,
+   la couleur vient de la classe bg-* posée sur l'élément, donc du nuancier. ── */
+.logo-script-masque {
+  -webkit-mask: url("/images/logo/logo-dpm-script.svg") center / contain no-repeat;
+  mask: url("/images/logo/logo-dpm-script.svg") center / contain no-repeat;
+}
+
 /* ── Nuancier : défileur de la liste des palettes (05/10/2026) ──
    Règle de Silva du 03/10/2026 : une liste longue défile avec des bords fondus,
    jamais de flèches ni de compteur. Le fondu n'apparaît que du côté où il reste

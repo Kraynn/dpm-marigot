@@ -66,6 +66,22 @@ export const PALETTES: Palette[] = [
     sous: "Anthracite pour les boutons et bandeaux, touches terracotta",
     v: { creme: "#f8f5ef", creme2: "#ece6dc", encre: "#232322", terre: "#3d3c3a", terreDark: "#2a2928", ocre: "#efc6b3", prusse: "#8a3a22", olive: "#5c5a56", taupe: "#666159", trait: "#dcd5c9" },
   },
+  // 05/10/2026, demande de Silva : « deux nuanciers de plus en reprenant la couleur de
+  // fond des docs adhésif ». Papier mesuré sur les rendus des deux PDF (assets/mail_recu/) :
+  // valeur la plus fréquente #d8c0b0, ton foncé (p10) vers #b19684 / #ab9082, moyenne
+  // #bda79a / #c2a999 ; texte imprimé sur l'adhésif vitrine : #172f37.
+  {
+    id: "papier-vitrine",
+    nom: "Papier vitrine",
+    sous: "Fond papier des adhésifs, bleu pétrole du logo",
+    v: { creme: "#d8c0b0", creme2: "#c8ae9d", encre: "#0d1c21", terre: "#172f37", terreDark: "#0e1f25", ocre: "#fec868", prusse: "#24414b", olive: "#4f5a3a", taupe: "#4d4038", trait: "#b19684" },
+  },
+  {
+    id: "papier-terracotta",
+    nom: "Papier & terracotta",
+    sous: "Fond papier des adhésifs, terracotta et anthracite",
+    v: { creme: "#d8c0b0", creme2: "#f3ece3", encre: "#161413", terre: "#7a321d", terreDark: "#612816", ocre: "#f3ece3", prusse: "#3b3936", olive: "#5f5146", taupe: "#4d433b", trait: "#b19684" },
+  },
   {
     id: "logo",
     nom: "Couleurs du logo",

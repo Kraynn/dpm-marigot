@@ -60,7 +60,37 @@ export default function HeroSection() {
       <div className="absolute -top-24 -right-32 w-[460px] h-[460px] rounded-full bg-ocre opacity-25 pointer-events-none" />
 
       <div className="container relative">
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center py-14 lg:py-20">
+        {/* 05/10/2026, demande de Silva : « le logo au milieu un peu en haut dans le
+            hero […] avec le nom dessus, on comprend direct où on est ». Rond puis
+            script, comme sur l'adhésif de porte. Le rond est servi en 192 ou 384 px
+            selon l'écran (rendus vectoriels du PDF, jamais agrandis). Le script est
+            posé en masque et peint en var(--color-encre) : il suit le nuancier. */}
+        <div
+          data-logo-banniere
+          className="flex flex-col items-center pt-8 lg:pt-10"
+          style={{
+            opacity: visible ? 1 : 0,
+            transition: "opacity 0.7s ease",
+          }}
+        >
+          <img
+            src="/images/logo/logo-dpm-rond.webp"
+            srcSet="/images/logo/logo-dpm-rond.webp 192w, /images/logo/logo-dpm-rond-384.webp 384w"
+            sizes="(min-width: 1024px) 128px, 96px"
+            alt=""
+            width={192}
+            height={192}
+            decoding="async"
+            className="w-24 h-24 lg:w-32 lg:h-32"
+          />
+          <span
+            role="img"
+            aria-label="DPM Marigot"
+            className="logo-script-masque block bg-encre h-[38px] lg:h-[48px] aspect-[2040/380] mt-2"
+          />
+        </div>
+
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center pt-8 pb-14 lg:pt-10 lg:pb-20">
           {/* Colonne texte */}
           <div
             className="flex flex-col"
@@ -128,7 +158,7 @@ export default function HeroSection() {
             </a>
           </div>
 
-          {/* Collage : deux photos réelles inclinées + bande de nuancier */}
+          {/* Collage : deux photos réelles inclinées */}
           <div
             className="relative h-[420px] sm:h-[520px] lg:h-[540px] hidden sm:block"
             style={{
@@ -164,16 +194,9 @@ export default function HeroSection() {
                 Plafond · après
               </figcaption>
             </figure>
-
-            {/* Échantillons : les teintes du site viennent de ces photos */}
-            <div
-              className="absolute right-0 bottom-8 flex flex-col border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)]"
-              aria-hidden="true"
-            >
-              {["bg-terre", "bg-ocre", "bg-olive", "bg-prusse", "bg-taupe"].map((c) => (
-                <span key={c} className={`${c} w-[54px] h-9 block`} />
-              ))}
-            </div>
+            {/* 05/10/2026 : la colonne de cinq échantillons qui tenait ici est retirée,
+                à la demande de Silva (« ça sert à rien »). La bande de couleurs en
+                tête de page, au pied et sur les pages légales reste. */}
           </div>
         </div>
       </div>
