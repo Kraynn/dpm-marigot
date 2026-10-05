@@ -5,3 +5,6 @@ dist/
 .vercel/
 dpm-marigot/
 .vercel
+
+# Pieces brutes recues du client (PDF de 27 a 41 Mo) : jamais dans le depot
+assets/mail_recu/

@@ -8,7 +8,7 @@
  * focus reste dans le pop-up, et Échap le ferme. Un clic sur le voile le ferme
  * aussi. Les palettes et leur application vivent dans src/nuancier.ts.
  */
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { X, Check, Link2 } from "lucide-react";
 import {
   PALETTES,
@@ -76,7 +76,7 @@ export function BoutonNuancier({
       aria-label="Nuancier"
       aria-haspopup="dialog"
       title="Nuancier"
-      className="inline-flex items-center justify-center w-7 h-7 opacity-60 hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+      className="inline-flex items-center justify-center w-6 h-7 xl:w-7 opacity-60 hover:opacity-100 focus-visible:opacity-100 transition-opacity"
     >
       <Pastille />
     </button>
@@ -96,13 +96,30 @@ export default function NuancierPopup({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [copie, setCopie] = useState(false);
+  const defilRef = useRef<HTMLDivElement>(null);
+  // Fondu seulement du côté où il reste du contenu : au début, pas de fondu en haut ;
+  // à la fin, pas de fondu en bas ; liste entièrement visible, aucun fondu.
+  const [bords, setBords] = useState({ debut: true, fin: true });
+  const mesurer = useCallback(() => {
+    const el = defilRef.current;
+    if (!el) return;
+    const debut = el.scrollTop <= 1;
+    const fin = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+    setBords((b) => (b.debut === debut && b.fin === fin ? b : { debut, fin }));
+  }, []);
 
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (ouvert && !d.open) d.showModal();
     if (!ouvert && d.open) d.close();
-  }, [ouvert]);
+    if (ouvert) requestAnimationFrame(mesurer);
+  }, [ouvert, mesurer]);
+
+  useEffect(() => {
+    window.addEventListener("resize", mesurer);
+    return () => window.removeEventListener("resize", mesurer);
+  }, [mesurer]);
 
   const copierLien = async () => {
     const url = new URL(window.location.href);
@@ -146,8 +163,10 @@ export default function NuancierPopup({
       }}
       className="nuancier-dialog m-auto p-0 bg-transparent max-w-[min(760px,calc(100vw-24px))] w-full max-h-[calc(100dvh-24px)] backdrop:bg-encre/55"
     >
-      <div className="bg-creme text-encre border-[3px] border-encre shadow-[8px_8px_0_var(--color-encre)] p-5 sm:p-7 max-h-[calc(100dvh-36px)] overflow-y-auto">
-        <div className="flex items-start justify-between gap-4 mb-5">
+      {/* Titre et actions fixes ; seule la liste défile (règle de Silva du 03/10/2026 :
+          défileur aux bords fondus, sans flèches ni compteur). */}
+      <div className="bg-creme text-encre border-[3px] border-encre shadow-[8px_8px_0_var(--color-encre)] p-5 sm:p-7 max-h-[calc(100dvh-36px)] flex flex-col">
+        <div className="flex items-start justify-between gap-4 mb-4 shrink-0">
           <div>
             <h2 id="nuancier-titre" className="text-2xl sm:text-3xl leading-tight text-encre">
               Nuancier
@@ -167,47 +186,58 @@ export default function NuancierPopup({
           </button>
         </div>
 
-        <ul className="grid sm:grid-cols-2 gap-3">
-          {PALETTES.map((p) => {
-            const choisi = p.id === actif;
-            return (
-              <li key={p.id}>
-                <button
-                  type="button"
-                  aria-pressed={choisi}
-                  onClick={() => choisir(p.id)}
-                  className={`w-full text-left p-3.5 border-[3px] bg-white transition-shadow ${
-                    choisi
-                      ? "border-encre shadow-[5px_5px_0_var(--color-encre)]"
-                      : "border-encre/25 hover:border-encre"
-                  }`}
-                >
-                  <span className="flex gap-1.5 mb-2.5" aria-hidden>
-                    {pastilles(p.v).map((c, i) => (
-                      <i
-                        key={i}
-                        className="block w-8 h-8 border border-black/15"
-                        style={{ background: c }}
-                      />
-                    ))}
-                  </span>
-                  <span className="flex items-center gap-2 font-bold text-[0.95rem] text-[#1a1613]">
-                    {p.nom}
-                    {choisi && <Check size={16} aria-label="choisi" />}
-                  </span>
-                  <span className="block text-[13px] leading-snug text-[#4a443f] mt-0.5">{p.sous}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <div
+          ref={defilRef}
+          onScroll={mesurer}
+          className={`defil-nuancier min-h-0 flex-1 ${bords.debut ? "au-debut" : ""} ${bords.fin ? "a-la-fin" : ""}`}
+        >
+          <ul className="grid sm:grid-cols-2 gap-3">
+            {PALETTES.map((p) => {
+              const choisi = p.id === actif;
+              return (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    aria-pressed={choisi}
+                    data-palette={p.id}
+                    onClick={() => choisir(p.id)}
+                    className={`w-full text-left p-3.5 border-[3px] bg-white transition-shadow ${
+                      choisi
+                        ? "border-encre shadow-[5px_5px_0_var(--color-encre)]"
+                        : "border-encre/25 hover:border-encre"
+                    }`}
+                  >
+                    <span className="flex gap-1.5 mb-2.5" aria-hidden>
+                      {pastilles(p.v).map((c, i) => (
+                        <i
+                          key={i}
+                          className="block w-8 h-8 border border-black/15"
+                          style={{ background: c }}
+                        />
+                      ))}
+                    </span>
+                    <span className="flex items-center gap-2 font-bold text-[0.95rem] text-[#1a1613]">
+                      {p.nom}
+                      {choisi && <Check size={16} aria-label="choisi" />}
+                    </span>
+                    <span className="block text-[13px] leading-snug text-[#4a443f] mt-0.5">{p.sous}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
-        <div className="flex flex-wrap items-center gap-3 mt-6">
+        <div className="flex flex-wrap items-center gap-3 mt-4 shrink-0">
+          {/* aria-disabled plutôt que disabled : un bouton désactivé perd le focus,
+              qui retombait sur <body> juste après le clic. */}
           <button
             type="button"
-            onClick={() => choisir(NUANCIER_DEFAUT)}
-            disabled={actif === NUANCIER_DEFAUT}
-            className="cta-btn-ghost disabled:opacity-50 disabled:cursor-default"
+            onClick={() => {
+              if (actif !== NUANCIER_DEFAUT) choisir(NUANCIER_DEFAUT);
+            }}
+            aria-disabled={actif === NUANCIER_DEFAUT}
+            className="cta-btn-ghost aria-disabled:opacity-50 aria-disabled:cursor-default"
           >
             Revenir au site actuel
           </button>

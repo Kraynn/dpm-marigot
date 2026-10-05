@@ -136,7 +136,7 @@ export default function Navbar() {
           </a>
 
           {/* Navigation desktop */}
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -153,7 +153,7 @@ export default function Navbar() {
           </nav>
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 lg:gap-2 xl:gap-3">
             {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre. */}
             <span className="hidden lg:inline-flex">
               <BoutonNuancier onOuvrir={() => setNuancierOuvert(true)} />
@@ -182,7 +182,7 @@ export default function Navbar() {
 
             <a
               href="tel:+33185830355"
-              className="hidden md:inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-5 py-3 border-[3px] border-encre shadow-[5px_5px_0_var(--color-terre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-terre)] transition-all whitespace-nowrap"
+              className="hidden md:inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-5 lg:px-4 xl:px-5 py-3 border-[3px] border-encre shadow-[5px_5px_0_var(--color-terre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-terre)] transition-all whitespace-nowrap"
             >
               <Phone size={15} />
               01 85 83 03 55

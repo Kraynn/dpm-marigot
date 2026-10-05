@@ -16,6 +16,10 @@ import { ArrowRight, Phone, Mail, MapPin, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { trpc } from "@/lib/trpc";
+import { TRAVAUX_RENOVATION } from "@/travaux";
+
+/** Travaux de l'adhésif déjà présents dans le menu sous un autre libellé. */
+const DEJA_COUVERTS: readonly string[] = ["Peinture, papier peint", "Menuiserie"];
 
 const projectTypes = [
   "Peinture intérieure",
@@ -23,15 +27,8 @@ const projectTypes = [
   "Décoration intérieure",
   "Menuiserie",
   "Rénovation après dégât des eaux",
-  // 05/10/2026 : travaux de l'adhésif vitrine absents jusque-là (cf. src/travaux.ts)
-  "Rénovation de salle de bain",
-  "Carrelage, faïence",
-  "Revêtement de sol (dur et souple)",
-  "Rénovation parquet",
-  "Isolation, cloisons",
-  "Serrurerie",
-  "Plomberie",
-  "Électricité",
+  // 05/10/2026 : les travaux de l'adhésif vitrine, sauf ceux déjà couverts ci-dessus
+  ...TRAVAUX_RENOVATION.filter((t) => !DEJA_COUVERTS.includes(t)),
   "Autre",
 ];
 

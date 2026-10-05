@@ -706,3 +706,33 @@
   color: var(--color-prusse);
   background: var(--color-creme);
 }
+
+/* ── Nuancier : défileur de la liste des palettes (05/10/2026) ──
+   Règle de Silva du 03/10/2026 : une liste longue défile avec des bords fondus,
+   jamais de flèches ni de compteur. Le fondu n'apparaît que du côté où il reste
+   du contenu (classes au-debut / a-la-fin posées par NuancierPopup.tsx).
+   Modèle : .defil de diana/app/public/style.css. */
+@property --fondu-haut { syntax: "<length>"; inherits: false; initial-value: 34px; }
+@property --fondu-bas { syntax: "<length>"; inherits: false; initial-value: 34px; }
+.defil-nuancier {
+  --fondu-haut: 34px;
+  --fondu-bas: 34px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  /* place pour l'ombre portée de la vignette choisie, sinon rognée */
+  padding: 4px 8px 10px 2px;
+  margin: -4px -8px 0 -2px;
+  -webkit-mask-image: linear-gradient(transparent, #000 var(--fondu-haut), #000 calc(100% - var(--fondu-bas)), transparent);
+  mask-image: linear-gradient(transparent, #000 var(--fondu-haut), #000 calc(100% - var(--fondu-bas)), transparent);
+  transition: --fondu-haut 0.6s ease, --fondu-bas 0.6s ease;
+}
+.defil-nuancier::-webkit-scrollbar {
+  display: none;
+}
+.defil-nuancier.au-debut {
+  --fondu-haut: 0px;
+}
+.defil-nuancier.a-la-fin {
+  --fondu-bas: 0px;
+}
