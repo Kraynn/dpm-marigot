@@ -23,6 +23,15 @@ const projectTypes = [
   "Décoration intérieure",
   "Menuiserie",
   "Rénovation après dégât des eaux",
+  // 05/10/2026 : travaux de l'adhésif vitrine absents jusque-là (cf. src/travaux.ts)
+  "Rénovation de salle de bain",
+  "Carrelage, faïence",
+  "Revêtement de sol (dur et souple)",
+  "Rénovation parquet",
+  "Isolation, cloisons",
+  "Serrurerie",
+  "Plomberie",
+  "Électricité",
   "Autre",
 ];
 
@@ -31,7 +40,7 @@ const contacts = [
     icon: <Phone size={20} />,
     title: "Appel direct",
     value: "01 85 83 03 55",
-    sub: "Du lundi au samedi",
+    sub: "Du mardi au vendredi, 9h00 – 18h30",
     href: "tel:+33185830355",
     couleur: "bg-terre",
   },

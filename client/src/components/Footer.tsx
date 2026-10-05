@@ -27,6 +27,8 @@ const services: { label: string; ancre: string }[] = [
   { label: "Sols & murs", ancre: "#services" },
   { label: "Menuiserie", ancre: "#services" },
   { label: "Dégâts des eaux", ancre: "#services" },
+  // 05/10/2026 : la liste complète de l'adhésif vitrine, sous les cartes métiers
+  { label: "Tous nos travaux de rénovation", ancre: "#travaux" },
   { label: "Point relais colis", ancre: "#relais-colis" },
 ];
 
@@ -76,15 +78,27 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Marque */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-5">
-              <span className="w-10 h-10 bg-terre border-[3px] border-creme grid place-items-center text-creme font-display text-lg">
-                D
-              </span>
-              <span>
-                <span className="block font-display text-xl leading-tight text-creme">
-                  DPM Marigot
-                </span>
-                <span className="block text-[11px] uppercase tracking-[0.14em] text-creme/50 leading-tight">
+            {/* Logo du client sur un cartouche crème : le rond bleu pétrole et le
+                script sont faits pour un fond clair, ils disparaîtraient sur l'encre. */}
+            <div className="inline-flex items-center gap-3 mb-5 bg-creme border-[3px] border-creme px-4 py-3">
+              <img
+                src="/images/logo/logo-dpm-rond.webp"
+                alt=""
+                width={192}
+                height={192}
+                loading="lazy"
+                className="w-14 h-14 shrink-0"
+              />
+              <span className="flex flex-col">
+                <img
+                  src="/images/logo/logo-dpm-script.svg"
+                  alt="DPM Marigot"
+                  width={2040}
+                  height={380}
+                  loading="lazy"
+                  className="h-8 w-auto self-start"
+                />
+                <span className="block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight mt-1">
                   Décoration · Peinture · Menuiserie
                 </span>
               </span>

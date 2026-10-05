@@ -1,6 +1,6 @@
 /**
  * DPM Marigot – Navbar
- * Direction « Le Nuancier » : bande de nuancier en tête, cube terre cuite,
+ * Direction « Le Nuancier » : bande de nuancier en tête, logo du client (05/10/2026),
  * bouton téléphone à ombre dure. Le numéro reste cliquable en permanence.
  *
  * 2026-09-21 : les réseaux sociaux entrent dans le header. Icônes lucide, donc
@@ -97,22 +97,36 @@ export default function Navbar() {
 
       <div className="container">
         <div className="flex items-center justify-between h-16 lg:h-[74px] gap-4">
-          {/* Marque – wordmark provisoire, le logo client reste à récupérer */}
+          {/* Marque – logo du client (reçu le 05/10/2026, assets/mail_recu/).
+              Le rond vient du PDF vectoriel du logo, rendu en WebP 192 px
+              (affiché 44-52 px, donc net jusqu'en 3x). Le script « DPM Marigot »
+              est la police Alex Brush de l'adhésif de porte, convertie en tracés :
+              un SVG de 13 Ko, pas de police web à charger. */}
           <a
             href="/"
             aria-label="DPM Marigot — retour à l'accueil"
-            className="flex items-center gap-3 shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 shrink-0 min-w-0"
             onClick={(e) => {
               e.preventDefault();
               handleLogo();
             }}
           >
-            <span className="w-10 h-10 bg-terre border-[3px] border-encre shadow-[4px_4px_0_var(--color-encre)] grid place-items-center text-creme font-display text-lg -rotate-[3deg]">
-              D
-            </span>
-            <span className="hidden sm:block">
-              <span className="block font-display text-xl leading-tight text-encre">DPM Marigot</span>
-              <span className="block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight">
+            <img
+              src="/images/logo/logo-dpm-rond.webp"
+              alt=""
+              width={192}
+              height={192}
+              className="w-11 h-11 lg:w-[52px] lg:h-[52px] shrink-0"
+            />
+            <span className="flex flex-col min-w-0">
+              <img
+                src="/images/logo/logo-dpm-script.svg"
+                alt="DPM Marigot"
+                width={2040}
+                height={380}
+                className="h-[26px] lg:h-[34px] w-auto self-start"
+              />
+              <span className="hidden sm:block text-[11px] uppercase tracking-[0.14em] text-taupe leading-tight mt-0.5">
                 Décoration · Peinture · Menuiserie
               </span>
             </span>
