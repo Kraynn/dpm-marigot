@@ -74,7 +74,11 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="container py-14">
+      {/* Marge basse = place des boutons flottants (FloatingCTA) en bas de page :
+          sous 1024 px, barre « Appeler / Devis » de 79 px et WhatsApp jusqu'à 144 px
+          du bas ; au-delà, WhatsApp jusqu'à 78 px du bas. Sans elle, ils recouvraient
+          « Mentions légales » et « Politique de confidentialité » (05/10/2026). */}
+      <div className="container pt-14 pb-[168px] lg:pb-24">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Marque */}
           <div className="lg:col-span-2">
