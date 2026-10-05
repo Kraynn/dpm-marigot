@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
+import NuancierPopup, { BoutonNuancier, useNuancier } from "@/components/NuancierPopup";
 import { RESEAUX_CONNUS } from "@/reseaux";
 
 const ICONE_RESEAU: Record<string, typeof Facebook> = {
@@ -52,6 +53,8 @@ function viserAncre(href: string, essaisRestants = 20) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [nuancierOuvert, setNuancierOuvert] = useState(false);
+  const nuancier = useNuancier();
   const [emplacement, naviguer] = useLocation();
   const surAccueil = emplacement === "/";
 
@@ -151,6 +154,10 @@ export default function Navbar() {
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
           <div className="flex items-center gap-3">
+            {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre. */}
+            <span className="hidden lg:inline-flex">
+              <BoutonNuancier onOuvrir={() => setNuancierOuvert(true)} />
+            </span>
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="hidden lg:flex items-center gap-1.5 mr-1">
                 {RESEAUX_CONNUS.map((r) => {
@@ -252,9 +259,27 @@ export default function Navbar() {
                 })}
               </ul>
             )}
+
+            {/* Nuancier : sur mobile, la barre est pleine ; il vit au bas du menu. */}
+            <div className="pt-4">
+              <BoutonNuancier
+                variante="menu"
+                onOuvrir={() => {
+                  setOpen(false);
+                  setNuancierOuvert(true);
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
+
+      <NuancierPopup
+        ouvert={nuancierOuvert}
+        onFermer={() => setNuancierOuvert(false)}
+        actif={nuancier.actif}
+        choisir={nuancier.choisir}
+      />
     </header>
   );
 }

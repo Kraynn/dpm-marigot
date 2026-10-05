@@ -121,7 +121,7 @@ export default function ServicesSection() {
                 <p className="text-encre/70 text-sm leading-relaxed">{service.description}</p>
                 <ul className="mt-auto pt-2 flex flex-col gap-1.5">
                   {service.items.map((item) => (
-                    <li key={item} className="flex items-center gap-2 text-xs text-encre/60">
+                    <li key={item} className="flex items-center gap-2 text-xs text-encre/75">
                       <span className={`w-1.5 h-1.5 shrink-0 ${service.puce}`} />
                       {item}
                     </li>

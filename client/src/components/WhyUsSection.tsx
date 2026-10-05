@@ -183,7 +183,7 @@ export default function WhyUsSection() {
               </span>
               <div>
                 <p className="font-bold text-encre text-sm">{f.title}</p>
-                <p className="text-encre/65 text-xs mt-1 leading-relaxed">
+                <p className="text-encre/80 text-xs mt-1 leading-relaxed">
                   {f.desc}
                 </p>
               </div>

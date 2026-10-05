@@ -14,7 +14,7 @@
      prusse   #1F3A52  menuiseries alu anthracite, poussées vers le bleu
      olive    #5E6B45  végétation vue par les baies
      crème    #F3EDE4  plafond repeint
-     taupe    #7A6E62  murs peints
+     taupe    #6F6458  murs peints (#7A6E62 jusqu'au 05/10/2026, assombri pour l'AA : 4,26 -> 4,96 sur la crème)
      encre    #1A1613
 
    Motif signature : la bande de nuancier (.nuancier-bar). DPM vend de la
@@ -32,7 +32,7 @@
   --color-ocre: #c99a3b;
   --color-prusse: #1f3a52;
   --color-olive: #5e6b45;
-  --color-taupe: #7a6e62;
+  --color-taupe: #6f6458;
   --color-trait: #d9cfc0;
   --font-display: "DM Serif Display", Georgia, serif;
   --font-sans: "Space Grotesk", system-ui, sans-serif;
@@ -94,7 +94,7 @@
   --secondary: #eae2d6;
   --secondary-foreground: #1a1613;
   --muted: #eae2d6;
-  --muted-foreground: #7a6e62;
+  --muted-foreground: #6f6458;
   --accent: #c99a3b;
   --accent-foreground: #1a1613;
   --destructive: #a8442f;
@@ -106,7 +106,7 @@
   --chart-2: #c99a3b;
   --chart-3: #1f3a52;
   --chart-4: #5e6b45;
-  --chart-5: #7a6e62;
+  --chart-5: #6f6458;
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1613;
   --sidebar-primary: #a8442f;
@@ -449,7 +449,7 @@
   appearance: none;
   border: 0;
   background: transparent;
-  color: color-mix(in srgb, var(--color-encre) 60%, transparent);
+  color: color-mix(in srgb, var(--color-encre) 72%, transparent);
   font-family: "Space Grotesk", sans-serif;
   font-size: 0.8rem;
   font-weight: 700;

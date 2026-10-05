@@ -157,13 +157,13 @@ export default function ContactSection() {
                     {item.icon}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[11px] uppercase tracking-[0.14em] text-creme/50 font-bold">
+                    <span className="block text-[11px] uppercase tracking-[0.14em] text-creme/75 font-bold">
                       {item.title}
                     </span>
                     <span className="block text-creme font-bold text-sm truncate group-hover:text-ocre transition-colors">
                       {item.value}
                     </span>
-                    <span className="block text-creme/50 text-xs truncate">{item.sub}</span>
+                    <span className="block text-creme/70 text-xs truncate">{item.sub}</span>
                   </span>
                 </a>
               ))}

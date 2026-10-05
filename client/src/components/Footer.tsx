@@ -51,7 +51,7 @@ export default function Footer() {
             <p className="font-display text-2xl text-white leading-tight">
               Un chantier en tête ?
             </p>
-            <p className="text-white/80 text-sm mt-1">
+            <p className="text-white/90 text-sm mt-1">
               Devis gratuit, réponse sous 72h, sans engagement.
             </p>
           </div>
@@ -103,7 +103,7 @@ export default function Footer() {
                 </span>
               </span>
             </div>
-            <p className="text-creme/65 text-sm leading-relaxed max-w-sm">
+            <p className="text-creme/75 text-sm leading-relaxed max-w-sm">
               Artisan au Mesnil-Saint-Denis (78). Peinture, décoration, menuiserie, revêtements de
               sols et murs, remise en état après dégât des eaux. Showroom ouvert au public.
             </p>
@@ -116,15 +116,15 @@ export default function Footer() {
               </a>
               <a
                 href="mailto:contact@dpmmarigot.fr"
-                className="flex items-center gap-2.5 text-creme/65 hover:text-ocre transition-colors text-sm"
+                className="flex items-center gap-2.5 text-creme/75 hover:text-ocre transition-colors text-sm"
               >
                 <Mail size={15} /> contact@dpmmarigot.fr
               </a>
-              <span className="flex items-start gap-2.5 text-creme/65 text-sm">
+              <span className="flex items-start gap-2.5 text-creme/75 text-sm">
                 <MapPin size={15} className="mt-0.5 shrink-0" />
                 92, Avenue Habert de Montmort — Le Mesnil-Saint-Denis (78)
               </span>
-              <span className="flex items-start gap-2.5 text-creme/65 text-sm">
+              <span className="flex items-start gap-2.5 text-creme/75 text-sm">
                 <Clock size={15} className="mt-0.5 shrink-0" />
                 Du mardi au vendredi, 9h00 – 18h30
               </span>
@@ -137,7 +137,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={r.libelle}
-                    className="flex items-center gap-2.5 text-creme/65 hover:text-ocre transition-colors text-sm"
+                    className="flex items-center gap-2.5 text-creme/75 hover:text-ocre transition-colors text-sm"
                   >
                     <Icone size={15} aria-hidden /> Notre page {r.nom}
                   </a>
@@ -158,7 +158,7 @@ export default function Footer() {
                       e.preventDefault();
                       scrollTo(s.ancre);
                     }}
-                    className="text-creme/65 hover:text-creme transition-colors text-sm"
+                    className="text-creme/75 hover:text-creme transition-colors text-sm"
                   >
                     {s.label}
                   </a>
@@ -172,7 +172,7 @@ export default function Footer() {
             <p className="section-label text-ocre mb-4">Zone d'intervention</p>
             <ul className="flex flex-col gap-2.5">
               {zones.map((z) => (
-                <li key={z} className="text-creme/65 text-sm">
+                <li key={z} className="text-creme/75 text-sm">
                   {z}
                 </li>
               ))}
@@ -181,7 +181,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t-2 border-creme/15 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-creme/45 text-xs">
+          <p className="text-creme/75 text-xs">
             © {new Date().getFullYear()} DPM Marigot. Tous droits réservés.
           </p>
           {/* 25/09/2026 : ces deux liens existaient en href="#" depuis l'origine.
@@ -189,13 +189,13 @@ export default function Footer() {
           <div className="flex items-center gap-5">
             <Link
               href="/mentions-legales"
-              className="text-creme/45 hover:text-creme/80 text-xs transition-colors"
+              className="text-creme/75 hover:text-creme text-xs transition-colors"
             >
               Mentions légales
             </Link>
             <Link
               href="/confidentialite"
-              className="text-creme/45 hover:text-creme/80 text-xs transition-colors"
+              className="text-creme/75 hover:text-creme text-xs transition-colors"
             >
               Politique de confidentialité
             </Link>
