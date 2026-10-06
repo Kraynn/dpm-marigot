@@ -25,7 +25,7 @@ import { Check, Maximize2, Pencil, Send, Trash2, Undo2, X } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { NUANCIER_DEFAUT, lireMemorise, trouverPalette } from "@/nuancier";
-import { capturerLaPage } from "./capture";
+import { capturerLaPage, chargerLesImages } from "./capture";
 import {
   chemin,
   cibleBloc,
@@ -570,6 +570,7 @@ export default function ModeEdition() {
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         if (!vivant) return;
+        chargerLesImages();
         const { retablies, ecartees } = rejouerBrouillon();
         if (retablies) toast.success(`Brouillon retrouvé : ${compter(retablies)}.`);
         if (ecartees)

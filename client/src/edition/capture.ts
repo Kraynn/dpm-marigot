@@ -36,10 +36,24 @@ function reduire(canvas: HTMLCanvasElement, facteur: number): HTMLCanvasElement 
   return petit;
 }
 
+/**
+ * Demande tout de suite les images en chargement différé. La capture attend que
+ * chaque image de la page soit chargée ; une image du bas de page jamais défilée
+ * ne l'est jamais, et la bibliothèque patientait alors jusqu'à son délai (8 s
+ * mesurées sur l'accueil). Appelé à l'ouverture du mode édition : à l'envoi, tout
+ * est déjà là.
+ */
+export function chargerLesImages() {
+  document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => {
+    img.loading = "eager";
+  });
+}
+
 /** Capture pleine page en JPEG, encodée en base64 sans préfixe ; `null` si impossible. */
 export async function capturerLaPage(): Promise<string | null> {
   const html = document.documentElement;
   html.setAttribute("data-edition-capture", "");
+  chargerLesImages();
   try {
     // Deux images : le temps que les styles propres à la capture soient appliqués.
     await prochaineImage();
