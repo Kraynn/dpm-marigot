@@ -49,6 +49,7 @@ import {
   nouvelId,
   oter,
   poser,
+  rappelerDansAdresse,
   repartirDeZero,
   synchroniserBrouillon,
   useEdition,
@@ -238,6 +239,26 @@ function Fenetre({
       onClose={onFermer}
       onCancel={(e) => {
         if (verrou) e.preventDefault();
+      }}
+      onKeyDown={(e) => {
+        // Même boucle que dans NuancierPopup : showModal() rend la page inerte, mais
+        // Tab peut encore sortir vers la barre du navigateur.
+        if (e.key !== "Tab") return;
+        const f = Array.from(
+          e.currentTarget.querySelectorAll<HTMLElement>(
+            "button:not([disabled]), input:not([tabindex='-1']), textarea, [href]",
+          ),
+        );
+        if (!f.length) return;
+        const premier = f[0];
+        const dernier = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === premier) {
+          e.preventDefault();
+          dernier.focus();
+        } else if (!e.shiftKey && document.activeElement === dernier) {
+          e.preventDefault();
+          premier.focus();
+        }
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) fermer();
@@ -467,11 +488,13 @@ function PanneauEnvoi({ modifs, onFermer }: { modifs: Modification[]; onFermer: 
             className={`${champ} resize-y`}
           />
         </label>
-        {/* Champ piège, comme sur le Devis : invisible, il doit rester vide. */}
+        {/* Champ piège, comme sur le Devis : invisible, il doit rester vide. Son nom
+            dans la page n'évoque ni site ni adresse : un remplissage automatique du
+            navigateur qui l'écrirait ferait passer un vrai envoi pour un robot. */}
         <input
           value={piege}
           onChange={(e) => setPiege(e.target.value)}
-          name="website"
+          name="edition-controle"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden
@@ -567,6 +590,7 @@ export default function ModeEdition() {
     let vivant = true;
     repartirDeZero();
     fiches.clear();
+    rappelerDansAdresse();
     requestAnimationFrame(() =>
       requestAnimationFrame(() => {
         if (!vivant) return;
@@ -757,7 +781,9 @@ export default function ModeEdition() {
             aria-label="Bloc désigné"
             // Garde le texte en cours de saisie actif pendant le clic sur la barre.
             onPointerDown={(e) => e.preventDefault()}
-            className="fixed z-[66] flex items-stretch bg-encre text-creme text-xs font-bold shadow-[3px_3px_0_var(--color-terre)]"
+            // Liseré clair : sur les sections sombres (Devis, pied de page), la barre
+            // de couleur encre se fondait dans le fond.
+            className="fixed z-[66] flex items-stretch bg-encre text-creme text-xs font-bold border border-creme/70 shadow-[3px_3px_0_var(--color-terre)]"
             style={{
               top: Math.max(sousEnTete + 4, cadre.top - 31),
               right: Math.max(8, window.innerWidth - cadre.right - 3),

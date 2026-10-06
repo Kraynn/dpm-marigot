@@ -784,3 +784,25 @@ html[data-edition-capture] body {
 html[data-edition-capture] [data-edition-modifie] {
   outline: none;
 }
+/* La carte Google (iframe d'un autre domaine) ne peut pas être reproduite : sans
+   ce cadre, la capture montrait un rectangle blanc qui passait pour un bloc retiré.
+   Limité à #root : la bibliothèque de capture pose son propre iframe de travail
+   dans <body>, et sans cette borne le cadre recouvrait la page entière. */
+html[data-edition-capture] #root :has(> iframe) {
+  position: relative;
+}
+html[data-edition-capture] #root :has(> iframe)::after {
+  content: "Carte Google — non reproduite sur la capture";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--color-taupe);
+  background: var(--color-creme-2);
+}

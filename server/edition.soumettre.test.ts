@@ -141,6 +141,34 @@ describe("edition.soumettre", () => {
     await expect(autre.edition.soumettre(validInput)).resolves.toEqual({ success: true });
   });
 
+  // Hors de Vercel, le premier élément de x-forwarded-for est choisi par l'appelant :
+  // le compteur se cale sur x-real-ip, que la plateforme écrit elle-même.
+  it("compte par x-real-ip, même si x-forwarded-for change à chaque appel", async () => {
+    const appel = (i: number) =>
+      appRouter
+        .createCaller({
+          user: null,
+          req: {
+            protocol: "https",
+            headers: { "x-real-ip": "192.0.2.50", "x-forwarded-for": `9.9.9.${i}, 1.1.1.1` },
+          },
+          res: { clearCookie: vi.fn() },
+        })
+        .edition.soumettre(validInput);
+    for (let i = 0; i < 6; i++) await appel(i);
+
+    await expect(appel(6)).rejects.toThrow(/Trop d'envois/);
+  });
+
+  it("rejette une page qui n'est pas un chemin sur une ligne", async () => {
+    const caller = appRouter.createCaller(createPublicContext());
+    for (const page of ["/x\r\nBcc: tiers@exemple.fr", "/a b", "https://ailleurs.example/", "x"]) {
+      await expect(caller.edition.soumettre({ ...validInput, page })).rejects.toThrow();
+    }
+    expect(sendEditionEmail).not.toHaveBeenCalled();
+    expect(notifyOwner).not.toHaveBeenCalled();
+  });
+
   it("n'écrit ni le nom ni les textes dans les journaux", async () => {
     const caller = appRouter.createCaller(createPublicContext());
     await caller.edition.soumettre(validInput);
@@ -204,6 +232,25 @@ describe("buildEditionEmail", () => {
     expect(mail.html).not.toContain("<script>");
     expect(mail.html).not.toContain("<b>gras</b>");
     expect(mail.html).toContain("&lt;b&gt;gras&lt;/b&gt; &amp; co");
+  });
+
+  // Même si la validation de la route laissait passer un retour à la ligne, il ne
+  // doit atteindre ni l'objet ni les lignes d'en-tête du corps.
+  it("ramène sur une ligne tout ce qui finit dans l'objet ou l'en-tête", () => {
+    const mail = buildEditionEmail(
+      {
+        ...validInput,
+        page: "/x\r\nBcc: tiers@exemple.fr",
+        nom: "Anne\nCécile",
+        modifications: [{ ...texte, section: "Nos\r\nmétiers", element: "ti\ntre" }],
+      },
+      date
+    );
+
+    expect(mail.subject).not.toMatch(/[\r\n]/);
+    expect(mail.subject).toBe("DPM Marigot — 1 modification demandée (/x Bcc: tiers@exemple.fr)");
+    expect(mail.text).toContain("De       : Anne Cécile");
+    expect(mail.text).toContain("1. TEXTE — Nos métiers › ti tre");
   });
 
   it("annonce un mot seul quand il n'y a aucune retouche", () => {

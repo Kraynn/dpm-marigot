@@ -87,7 +87,12 @@ export const appRouter = router({
       .input(
         z
           .object({
-            page: z.string().min(1).max(200),
+            // Un chemin, sur une ligne : il finit dans l'objet du mail et dans le journal.
+            page: z
+              .string()
+              .min(1)
+              .max(200)
+              .regex(/^\/[^\s\u0000-\u001f\u007f]*$/, "Page invalide"),
             adresse: z.string().max(500).optional(),
             palette: z.string().max(60).optional(),
             largeur: z.number().int().min(100).max(20000).optional(),
@@ -122,8 +127,14 @@ export const appRouter = router({
           return { success: true } as const;
         }
 
-        const transmis = ctx.req.headers["x-forwarded-for"];
-        const ip = (Array.isArray(transmis) ? transmis[0] : transmis)?.split(",")[0]?.trim();
+        // x-real-ip d'abord : c'est Vercel qui l'écrit. Le premier élément de
+        // x-forwarded-for ne sert que de repli (serveur local), car hors plateforme
+        // c'est l'appelant qui le choisit.
+        const entete = (nom: string) => {
+          const v = ctx.req.headers[nom];
+          return (Array.isArray(v) ? v[0] : v)?.split(",")[0]?.trim();
+        };
+        const ip = entete("x-real-ip") || entete("x-forwarded-for");
         if (!autoriser(`edition:${ip || "inconnue"}`, 6, 10 * 60 * 1000)) {
           throw new TRPCError({
             code: "TOO_MANY_REQUESTS",

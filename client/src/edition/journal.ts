@@ -121,6 +121,15 @@ export function ouvrirEdition() {
   publier({ ...etat, actif: true });
 }
 
+/**
+ * Remet `?edition=1` dans l'adresse. Après un retour arrière du navigateur, le
+ * mode reste ouvert mais l'adresse revient à celle d'avant : un rechargement
+ * sortait alors du mode édition sans prévenir.
+ */
+export function rappelerDansAdresse() {
+  if (etat.actif) ecrireDansAdresse(true);
+}
+
 /** Sort du mode édition. Le brouillon reste sur l'appareil. */
 export function fermerEdition() {
   marquerLaPage(false);

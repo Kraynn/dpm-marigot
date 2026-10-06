@@ -133,12 +133,22 @@ export function nommerSection(el: Element): string {
 export function extrait(el: Element, longueur = 200): string {
   // Un bloc réunit plusieurs éléments : `textContent` les collerait bout à bout
   // (« MenuiserieMenuiserieHabillages… »). On sépare chaque fragment d'une espace.
+  // Un texte déjà retouché est cité dans sa version d'origine (gardée dans
+  // data-edition-modifie) : le mail doit décrire le bloc tel qu'il est dans les
+  // sources, pas tel que le client l'avait réécrit avant de le retirer.
   const fragments: string[] = [];
-  const marcheur = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-  while (marcheur.nextNode()) {
-    const fragment = nettoyer(marcheur.currentNode.textContent ?? "");
-    if (fragment) fragments.push(fragment);
-  }
+  const parcourir = (n: Node) => {
+    if (n.nodeType === Node.TEXT_NODE) {
+      const fragment = nettoyer(n.textContent ?? "");
+      if (fragment) fragments.push(fragment);
+      return;
+    }
+    if (!(n instanceof Element)) return;
+    const origine = n.getAttribute("data-edition-modifie");
+    if (origine) fragments.push(origine);
+    else n.childNodes.forEach(parcourir);
+  };
+  parcourir(el);
   const texte = fragments.join(" ");
   if (texte) return texte.length > longueur ? `${texte.slice(0, longueur)}…` : texte;
   const img = el instanceof HTMLImageElement ? el : el.querySelector("img");

@@ -77,7 +77,26 @@ const echapper = (s: string) =>
 
 const accorder = (n: number) => `${n} modification${n > 1 ? "s" : ""} demandée${n > 1 ? "s" : ""}`;
 
-export function buildEditionEmail(data: EditionEmailInput, date: Date = new Date()) {
+/**
+ * Ramène une valeur sur une seule ligne. Tout ce qui finit dans l'objet du mail
+ * ou dans une ligne d'en-tête du corps vient du navigateur : un retour à la ligne
+ * dans `page` est le motif classique d'injection d'en-tête.
+ */
+const uneLigne = (s: string) => s.replace(/[\x00-\x1f\x7f\s]+/g, " ").trim();
+
+export function buildEditionEmail(brut: EditionEmailInput, date: Date = new Date()) {
+  const data: EditionEmailInput = {
+    ...brut,
+    page: uneLigne(brut.page),
+    adresse: brut.adresse && uneLigne(brut.adresse),
+    palette: brut.palette && uneLigne(brut.palette),
+    nom: brut.nom && uneLigne(brut.nom),
+    modifications: brut.modifications.map(m => ({
+      ...m,
+      section: uneLigne(m.section),
+      element: uneLigne(m.element),
+    })),
+  };
   const n = data.modifications.length;
   const subject = n
     ? `${SITE} — ${accorder(n)} (${data.page})`
@@ -98,10 +117,13 @@ export function buildEditionEmail(data: EditionEmailInput, date: Date = new Date
   if (data.nom) entete.push(["De", data.nom]);
 
   const pieces = data.capture
-    ? "Pièces jointes : page-modifiee.jpg (la page telle que le client l'a laissée) et modifications.json (la même liste, structurée)."
+    ? "Pièces jointes : page-modifiee.jpg (la page telle que le client l'a laissée ; la FAQ y est dépliée et la carte Google remplacée par un cadre, c'est l'état du mode édition) et modifications.json (la même liste, structurée)."
     : "La capture de la page n'a pas pu être jointe. Pièce jointe : modifications.json (la même liste, structurée).";
+  // Pas de promesse « mot pour mot » : un paragraphe coupé dans les sources par du
+  // gras ou une variable (pages légales) ne se retrouve pas d'un seul tenant, et un
+  // même libellé peut exister dans plusieurs composants.
   const mode =
-    "Pour appliquer : chaque texte « avant » est cité mot pour mot, il se retrouve par recherche dans client/src.";
+    "Pour appliquer : « avant » est le texte affiché sur la page d'origine. Le chercher dans client/src ; la section indiquée départage quand il existe à plusieurs endroits.";
 
   const text = [
     `Modifications demandées sur le site ${SITE}`,

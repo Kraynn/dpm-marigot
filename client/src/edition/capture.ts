@@ -69,6 +69,8 @@ export async function capturerLaPage(): Promise<string | null> {
       height: hauteur,
       scale: echelle,
       backgroundColor: getComputedStyle(document.body).backgroundColor || "#ffffff",
+      // Le clone de <body> retrouvait la marge par défaut du navigateur (8 px).
+      style: { margin: "0" },
       timeout: 8_000,
       filter: (n) =>
         !(n instanceof Element) ||
