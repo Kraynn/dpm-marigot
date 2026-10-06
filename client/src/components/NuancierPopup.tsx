@@ -60,6 +60,7 @@ export function BoutonNuancier({
       <button
         type="button"
         onClick={onOuvrir}
+        data-edition-libre
         aria-label="Nuancier"
         aria-haspopup="dialog"
         className="inline-flex items-center gap-2.5 px-3 py-2.5 border-2 border-encre/30 text-encre/80 text-sm"
@@ -73,6 +74,7 @@ export function BoutonNuancier({
     <button
       type="button"
       onClick={onOuvrir}
+      data-edition-libre
       aria-label="Nuancier"
       aria-haspopup="dialog"
       title="Nuancier"
@@ -135,8 +137,10 @@ export default function NuancierPopup({
   };
 
   return (
+    // data-edition-libre : le nuancier reste utilisable pendant que l'éditeur de page est ouvert.
     <dialog
       ref={ref}
+      data-edition-libre
       aria-labelledby="nuancier-titre"
       onClose={onFermer}
       onCancel={onFermer}

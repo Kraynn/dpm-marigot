@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useEditionActive } from "@/edition/journal";
 
 /**
  * Révèle un bloc quand il entre dans le champ.
@@ -27,6 +28,7 @@ export function useScrollReveal(threshold = 0.15) {
   // L'état initial décide du premier rendu : le calculer ici, et pas dans un
   // effet, évite une frame où le bloc est encore invisible.
   const [visible, setVisible] = useState(reduireLesAnimations);
+  const edition = useEditionActive();
 
   useEffect(() => {
     if (reduireLesAnimations()) {
@@ -51,5 +53,8 @@ export function useScrollReveal(threshold = 0.15) {
     return () => observer.disconnect();
   }, [threshold]);
 
-  return { ref, visible };
+  // 06/10/2026 — en mode édition, tout est révélé d'emblée : une section jamais
+  // défilée resterait transparente, donc ni modifiable ni présente sur la capture
+  // jointe au mail.
+  return { ref, visible: visible || edition };
 }

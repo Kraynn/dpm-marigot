@@ -748,3 +748,61 @@
 .defil-nuancier.a-la-fin {
   --fondu-bas: 0px;
 }
+
+/* ── Éditeur de page (06/10/2026) ──
+   Tout est sous html[data-edition] : hors du mode édition, aucune de ces règles
+   ne s'applique. Les retouches sont locales au navigateur (src/edition/).
+   data-edition-capture est posé le temps de la capture jointe au mail : la page
+   y apparaît telle qu'un visiteur la verrait, sans les marques de l'éditeur. */
+html[data-edition] body {
+  /* place pour la barre de l'éditeur, qui recouvrirait le bas du pied de page */
+  padding-bottom: 5.5rem;
+}
+html[data-edition] iframe {
+  /* la carte Google avalerait le survol et les clics */
+  pointer-events: none;
+}
+html[data-edition] #root a {
+  -webkit-user-drag: none;
+}
+html[data-edition] [contenteditable] {
+  outline: none;
+  cursor: text;
+  -webkit-user-select: text;
+  user-select: text;
+}
+html[data-edition] [data-edition-modifie] {
+  outline: 2px solid var(--color-ocre);
+  outline-offset: 3px;
+}
+html[data-edition] [data-edition-retire] {
+  display: none !important;
+}
+html[data-edition-capture] body {
+  padding-bottom: 0;
+}
+html[data-edition-capture] [data-edition-modifie] {
+  outline: none;
+}
+/* La carte Google (iframe d'un autre domaine) ne peut pas être reproduite : sans
+   ce cadre, la capture montrait un rectangle blanc qui passait pour un bloc retiré.
+   Limité à #root : la bibliothèque de capture pose son propre iframe de travail
+   dans <body>, et sans cette borne le cadre recouvrait la page entière. */
+html[data-edition-capture] #root :has(> iframe) {
+  position: relative;
+}
+html[data-edition-capture] #root :has(> iframe)::after {
+  content: "Carte Google — non reproduite sur la capture";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--color-taupe);
+  background: var(--color-creme-2);
+}
