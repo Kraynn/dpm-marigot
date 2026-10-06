@@ -7,6 +7,7 @@
  */
 import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
+import { useEditionActive } from "@/edition/journal";
 
 const WHATSAPP_URL =
   "https://wa.me/33185830355?text=Bonjour%2C%20je%20souhaite%20obtenir%20un%20devis%20gratuit.";
@@ -21,6 +22,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
+  const edition = useEditionActive();
 
   useEffect(() => {
     const handler = () => setVisible(window.scrollY > 300);
@@ -33,7 +35,8 @@ export default function FloatingCTA() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  if (!visible) return null;
+  // 06/10/2026 — en mode édition, la barre de l'éditeur occupe le bas de l'écran.
+  if (!visible || edition) return null;
 
   return (
     <>

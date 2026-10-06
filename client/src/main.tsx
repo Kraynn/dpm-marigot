@@ -7,10 +7,13 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+import { editionInitiale } from "./edition/journal";
 import { nuancierInitial } from "./nuancier";
 
 // Nuancier choisi (?nuancier= ou localStorage) posé avant le premier rendu : pas de flash.
 nuancierInitial();
+// Éditeur de page : `?edition=1` ouvre le mode édition dès le premier rendu.
+editionInitiale();
 
 const queryClient = new QueryClient();
 

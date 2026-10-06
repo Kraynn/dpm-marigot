@@ -10,12 +10,17 @@
  * téléphone ; sur mobile elles passent dans le menu burger, la barre étant
  * déjà pleine à 375 px avec le cube, le bouton d'appel et le burger.
  */
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
 import NuancierPopup, { BoutonNuancier, useNuancier } from "@/components/NuancierPopup";
+import BoutonEdition from "@/edition/BoutonEdition";
+import { useEditionActive } from "@/edition/journal";
 import { RESEAUX_CONNUS } from "@/reseaux";
+
+// Éditeur de page (06/10/2026) : téléchargé seulement quand le mode est ouvert.
+const ModeEdition = lazy(() => import("@/edition/ModeEdition"));
 
 const ICONE_RESEAU: Record<string, typeof Facebook> = {
   Facebook,
@@ -55,6 +60,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [nuancierOuvert, setNuancierOuvert] = useState(false);
   const nuancier = useNuancier();
+  const edition = useEditionActive();
   const [emplacement, naviguer] = useLocation();
   const surAccueil = emplacement === "/";
 
@@ -95,7 +101,11 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-creme border-b-[3px] border-encre">
+    // data-edition-socle : l'éditeur de page ne propose jamais de retirer l'en-tête.
+    <header
+      data-edition-socle
+      className="fixed top-0 left-0 right-0 z-50 bg-creme border-b-[3px] border-encre"
+    >
       <NuancierBar />
 
       <div className="container">
@@ -151,9 +161,11 @@ export default function Navbar() {
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
           <div className="flex items-center gap-3 lg:gap-2 xl:gap-3">
-            {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre. */}
-            <span className="hidden lg:inline-flex">
+            {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre.
+                06/10/2026 : le crayon de l'éditeur de page se place à côté. */}
+            <span className="hidden lg:inline-flex items-center">
               <BoutonNuancier onOuvrir={() => setNuancierOuvert(true)} />
+              <BoutonEdition />
             </span>
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="hidden lg:flex items-center gap-1.5 mr-1">
@@ -257,8 +269,9 @@ export default function Navbar() {
               </ul>
             )}
 
-            {/* Nuancier : sur mobile, la barre est pleine ; il vit au bas du menu. */}
-            <div className="pt-4">
+            {/* Nuancier : sur mobile, la barre est pleine ; il vit au bas du menu,
+                avec l'éditeur de page. */}
+            <div className="pt-4 flex flex-wrap gap-2.5">
               <BoutonNuancier
                 variante="menu"
                 onOuvrir={() => {
@@ -266,6 +279,7 @@ export default function Navbar() {
                   setNuancierOuvert(true);
                 }}
               />
+              <BoutonEdition variante="menu" onOuvrir={() => setOpen(false)} />
             </div>
           </div>
         </div>
@@ -277,6 +291,12 @@ export default function Navbar() {
         actif={nuancier.actif}
         choisir={nuancier.choisir}
       />
+
+      {edition && (
+        <Suspense fallback={null}>
+          <ModeEdition />
+        </Suspense>
+      )}
     </header>
   );
 }
