@@ -179,6 +179,23 @@
     }
   }
 
+  /* Bannière d'accueil : les deux avant / après débordent du conteneur vers la
+     droite, sur le blanc qui sépare le conteneur du bord de page (08/10/2026).
+     Le bord droit du collage s'arrête à 64 px du bord de page, débord plafonné à
+     200 px. Le conteneur de Tailwind plafonne à 1280 px en xl et 1536 px en 2xl,
+     d'où un calcul par palier. */
+  @media (min-width: 1280px) {
+    .banniere-collage {
+      margin-right: calc(-1 * clamp(0px, (100vw - 1280px) / 2 - 2rem, 200px));
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .banniere-collage {
+      margin-right: calc(-1 * clamp(0px, (100vw - 1536px) / 2 - 2rem, 200px));
+    }
+  }
+
   /* ── Motif signature : la bande de nuancier ─────────────── */
   .nuancier-bar {
     display: flex;
