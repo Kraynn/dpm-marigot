@@ -19,9 +19,10 @@ type Props = {
   /** Position de départ du curseur, en % (0 = tout « après »). */
   depart?: number;
   /**
-   * Bannière (08/10/2026) : la partie « avant » prend une opacité égale à la
-   * course du curseur, si bien qu'elle se fond dans l'« après » à mesure qu'on
-   * glisse vers lui, et inversement.
+   * Bannière (08/10/2026) : les étiquettes suivent la course du curseur.
+   * « Avant » s'efface à mesure que l'image « après » gagne, et inversement ;
+   * en butée, seule l'étiquette de l'image affichée reste. Les photos ne
+   * changent pas d'opacité.
    */
   fondu?: boolean;
   /**
@@ -92,22 +93,15 @@ export default function AvantApres({
         draggable={false}
         loading={chargement}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          clipPath: `inset(0 ${100 - pos}% 0 0)`,
-          opacity: fondu ? pos / 100 : 1,
-        }}
+        style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
       />
 
       {/* Ligne de séparation + poignée */}
       <div
-        className="absolute top-0 bottom-0 z-10 pointer-events-none w-[3px] bg-creme"
-        style={{ left: `${pos}%`, transform: "translateX(-50%)" }}
-      />
-      {/* La poignée reste entière dans le cadre, même curseur en butée (départ à 0 %). */}
-      <div
         className="absolute top-0 bottom-0 z-10 pointer-events-none"
-        style={{ left: `clamp(20px, ${pos}%, calc(100% - 20px))`, transform: "translateX(-50%)" }}
+        style={{ left: `${pos}%`, transform: "translateX(-50%)" }}
       >
+        <div className="absolute inset-0 w-[3px] bg-creme" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-creme border-[3px] border-encre flex items-center justify-center text-encre">
           <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden>
             <path
@@ -129,10 +123,16 @@ export default function AvantApres({
       </div>
 
       {/* Badges AVANT / APRÈS */}
-      <span className="absolute top-3 left-3 z-10 pointer-events-none bg-encre text-creme text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1">
+      <span
+        className="absolute top-3 left-3 z-10 pointer-events-none bg-encre text-creme text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1"
+        style={fondu ? { opacity: pos / 100 } : undefined}
+      >
         Avant
       </span>
-      <span className="absolute top-3 right-3 z-10 pointer-events-none bg-olive text-white text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1">
+      <span
+        className="absolute top-3 right-3 z-10 pointer-events-none bg-olive text-white text-[10px] font-bold uppercase tracking-[0.18em] px-2.5 py-1"
+        style={fondu ? { opacity: 1 - pos / 100 } : undefined}
+      >
         Après
       </span>
 
