@@ -28,8 +28,10 @@ import { PROJETS } from "./RealisationsGallery";
 // 08/10/2026, demande de Silva : les deux polaroïds deviennent des curseurs avant /
 // après, comme dans la galerie, plus grands et décalés vers la droite au-delà du
 // conteneur (marge prise sur le blanc de bord de page, voir .banniere-collage).
-// Le curseur s'ouvre à mi-course : le « après » reste visible d'emblée, ce qui
-// tenait la règle du 19/09 (pas un plafond fissuré seul en vitrine).
+// Le curseur part en butée sur « après », ce qui tient la règle du 19/09 (pas un
+// plafond fissuré en vitrine) ; l'« avant » se fond à mesure qu'on glisse.
+// Tailles ramenées aux 3/4 le même jour, et hauteurs de colonne d'origine : ce
+// sont elles qui fixent la position verticale du texte à gauche.
 const [PLAFOND, SALLE_A_MANGER] = PROJETS;
 
 // La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
@@ -153,19 +155,22 @@ export default function HeroSection() {
 
           {/* Collage : deux photos réelles inclinées */}
           <div
-            className="banniere-collage relative h-[600px] lg:h-[640px] xl:h-[720px] 2xl:h-[770px] hidden sm:block"
+            className="banniere-collage relative h-[420px] sm:h-[520px] lg:h-[540px] hidden sm:block"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.7s ease 0.18s, transform 0.7s ease 0.18s",
             }}
           >
-            <figure className="absolute top-0 right-4 lg:right-6 xl:right-0 w-[380px] lg:w-[400px] xl:w-[460px] 2xl:w-[520px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
+            <figure className="absolute top-0 right-4 lg:right-6 xl:right-0 w-[285px] lg:w-[300px] xl:w-[345px] 2xl:w-[390px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
               <AvantApres
                 avant={SALLE_A_MANGER.avant}
                 apres={SALLE_A_MANGER.apres}
                 className="aspect-[4/3]"
                 differe={false}
+                depart={0}
+                fondu
+                indice="survol"
                 libelle="Salle à manger : curseur avant / après"
               />
               <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
@@ -173,16 +178,19 @@ export default function HeroSection() {
               </figcaption>
             </figure>
 
-            <figure className="absolute bottom-0 left-0 lg:left-20 xl:left-12 w-[280px] lg:w-[300px] xl:w-[330px] 2xl:w-[360px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
+            <figure className="absolute bottom-0 left-0 lg:left-20 xl:left-12 w-[210px] lg:w-[225px] xl:w-[248px] 2xl:w-[270px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
               <AvantApres
                 avant={PLAFOND.avant}
                 apres={PLAFOND.apres}
                 className="aspect-[4/3]"
                 differe={false}
+                depart={0}
+                fondu
+                indice="survol"
                 libelle="Plafond fissuré : curseur avant / après"
               />
               <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
-                Plafond fissuré · repris et repeint
+                Plafond fissuré · repris
               </figcaption>
             </figure>
             {/* 05/10/2026 : la colonne de cinq échantillons qui tenait ici est retirée,
