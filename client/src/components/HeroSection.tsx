@@ -29,7 +29,7 @@ import { PROJETS } from "./RealisationsGallery";
 // après, comme dans la galerie, plus grands et décalés vers la droite au-delà du
 // conteneur (marge prise sur le blanc de bord de page, voir .banniere-collage).
 // Le curseur part en butée sur « après », ce qui tient la règle du 19/09 (pas un
-// plafond fissuré en vitrine) ; l'« avant » se fond à mesure qu'on glisse.
+// plafond fissuré en vitrine) ; les étiquettes Avant / Après se fondent à mesure qu'on glisse.
 // Tailles ramenées aux 3/4 le même jour, et hauteurs de colonne d'origine : ce
 // sont elles qui fixent la position verticale du texte à gauche.
 const [PLAFOND, SALLE_A_MANGER] = PROJETS;
