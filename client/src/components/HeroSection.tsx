@@ -22,12 +22,15 @@
  */
 import { useEffect, useState } from "react";
 import { ArrowRight, Phone } from "lucide-react";
+import AvantApres from "./AvantApres";
+import { PROJETS } from "./RealisationsGallery";
 
-// Les deux polaroïds de la bannière montrent du travail fini. Le plafond affichait
-// jusqu'au 2026-09-19 la photo « avant » — un plafond fissuré en vitrine d'un peintre
-// mettait en avant le dégât, pas la reprise.
-const PHOTO_SALLE_A_MANGER = "/images/realisations/salle-a-manger-apres.jpg";
-const PHOTO_PLAFOND = "/images/realisations/plafond-apres.jpg";
+// 08/10/2026, demande de Silva : les deux polaroïds deviennent des curseurs avant /
+// après, comme dans la galerie, plus grands et décalés vers la droite au-delà du
+// conteneur (marge prise sur le blanc de bord de page, voir .banniere-collage).
+// Le curseur s'ouvre à mi-course : le « après » reste visible d'emblée, ce qui
+// tenait la règle du 19/09 (pas un plafond fissuré seul en vitrine).
+const [PLAFOND, SALLE_A_MANGER] = PROJETS;
 
 // La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
 // donc son propre déclencheur, et sa propre prise en compte de
@@ -150,38 +153,36 @@ export default function HeroSection() {
 
           {/* Collage : deux photos réelles inclinées */}
           <div
-            className="relative h-[420px] sm:h-[520px] lg:h-[540px] hidden sm:block"
+            className="banniere-collage relative h-[600px] lg:h-[640px] xl:h-[720px] 2xl:h-[770px] hidden sm:block"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.7s ease 0.18s, transform 0.7s ease 0.18s",
             }}
           >
-            <figure className="absolute top-0 right-4 lg:right-9 w-[300px] lg:w-[340px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
-              <img
-                src={PHOTO_SALLE_A_MANGER}
-                alt="Salle à manger repeinte en teinte taupe par DPM Marigot, charpente apparente"
-                width={480}
-                height={640}
-                decoding="async"
-                className="w-full h-[240px] lg:h-[250px] object-cover"
+            <figure className="absolute top-0 right-4 lg:right-6 xl:right-0 w-[380px] lg:w-[400px] xl:w-[460px] 2xl:w-[520px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
+              <AvantApres
+                avant={SALLE_A_MANGER.avant}
+                apres={SALLE_A_MANGER.apres}
+                className="aspect-[4/3]"
+                differe={false}
+                libelle="Salle à manger : curseur avant / après"
               />
               <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
-                Salle à manger · après
+                Salle à manger · rénovation complète
               </figcaption>
             </figure>
 
-            <figure className="absolute bottom-0 left-0 w-[215px] lg:w-[245px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
-              <img
-                src={PHOTO_PLAFOND}
-                alt="Plafond repris et remis en peinture par DPM Marigot après un dégât des eaux"
-                width={1200}
-                height={1600}
-                decoding="async"
-                className="w-full h-[160px] lg:h-[180px] object-cover"
+            <figure className="absolute bottom-0 left-0 lg:left-20 xl:left-12 w-[280px] lg:w-[300px] xl:w-[330px] 2xl:w-[360px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
+              <AvantApres
+                avant={PLAFOND.avant}
+                apres={PLAFOND.apres}
+                className="aspect-[4/3]"
+                differe={false}
+                libelle="Plafond fissuré : curseur avant / après"
               />
               <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
-                Plafond · après
+                Plafond fissuré · repris et repeint
               </figcaption>
             </figure>
             {/* 05/10/2026 : la colonne de cinq échantillons qui tenait ici est retirée,
