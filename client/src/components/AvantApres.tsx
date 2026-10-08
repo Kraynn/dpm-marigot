@@ -4,7 +4,7 @@
  * polaroïds de la bannière d'accueil. L'input range invisible superposé est
  * conservé tel quel : il fonctionne au doigt, à la souris et au clavier.
  */
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type Photo = { src: string; alt: string };
 
@@ -16,7 +16,23 @@ type Props = {
   /** La bannière est au-dessus de la ligne de flottaison : pas de chargement différé. */
   differe?: boolean;
   libelle?: string;
+  /** Position de départ du curseur, en % (0 = tout « après »). */
+  depart?: number;
+  /**
+   * Bannière (08/10/2026) : la partie « avant » prend une opacité égale à la
+   * course du curseur, si bien qu'elle se fond dans l'« après » à mesure qu'on
+   * glisse vers lui, et inversement.
+   */
+  fondu?: boolean;
+  /**
+   * « toujours » : l'indice « Faites glisser » est affiché et s'efface au survol.
+   * « survol » (bannière) : il apparaît au survol, tient 2 s puis s'efface, et
+   * disparaît aussitôt que le curseur bouge.
+   */
+  indice?: "toujours" | "survol";
 };
+
+const DUREE_INDICE = 2000;
 
 export default function AvantApres({
   avant,
@@ -24,12 +40,42 @@ export default function AvantApres({
   className = "aspect-[4/3] border-b-[3px] border-encre",
   differe = true,
   libelle = "Curseur avant / après",
+  depart = 50,
+  fondu = false,
+  indice = "toujours",
 }: Props) {
-  const [pos, setPos] = useState(50);
+  const [pos, setPos] = useState(depart);
+  const [indiceVisible, setIndiceVisible] = useState(false);
+  const minuteur = useRef<ReturnType<typeof setTimeout>>(undefined);
   const chargement = differe ? "lazy" : "eager";
 
+  useEffect(() => () => clearTimeout(minuteur.current), []);
+
+  const masquerIndice = () => {
+    clearTimeout(minuteur.current);
+    setIndiceVisible(false);
+  };
+
+  const montrerIndice = () => {
+    if (indice !== "survol") return;
+    clearTimeout(minuteur.current);
+    setIndiceVisible(true);
+    minuteur.current = setTimeout(() => setIndiceVisible(false), DUREE_INDICE);
+  };
+
+  const classeIndice =
+    indice === "survol"
+      ? indiceVisible
+        ? "opacity-100"
+        : "opacity-0"
+      : "group-hover:opacity-0";
+
   return (
-    <div className={`group relative overflow-hidden bg-creme-2 select-none ${className}`}>
+    <div
+      className={`group relative overflow-hidden bg-creme-2 select-none ${className}`}
+      onPointerEnter={montrerIndice}
+      onPointerLeave={indice === "survol" ? masquerIndice : undefined}
+    >
       {/* Après — image de base */}
       <img
         src={apres.src}
@@ -46,15 +92,22 @@ export default function AvantApres({
         draggable={false}
         loading={chargement}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
+        style={{
+          clipPath: `inset(0 ${100 - pos}% 0 0)`,
+          opacity: fondu ? pos / 100 : 1,
+        }}
       />
 
       {/* Ligne de séparation + poignée */}
       <div
-        className="absolute top-0 bottom-0 z-10 pointer-events-none"
+        className="absolute top-0 bottom-0 z-10 pointer-events-none w-[3px] bg-creme"
         style={{ left: `${pos}%`, transform: "translateX(-50%)" }}
+      />
+      {/* La poignée reste entière dans le cadre, même curseur en butée (départ à 0 %). */}
+      <div
+        className="absolute top-0 bottom-0 z-10 pointer-events-none"
+        style={{ left: `clamp(20px, ${pos}%, calc(100% - 20px))`, transform: "translateX(-50%)" }}
       >
-        <div className="absolute inset-0 w-[3px] bg-creme" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-creme border-[3px] border-encre flex items-center justify-center text-encre">
           <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden>
             <path
@@ -83,8 +136,10 @@ export default function AvantApres({
         Après
       </span>
 
-      {/* Indice de glissement (disparaît au survol) */}
-      <span className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 pointer-events-none whitespace-nowrap bg-creme border-2 border-encre text-encre text-[11px] font-bold px-3 py-1 transition-opacity duration-300 group-hover:opacity-0">
+      {/* Indice de glissement */}
+      <span
+        className={`absolute bottom-3 left-1/2 -translate-x-1/2 z-10 pointer-events-none whitespace-nowrap bg-creme border-2 border-encre text-encre text-[11px] font-bold px-3 py-1 transition-opacity duration-300 ${classeIndice}`}
+      >
         Faites glisser ←→
       </span>
 
@@ -95,7 +150,10 @@ export default function AvantApres({
         max={100}
         step={0.3}
         value={pos}
-        onChange={(e) => setPos(+e.target.value)}
+        onChange={(e) => {
+          setPos(+e.target.value);
+          masquerIndice();
+        }}
         className="absolute inset-0 w-full h-full opacity-0 cursor-col-resize z-20"
         style={{ margin: 0, padding: 0 }}
         aria-label={libelle}
