@@ -21,7 +21,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { TRPCClientError } from "@trpc/client";
-import { Check, Maximize2, Pencil, Send, Trash2, Undo2, X } from "lucide-react";
+import { Check, Pencil, Send, Trash2, Undo2, X } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import { NUANCIER_DEFAUT, lireMemorise, trouverPalette } from "@/nuancier";
@@ -30,7 +30,6 @@ import {
   chemin,
   cibleBloc,
   cibleTexte,
-  elargir,
   estHorsChamp,
   extrait,
   lireTexte,
@@ -762,7 +761,6 @@ export default function ModeEdition() {
 
   const fermerPanneau = useCallback(() => setPanneau(null), []);
 
-  const plusGrand = cible ? elargir(cible) : null;
   const sousEnTete = document.querySelector("[data-edition-socle]")?.getBoundingClientRect().bottom ?? 0;
   const visible = cadre && cadre.bottom > sousEnTete && cadre.top < window.innerHeight;
   const n = modifs.length;
@@ -803,21 +801,6 @@ export default function ModeEdition() {
               <Trash2 size={13} aria-hidden />
               Retirer
             </button>
-            {plusGrand && (
-              <button
-                type="button"
-                onClick={() => {
-                  terminer();
-                  validerChamp();
-                  designer(plusGrand, true);
-                }}
-                title="Désigner le bloc qui contient celui-ci"
-                className="inline-flex items-center gap-1.5 px-2.5 py-2 border-l border-creme/25 hover:bg-prusse transition-colors"
-              >
-                <Maximize2 size={13} aria-hidden />
-                Élargir
-              </button>
-            )}
           </div>
         </>
       )}
