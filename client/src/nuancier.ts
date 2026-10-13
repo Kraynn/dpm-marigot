@@ -16,8 +16,16 @@
  * Toute nouvelle valeur doit repasser ce contrôle.
  *
  * Choix mémorisé dans localStorage (clé ci-dessous) et partageable par
- * `?nuancier=<id>`. « actuel » = aucune surcharge : le site tel que défini
- * dans index.css.
+ * `?nuancier=<id>`.
+ *
+ * 13/10/2026 — palette figée : « Papier & terracotta » (choix de la cliente,
+ * confirmé par Silva). Ses valeurs sont désormais celles de index.css, donc
+ * NUANCIER_DEFAUT = "papier-terracotta" = aucune surcharge. Le nuancier sort de
+ * l'interface publique (plus de pastille, plus de `?nuancier=`) : au chargement,
+ * main.tsx appelle oublierNuancier(), qui efface un ancien choix mémorisé pour
+ * que tout visiteur voie la palette figée. « actuel » garde la palette d'avant
+ * pour mémoire. Le module reste parce que l'éditeur de page lit le nom de la
+ * palette (ModeEdition, en-tête du mail de retouches).
  */
 
 export type Teintes = {
@@ -38,8 +46,8 @@ export type Palette = { id: string; nom: string; sous: string; v: Teintes };
 export const PALETTES: Palette[] = [
   {
     id: "actuel",
-    nom: "Actuel",
-    sous: "Le site aujourd'hui : terracotta sur crème",
+    nom: "Ancien site",
+    sous: "Le site jusqu'au 12/10/2026 : terracotta sur crème",
     v: { creme: "#f3ede4", creme2: "#eae2d6", encre: "#1a1613", terre: "#a8442f", terreDark: "#8c3524", ocre: "#c99a3b", prusse: "#1f3a52", olive: "#5e6b45", taupe: "#6f6458", trait: "#d9cfc0" },
   },
   {
@@ -90,7 +98,7 @@ export const PALETTES: Palette[] = [
   },
 ];
 
-export const NUANCIER_DEFAUT = "actuel";
+export const NUANCIER_DEFAUT = "papier-terracotta";
 const CLE = "dpm-nuancier";
 const ID_STYLE = "nuancier-live";
 
@@ -150,6 +158,29 @@ export function ecrireDansAdresse(id: string) {
     if (id === NUANCIER_DEFAUT) url.searchParams.delete("nuancier");
     else url.searchParams.set("nuancier", id);
     window.history.replaceState(window.history.state, "", url);
+  } catch {
+    /* adresse non modifiable : sans conséquence */
+  }
+}
+
+/**
+ * Palette figée (13/10/2026) : efface tout choix d'avant — clé localStorage,
+ * surcharge éventuelle, `?nuancier=` dans l'adresse — pour que le site public
+ * s'affiche toujours avec les valeurs de index.css.
+ */
+export function oublierNuancier() {
+  try {
+    window.localStorage.removeItem(CLE);
+  } catch {
+    /* stockage bloqué : rien n'a pu y être mémorisé */
+  }
+  document.getElementById(ID_STYLE)?.remove();
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("nuancier")) {
+      url.searchParams.delete("nuancier");
+      window.history.replaceState(window.history.state, "", url);
+    }
   } catch {
     /* adresse non modifiable : sans conséquence */
   }

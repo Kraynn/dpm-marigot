@@ -7,15 +7,22 @@
    DPM Marigot – Design system « Le Nuancier »
    Direction validée le 2026-08-28 (cf. design-demos/direction-approved.md)
 
-   Palette échantillonnée sur les photos de chantier réelles du client
-   (client/public/images/), pas sur un catalogue de tendances :
-     terre    #A8442F  pot en terre cuite, salle à manger
-     ocre     #C99A3B  bois de chêne éclairci
-     prusse   #1F3A52  menuiseries alu anthracite, poussées vers le bleu
-     olive    #5E6B45  végétation vue par les baies
-     crème    #F3EDE4  plafond repeint
-     taupe    #6F6458  murs peints (#7A6E62 jusqu'au 05/10/2026, assombri pour l'AA : 4,26 -> 4,96 sur la crème)
-     encre    #1A1613
+   Palette figée le 13/10/2026 : « Papier & terracotta », choisie par la
+   cliente au rendez-vous parmi les propositions du nuancier (src/nuancier.ts,
+   id "papier-terracotta"). Fond = papier des adhésifs de la vitrine.
+     crème    #D8C0B0  papier des adhésifs (fond de page)
+     crème 2  #F3ECE3  blanc cassé (cartes, aplats clairs)
+     encre    #161413
+     terre    #7A321D  terracotta (boutons, accents)
+     terre-dk #612816
+     ocre     #F3ECE3  blanc cassé (bandeau Avis, rond de la bannière)
+     prusse   #3B3936  anthracite (bande Processus)
+     olive    #5F5146
+     taupe    #4D433B  texte secondaire
+     trait    #B19684  filets
+   Palette d'origine (28/08 -> 12/10/2026), échantillonnée sur les photos de
+   chantier : terre #A8442F, ocre #C99A3B, prusse #1F3A52, olive #5E6B45,
+   crème #F3EDE4, taupe #6F6458, encre #1A1613 (entrée « actuel » du nuancier).
 
    Motif signature : la bande de nuancier (.nuancier-bar). DPM vend de la
    couleur et de la matière — la couleur est le produit, elle structure la page.
@@ -24,16 +31,16 @@
    ============================================================ */
 
 @theme {
-  --color-creme: #f3ede4;
-  --color-creme-2: #eae2d6;
-  --color-encre: #1a1613;
-  --color-terre: #a8442f;
-  --color-terre-dark: #8c3524;
-  --color-ocre: #c99a3b;
-  --color-prusse: #1f3a52;
-  --color-olive: #5e6b45;
-  --color-taupe: #6f6458;
-  --color-trait: #d9cfc0;
+  --color-creme: #d8c0b0;
+  --color-creme-2: #f3ece3;
+  --color-encre: #161413;
+  --color-terre: #7a321d;
+  --color-terre-dark: #612816;
+  --color-ocre: #f3ece3;
+  --color-prusse: #3b3936;
+  --color-olive: #5f5146;
+  --color-taupe: #4d433b;
+  --color-trait: #b19684;
   --font-display: "DM Serif Display", Georgia, serif;
   --font-sans: "Space Grotesk", system-ui, sans-serif;
 }
@@ -83,38 +90,38 @@
 :root {
   --radius: 0rem;
 
-  --background: #f3ede4;
-  --foreground: #1a1613;
+  --background: #d8c0b0;
+  --foreground: #161413;
   --card: #ffffff;
-  --card-foreground: #1a1613;
+  --card-foreground: #161413;
   --popover: #ffffff;
-  --popover-foreground: #1a1613;
-  --primary: #a8442f;
+  --popover-foreground: #161413;
+  --primary: #7a321d;
   --primary-foreground: #ffffff;
-  --secondary: #eae2d6;
-  --secondary-foreground: #1a1613;
-  --muted: #eae2d6;
-  --muted-foreground: #6f6458;
-  --accent: #c99a3b;
-  --accent-foreground: #1a1613;
-  --destructive: #a8442f;
+  --secondary: #f3ece3;
+  --secondary-foreground: #161413;
+  --muted: #f3ece3;
+  --muted-foreground: #4d433b;
+  --accent: #f3ece3;
+  --accent-foreground: #161413;
+  --destructive: #7a321d;
   --destructive-foreground: #ffffff;
-  --border: #d9cfc0;
-  --input: #d9cfc0;
-  --ring: #a8442f;
-  --chart-1: #a8442f;
-  --chart-2: #c99a3b;
-  --chart-3: #1f3a52;
-  --chart-4: #5e6b45;
-  --chart-5: #6f6458;
+  --border: #b19684;
+  --input: #b19684;
+  --ring: #7a321d;
+  --chart-1: #7a321d;
+  --chart-2: #f3ece3;
+  --chart-3: #3b3936;
+  --chart-4: #5f5146;
+  --chart-5: #4d433b;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1a1613;
-  --sidebar-primary: #a8442f;
+  --sidebar-foreground: #161413;
+  --sidebar-primary: #7a321d;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #eae2d6;
-  --sidebar-accent-foreground: #1a1613;
-  --sidebar-border: #d9cfc0;
-  --sidebar-ring: #a8442f;
+  --sidebar-accent: #f3ece3;
+  --sidebar-accent-foreground: #161413;
+  --sidebar-border: #b19684;
+  --sidebar-ring: #7a321d;
 }
 
 @layer base {

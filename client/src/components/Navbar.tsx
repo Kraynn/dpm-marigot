@@ -14,7 +14,6 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
-import NuancierPopup, { BoutonNuancier, useNuancier } from "@/components/NuancierPopup";
 import BoutonEdition from "@/edition/BoutonEdition";
 import { useEditionActive } from "@/edition/journal";
 import { RESEAUX_CONNUS } from "@/reseaux";
@@ -58,8 +57,6 @@ function viserAncre(href: string, essaisRestants = 20) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [nuancierOuvert, setNuancierOuvert] = useState(false);
-  const nuancier = useNuancier();
   const edition = useEditionActive();
   const [emplacement, naviguer] = useLocation();
   const surAccueil = emplacement === "/";
@@ -161,10 +158,10 @@ export default function Navbar() {
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
           <div className="flex items-center gap-3 lg:gap-2 xl:gap-3">
-            {/* Nuancier (05/10/2026) : pastille discrète, desktop seulement dans la barre.
-                06/10/2026 : le crayon de l'éditeur de page se place à côté. */}
+            {/* Crayon de l'éditeur de page (06/10/2026), desktop seulement dans la barre.
+                13/10/2026 : la pastille du nuancier qui était à côté est retirée,
+                la palette « Papier & terracotta » est figée dans index.css. */}
             <span className="hidden lg:inline-flex items-center">
-              <BoutonNuancier onOuvrir={() => setNuancierOuvert(true)} />
               <BoutonEdition />
             </span>
             {RESEAUX_CONNUS.length > 0 && (
@@ -269,28 +266,13 @@ export default function Navbar() {
               </ul>
             )}
 
-            {/* Nuancier : sur mobile, la barre est pleine ; il vit au bas du menu,
-                avec l'éditeur de page. */}
+            {/* Éditeur de page : sur mobile, la barre est pleine ; il vit au bas du menu. */}
             <div className="pt-4 flex flex-wrap gap-2.5">
-              <BoutonNuancier
-                variante="menu"
-                onOuvrir={() => {
-                  setOpen(false);
-                  setNuancierOuvert(true);
-                }}
-              />
               <BoutonEdition variante="menu" onOuvrir={() => setOpen(false)} />
             </div>
           </div>
         </div>
       )}
-
-      <NuancierPopup
-        ouvert={nuancierOuvert}
-        onFermer={() => setNuancierOuvert(false)}
-        actif={nuancier.actif}
-        choisir={nuancier.choisir}
-      />
 
       {edition && (
         <Suspense fallback={null}>
