@@ -15,7 +15,7 @@ import { ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NuancierBar from "@/components/NuancierBar";
-import { VERSION_LEGALE } from "@/identite-legale";
+import { ADRESSE_SITE, VERSION_LEGALE } from "@/identite-legale";
 
 type Props = {
   titre: string;
@@ -41,7 +41,7 @@ export default function PageLegale({ titre, intro, children }: Props) {
           </h1>
           <p className="text-encre/70 text-sm mt-4 leading-relaxed">{intro}</p>
           <p className="text-taupe text-xs mt-4">
-            Version du {VERSION_LEGALE} · site dpm-marigot.vercel.app
+            Version du {VERSION_LEGALE} · site {ADRESSE_SITE}
           </p>
         </div>
       </header>
