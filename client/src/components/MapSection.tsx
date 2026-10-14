@@ -18,7 +18,10 @@
 import { MapPin, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const ZONES = ["Yvelines (78)", "Paris (75)", "Hauts-de-Seine (92)", "Val-d'Oise (95)", "Essonne (91)"];
+// 14/10/2026 : Paris, Hauts-de-Seine, Val-d'Oise et Essonne retirés à la demande
+// de la cliente (éditeur de page, 13/10). Même liste dans Footer.tsx, la FAQ et
+// le JSON-LD (areaServed) de client/index.html.
+const ZONES = ["Yvelines (78)"];
 
 const CARTE_SRC =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.7!2d1.9499437!3d48.7394663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sDPM+Marigot!5e0!3m2!1sfr!2sfr!4v1";
@@ -96,14 +99,13 @@ export default function MapSection() {
                 92, Avenue Habert de Montmort
               </p>
               <p className="text-encre/70 text-sm mt-1 mb-5">Le Mesnil-Saint-Denis (78)</p>
-              <div className="mb-5 pb-5 border-b-2 border-encre/15">
+              {/* 14/10/2026 : le paragraphe « Ouvert au public… » est retiré (demande de la
+                  cliente, 13/10). La marge basse des horaires part avec lui, sinon le
+                  téléphone tomberait à 40 px du filet au lieu de 20. */}
+              <div className="pb-5 border-b-2 border-encre/15">
                 <p className="section-label text-taupe mb-1.5">Horaires</p>
                 <p className="text-encre text-sm font-bold">Du mardi au vendredi · 9h00 – 18h30</p>
               </div>
-              <p className="text-encre/70 text-sm leading-relaxed">
-                Ouvert au public. Venez voir les collections de revêtements de sols et de murs avant
-                de choisir — et retirez vos colis au passage.
-              </p>
               <a
                 href="tel:+33185830355"
                 className="inline-flex items-center gap-2 mt-5 font-bold text-sm text-encre border-b-[3px] border-terre pb-1 hover:text-terre transition-colors"

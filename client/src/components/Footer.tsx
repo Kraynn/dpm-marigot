@@ -32,7 +32,9 @@ const services: { label: string; ancre: string }[] = [
   { label: "Point relais colis", ancre: "#relais-colis" },
 ];
 
-const zones = ["Yvelines (78)", "Paris (75)", "Hauts-de-Seine (92)", "Val-d'Oise (95)", "Essonne (91)"];
+// 14/10/2026 : réduite aux Yvelines à la demande de la cliente (13/10), comme
+// dans MapSection.tsx.
+const zones = ["Yvelines (78)"];
 
 export default function Footer() {
   const scrollTo = (sel: string) => {

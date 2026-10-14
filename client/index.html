@@ -40,7 +40,10 @@
          métiers du site absents de l'adhésif (dégât des eaux, décoration).
          Les horaires « Tu-Fr 09:00-18:30 » sont confirmés par l'adhésif de porte.
          Le point relais colis est décrit, pas balisé : schema.org n'a pas de
-         type qui lui corresponde sans forcer. -->
+         type qui lui corresponde sans forcer.
+         2026-10-14 — areaServed passe de « Île-de-France » aux Yvelines : la
+         cliente a retiré Paris, 92, 95 et 91 de la zone d'intervention (13/10).
+         addressRegion reste « Île-de-France » : c'est la région de l'adresse. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -72,7 +75,10 @@
           "Remise en état après dégât des eaux",
           "Décoration intérieure"
         ],
-        "areaServed": "Île-de-France",
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Yvelines"
+        },
         "hasMap": "https://www.google.com/maps/search/?api=1&query=DPM+Marigot+92+Avenue+Habert+de+Montmort+Le+Mesnil-Saint-Denis",
         "sameAs": [
           "https://www.instagram.com/dpmmarigotrenovinterieure/",

@@ -48,7 +48,8 @@ const faqs = [
   },
   {
     q: "Dans quelles zones intervenez-vous ?",
-    a: "Nous partons du Mesnil-Saint-Denis et intervenons en Île-de-France : Yvelines, Paris, Hauts-de-Seine, Val-d'Oise et Essonne. Appelez-nous pour vérifier votre secteur.",
+    // 14/10/2026 : alignée sur la zone réduite aux Yvelines (demande de la cliente, 13/10).
+    a: "Nous partons du Mesnil-Saint-Denis et intervenons dans les Yvelines (78). Appelez-nous pour vérifier votre secteur.",
   },
   {
     q: "Travaillez-vous pour les professionnels ?",
