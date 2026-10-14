@@ -27,8 +27,8 @@ const projectTypes = [
   "Peinture extérieure",
   "Décoration intérieure",
   "Menuiserie",
-  // 14/10/2026 (RDV DPM) : « dégât des eaux » devient « sinistre » partout sur le site.
-  "Rénovation après sinistre",
+  // « dégât des eaux » renommé « sinistre » le 14/10, remis le 15/10 (Silva : on le garde, c'est ce que les clients cherchent).
+  "Rénovation après dégât des eaux",
   // 05/10/2026 : les travaux de l'adhésif vitrine, sauf ceux déjà couverts ci-dessus
   ...TRAVAUX_RENOVATION.filter((t) => !DEJA_COUVERTS.includes(t)),
   "Autre",

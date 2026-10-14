@@ -29,8 +29,7 @@
  * pointaient jusqu'ici sur la carte, en bas de page ; ils arrivent maintenant
  * ici, où le showroom est réellement décrit et montré.
  *
- * 2026-10-14 (notes du RDV DPM) : « dégât des eaux » devient « sinistre », et le
- * bouton « Demander un devis » part. Les badges « Devis gratuit » restent : ce
+ * 2026-10-14 (notes du RDV DPM) : le bouton « Demander un devis » part. Les badges « Devis gratuit » restent : ce
  * sont des faits, pas des boutons.
  *
  * 2026-09-21, troisième passage : le bandeau des partenaires devient le pied
@@ -56,7 +55,7 @@ const faits = [
   ],
   [
     { label: "Devis gratuit", fort: false },
-    { label: "Spécialiste sinistre", fort: false },
+    { label: "Spécialiste dégât des eaux", fort: false },
     { label: "Sols & murs", fort: false },
   ],
 ];

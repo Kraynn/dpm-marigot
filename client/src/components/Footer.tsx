@@ -9,8 +9,8 @@
  * dans la Navbar.
  *
  * 2026-10-14 (notes du RDV DPM) : le bouton « Demander un devis » du bandeau part
- * (onglet « Contact » dans l'en-tête à la place), « Dégâts des eaux » devient
- * « Sinistre », et la marge basse rétrécit : le bouton WhatsApp n'existe plus.
+ * (onglet « Contact » dans l'en-tête à la place), et la marge basse rétrécit : le
+ * bouton WhatsApp n'existe plus.
  */
 import { Link } from "wouter";
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
@@ -30,7 +30,7 @@ const services: { label: string; ancre: string }[] = [
   { label: "Décoration", ancre: "#services" },
   { label: "Sols & murs", ancre: "#services" },
   { label: "Menuiserie", ancre: "#services" },
-  { label: "Sinistre", ancre: "#services" },
+  { label: "Dégâts des eaux", ancre: "#services" },
   // 05/10/2026 : la liste complète de l'adhésif vitrine, sous les cartes métiers
   { label: "Tous nos travaux de rénovation", ancre: "#travaux" },
   { label: "Point relais colis", ancre: "#relais-colis" },
@@ -105,7 +105,7 @@ export default function Footer() {
             </div>
             <p className="text-creme/75 text-sm leading-relaxed max-w-sm">
               Artisan au Mesnil-Saint-Denis (78). Peinture, décoration, menuiserie, revêtements de
-              sols et murs, remise en état après sinistre. Showroom ouvert au public.
+              sols et murs, remise en état après dégât des eaux. Showroom ouvert au public.
             </p>
             <div className="flex flex-col gap-2.5 mt-6">
               <a

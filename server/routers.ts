@@ -9,6 +9,16 @@ import { publicProcedure, router } from "./_core/trpc.js";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+// x-real-ip d'abord : c'est Vercel qui l'écrit. Le premier élément de x-forwarded-for
+// ne sert que de repli (serveur local), car hors plateforme c'est l'appelant qui le choisit.
+function ipAppelant(req: { headers: Record<string, string | string[] | undefined> }) {
+  const entete = (nom: string) => {
+    const v = req.headers[nom];
+    return (Array.isArray(v) ? v[0] : v)?.split(",")[0]?.trim();
+  };
+  return entete("x-real-ip") || entete("x-forwarded-for") || "inconnue";
+}
+
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -39,10 +49,20 @@ export const appRouter = router({
           website: z.string().optional(), // honeypot — doit rester vide
         })
       )
-      .mutation(async ({ input }) => {
+      .mutation(async ({ input, ctx }) => {
         // Honeypot : si rempli, ignorer silencieusement
         if (input.website) {
           return { success: true, message: "Demande de devis reçue" };
+        }
+
+        // 15/10/2026 (question de Silva sur le flood) : même frein que l'éditeur de page,
+        // 3 demandes par 10 minutes et par IP. Compteur propre à chaque instance Vercel :
+        // c'est un frein contre le clic répété et le script naïf, pas un rempart.
+        if (!autoriser(`devis:${ipAppelant(ctx.req)}`, 3, 10 * 60 * 1000)) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: "Trop de demandes rapprochées. Réessayez dans quelques minutes ou appelez-nous.",
+          });
         }
 
         const { website: _hp, ...quoteData } = input;
@@ -134,15 +154,7 @@ export const appRouter = router({
           return { success: true } as const;
         }
 
-        // x-real-ip d'abord : c'est Vercel qui l'écrit. Le premier élément de
-        // x-forwarded-for ne sert que de repli (serveur local), car hors plateforme
-        // c'est l'appelant qui le choisit.
-        const entete = (nom: string) => {
-          const v = ctx.req.headers[nom];
-          return (Array.isArray(v) ? v[0] : v)?.split(",")[0]?.trim();
-        };
-        const ip = entete("x-real-ip") || entete("x-forwarded-for");
-        if (!autoriser(`edition:${ip || "inconnue"}`, 6, 10 * 60 * 1000)) {
+        if (!autoriser(`edition:${ipAppelant(ctx.req)}`, 6, 10 * 60 * 1000)) {
           throw new TRPCError({
             code: "TOO_MANY_REQUESTS",
             message: "Trop d'envois rapprochés. Réessayez dans quelques minutes.",

@@ -65,12 +65,12 @@ export const PROJETS: Projet[] = [
     },
   },
   {
-    titre: "Cuisine — après sinistre",
+    titre: "Cuisine — après sinistre DDE",
     description:
-      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre. Chantier de juin 2025.",
+      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre DDE (dégât des eaux). Chantier de juin 2025.",
     avant: {
       src: "/images/realisations/cuisine-sinistre-avant.jpg",
-      alt: "Mur et plafond de cuisine endommagés lors d'un sinistre",
+      alt: "Mur et plafond de cuisine endommagés par un dégât des eaux",
     },
     apres: {
       src: "/images/realisations/cuisine-sinistre-apres.jpg",
@@ -100,10 +100,10 @@ const DERNIERES: Realisation[] = [
     alt: "Salle à manger rénovée par DPM Marigot, murs taupe et plafond blanc, charpente apparente",
   },
   {
-    titre: "Cuisine — après sinistre",
+    titre: "Cuisine — après dégât des eaux",
     legende: "Plafond et mur repris puis remis en peinture après sinistre. Juin 2025.",
     src: "/images/realisations/cuisine-sinistre-apres.jpg",
-    alt: "Mur et plafond de cuisine rénovés par DPM Marigot après un sinistre",
+    alt: "Mur et plafond de cuisine rénovés par DPM Marigot après un dégât des eaux",
   },
   {
     titre: "Plafond de séjour",

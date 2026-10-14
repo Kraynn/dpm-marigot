@@ -8,9 +8,9 @@
  * servies par un CDN externe (d2xsxph8kpxj0f.cloudfront.net) qui répond 403 depuis :
  * ne jamais réintroduire de dépendance d'image hors du dépôt.
  *
- * 14/10/2026 (notes du RDV DPM) : la carte « Après un dégât des eaux » devient
- * « Après un sinistre » et porte la phrase de la cliente « Rien à payer hormis la
- * franchise en cas de sinistre » ; le bouton « Demander un devis » en bas de
+ * 14/10/2026 (notes du RDV DPM) : la carte « Après un dégât des eaux » (tag « Sinistre »)
+ * porte la phrase de la cliente « Rien à payer hormis la franchise en cas de
+ * sinistre » ; le bouton « Demander un devis » en bas de
  * section est retiré (onglet « Contact » dans l'en-tête à la place).
  */
 import { Check } from "lucide-react";
@@ -64,11 +64,11 @@ const services: Service[] = [
   },
   {
     tag: "Sinistre",
-    title: "Après un sinistre",
+    title: "Après un dégât des eaux",
     description:
       "Remise en état complète après sinistre : plafonds et murs touchés, dépose des revêtements, finitions.",
     mention: "Rien à payer hormis la franchise en cas de sinistre",
-    items: ["Reprise des supports", "Suivi du dossier assurance"],
+    items: ["Dégâts des eaux", "Reprise des supports", "Suivi du dossier assurance"],
     image: "/images/services/sinistre.jpg",
     tagClass: "bg-ocre text-encre",
     puce: "bg-ocre",

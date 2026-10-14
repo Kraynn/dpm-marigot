@@ -17,11 +17,12 @@ vi.mock("./_core/asapDevis", () => ({
 // Imports récupérés après le mock pour accéder aux fonctions mockées
 import { sendQuoteEmail } from "./_core/email";
 import { forwardToAsapDevis } from "./_core/asapDevis";
+import { oublierLesPassages } from "./_core/frequence";
 
-function createPublicContext(): TrpcContext {
+function createPublicContext(ip?: string): TrpcContext {
   return {
     user: null,
-    req: { protocol: "https", headers: {} },
+    req: { protocol: "https", headers: ip ? { "x-real-ip": ip } : {} },
     res: { clearCookie: vi.fn() },
   };
 }
@@ -41,6 +42,7 @@ beforeEach(() => {
   // par défaut : service central non configuré → comportement historique
   vi.mocked(forwardToAsapDevis).mockResolvedValue({ forwarded: false });
   process.env.QUOTE_RECIPIENT_EMAIL = "owner@example.com";
+  oublierLesPassages();
 });
 
 describe("contact.sendQuote", () => {
@@ -210,5 +212,22 @@ describe("contact.sendQuote", () => {
 
     expect(result.emailSent).toBe(true);
     expect(sendQuoteEmail).toHaveBeenCalledOnce();
+  });
+
+  // 15/10/2026 : limite de fréquence, 3 demandes par 10 minutes et par IP
+  it("refuse la 4e demande rapprochée d'une même IP, sans rien envoyer", async () => {
+    const caller = appRouter.createCaller(createPublicContext("203.0.113.7"));
+    for (let i = 0; i < 3; i++) await caller.contact.sendQuote(validInput);
+    expect(sendQuoteEmail).toHaveBeenCalledTimes(3);
+    await expect(caller.contact.sendQuote(validInput)).rejects.toMatchObject({ code: "TOO_MANY_REQUESTS" });
+    expect(sendQuoteEmail).toHaveBeenCalledTimes(3);
+  });
+
+  it("compte chaque IP à part", async () => {
+    const a = appRouter.createCaller(createPublicContext("203.0.113.7"));
+    for (let i = 0; i < 3; i++) await a.contact.sendQuote(validInput);
+    const b = appRouter.createCaller(createPublicContext("198.51.100.4"));
+    const result = await b.contact.sendQuote(validInput);
+    expect(result.success).toBe(true);
   });
 });

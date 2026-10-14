@@ -30,8 +30,8 @@ const faqs = [
     a: "Nous répondons aux demandes sous 72h. La date de démarrage et la durée du chantier sont écrites sur le devis, avant que vous ne signiez quoi que ce soit.",
   },
   {
-    // 14/10/2026 (RDV DPM) : « dégât des eaux » devient « sinistre » sur tout le site.
-    q: "Intervenez-vous après un sinistre ?",
+    // « dégât des eaux » renommé « sinistre » le 14/10, remis le 15/10 à la demande de Silva.
+    q: "Intervenez-vous après un dégât des eaux ?",
     a: "Oui, c'est une de nos spécialités : dépose des revêtements touchés, reprise des plafonds et des murs, remise en peinture. Nous connaissons le déroulé côté assurance et nous vous accompagnons dans les démarches.",
   },
   {
