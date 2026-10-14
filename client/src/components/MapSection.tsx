@@ -23,8 +23,15 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 // le JSON-LD (areaServed) de client/index.html.
 const ZONES = ["Yvelines (78)"];
 
+// 14/10/2026 : l'ancien embed (pb=…, coordonnées seules, place 0x0) centrait sur
+// le restaurant voisin « Oh Mesnil » sans nommer DPM (Silva). La requête par nom +
+// adresse ouvre la fiche Google de l'établissement : épingle « DPM Marigot -
+// Décoration, Peinture… », encart avec l'adresse et la note, vérifié dans Chrome
+// visible le 14/10. Toujours sans clé API (asap-web/CLAUDE.md).
 const CARTE_SRC =
-  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1167.7!2d1.9499437!3d48.7394663!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sDPM+Marigot!5e0!3m2!1sfr!2sfr!4v1";
+  "https://maps.google.com/maps?q=" +
+  encodeURIComponent("DPM Marigot, 92 avenue Habert de Montmort, 78320 Le Mesnil-Saint-Denis") +
+  "&z=17&hl=fr&output=embed";
 
 export default function MapSection() {
   const { ref, visible } = useScrollReveal();
