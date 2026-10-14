@@ -19,20 +19,21 @@
  * Les deux boutons restent ici — « Demander un devis » est la conversion, et
  * Silva a demandé que « Visiter le showroom » reste aussi. Ce dernier ne pointe
  * plus vers la carte mais vers la section showroom (#showroom).
+ *
+ * 2026-10-14, notes du RDV DPM :
+ *   - « bloc hero enlever 2 photos et mettre le relais colis direct à la place » :
+ *     les deux avant / après de droite sont retirés et la carte « Point relais »
+ *     (PointRelaisCard, contenu inchangé : Pickup + Chronopost, Colissimo, DPD)
+ *     prend leur place. Elle était jusque-là incrustée à cheval sur la section des
+ *     avis, qui descend sous le formulaire de devis. Sous 640 px, où la colonne
+ *     photos n'était pas affichée, la carte suit le texte, à plat.
+ *   - « Demander un devis » part, comme tous les boutons de devis de la page :
+ *     l'onglet « Contact » de l'en-tête mène au formulaire. « Visiter le
+ *     showroom » reste.
  */
 import { useEffect, useState } from "react";
-import { ArrowRight, Phone } from "lucide-react";
-import AvantApres from "./AvantApres";
-import { PROJETS } from "./RealisationsGallery";
-
-// 08/10/2026, demande de Silva : les deux polaroïds deviennent des curseurs avant /
-// après, comme dans la galerie, plus grands et décalés vers la droite au-delà du
-// conteneur (marge prise sur le blanc de bord de page, voir .banniere-collage).
-// Le curseur part en butée sur « après », ce qui tient la règle du 19/09 (pas un
-// plafond fissuré en vitrine) ; les étiquettes Avant / Après se fondent à mesure qu'on glisse.
-// Tailles ramenées aux 3/4 le même jour, et hauteurs de colonne d'origine : ce
-// sont elles qui fixent la position verticale du texte à gauche.
-const [PLAFOND, SALLE_A_MANGER] = PROJETS;
+import { Phone } from "lucide-react";
+import PointRelaisCard from "./PointRelaisCard";
 
 // La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
 // donc son propre déclencheur, et sa propre prise en compte de
@@ -60,7 +61,10 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative bg-creme pt-[74px] lg:pt-[84px] overflow-hidden">
+    // Filet bas : la section des avis, qui fermait la bannière par son propre filet,
+    // est descendue sous le devis (14/10/2026) ; sans lui, bannière et métiers,
+    // tous deux crème, se fondaient.
+    <section className="relative bg-creme pt-[74px] lg:pt-[84px] overflow-hidden border-b-[3px] border-encre">
       {/* Rond ocre : masse de couleur qui casse la grille, motif Nuancier */}
       <div className="absolute -top-24 -right-32 w-[460px] h-[460px] rounded-full bg-ocre opacity-25 pointer-events-none" />
 
@@ -128,10 +132,6 @@ export default function HeroSection() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 mt-8">
-              <button onClick={() => scrollTo("#contact")} className="cta-btn text-base">
-                Demander un devis
-                <ArrowRight size={18} className="cta-arrow" />
-              </button>
               <button onClick={() => scrollTo("#showroom")} className="cta-btn-ghost text-base">
                 Visiter le showroom
               </button>
@@ -153,49 +153,18 @@ export default function HeroSection() {
             </a>
           </div>
 
-          {/* Collage : deux photos réelles inclinées */}
+          {/* 14/10/2026 : le point relais colis à la place des deux photos (notes du
+              RDV DPM). La colonne garde sa hauteur desktop d'avant : c'est elle qui
+              centre le texte à gauche. */}
           <div
-            className="banniere-collage relative h-[420px] sm:h-[520px] lg:h-[540px] hidden sm:block"
+            className="flex items-center justify-center lg:h-[540px]"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.7s ease 0.18s, transform 0.7s ease 0.18s",
             }}
           >
-            <figure className="absolute top-0 right-4 lg:right-6 xl:right-0 w-[285px] lg:w-[300px] xl:w-[345px] 2xl:w-[390px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-prusse)] rotate-[2.5deg]">
-              <AvantApres
-                avant={SALLE_A_MANGER.avant}
-                apres={SALLE_A_MANGER.apres}
-                className="aspect-[4/3]"
-                differe={false}
-                depart={0}
-                fondu
-                indice="survol"
-                libelle="Salle à manger : curseur avant / après"
-              />
-              <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
-                Salle à manger · rénovation complète
-              </figcaption>
-            </figure>
-
-            <figure className="absolute bottom-0 left-0 lg:left-20 xl:left-12 w-[210px] lg:w-[225px] xl:w-[248px] 2xl:w-[270px] bg-white border-[3px] border-encre p-2.5 shadow-[8px_8px_0_var(--color-terre)] -rotate-[4deg]">
-              <AvantApres
-                avant={PLAFOND.avant}
-                apres={PLAFOND.apres}
-                className="aspect-[4/3]"
-                differe={false}
-                depart={0}
-                fondu
-                indice="survol"
-                libelle="Plafond fissuré : curseur avant / après"
-              />
-              <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-2 text-encre">
-                Plafond fissuré · repris
-              </figcaption>
-            </figure>
-            {/* 05/10/2026 : la colonne de cinq échantillons qui tenait ici est retirée,
-                à la demande de Silva (« ça sert à rien »). La bande de couleurs en
-                tête de page, au pied et sur les pages légales reste. */}
+            <PointRelaisCard variante="banniere" />
           </div>
         </div>
       </div>

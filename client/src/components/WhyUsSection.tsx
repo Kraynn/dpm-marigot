@@ -29,10 +29,14 @@
  * pointaient jusqu'ici sur la carte, en bas de page ; ils arrivent maintenant
  * ici, où le showroom est réellement décrit et montré.
  *
+ * 2026-10-14 (notes du RDV DPM) : « dégât des eaux » devient « sinistre », et le
+ * bouton « Demander un devis » part. Les badges « Devis gratuit » restent : ce
+ * sont des faits, pas des boutons.
+ *
  * 2026-09-21, troisième passage : le bandeau des partenaires devient le pied
  * de cette section (voir PartenairesBand.tsx). Plus de padding bas ici.
  */
-import { ArrowRight, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import PartenairesBand from "@/components/PartenairesBand";
 
@@ -52,7 +56,7 @@ const faits = [
   ],
   [
     { label: "Devis gratuit", fort: false },
-    { label: "Spécialiste dégât des eaux", fort: false },
+    { label: "Spécialiste sinistre", fort: false },
     { label: "Sols & murs", fort: false },
   ],
 ];
@@ -86,11 +90,6 @@ const engagements = [
 
 export default function WhyUsSection() {
   const { ref, visible } = useScrollReveal();
-
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section
@@ -134,11 +133,9 @@ export default function WhyUsSection() {
               ))}
             </div>
 
+            {/* 14/10/2026 (RDV DPM) : le bouton « Demander un devis » est retiré, comme
+                tous ceux de la page ; l'onglet « Contact » de l'en-tête mène au formulaire. */}
             <div className="flex flex-wrap items-center gap-4 mt-7">
-              <button onClick={handleCTA} className="cta-btn text-base">
-                Demander un devis
-                <ArrowRight size={18} className="cta-arrow" />
-              </button>
               <a href="tel:+33185830355" className="cta-btn-ghost text-base">
                 <Phone size={17} />
                 01 85 83 03 55

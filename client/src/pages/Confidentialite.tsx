@@ -74,6 +74,12 @@ export default function Confidentialite() {
               <td>Oui</td>
               <td>Vous rappeler — c'est le moyen de réponse principal</td>
             </tr>
+            {/* 14/10/2026 : champ ajouté au formulaire après le RDV DPM. */}
+            <tr>
+              <td>Code postal du chantier</td>
+              <td>Oui</td>
+              <td>Vérifier que le chantier est dans notre zone d'intervention</td>
+            </tr>
             <tr>
               <td>E-mail</td>
               <td>Non</td>

@@ -27,7 +27,6 @@
  * flèches du clavier et le roving tabindex — et on l'habille au Nuancier.
  */
 import * as Tabs from "@radix-ui/react-tabs";
-import { ArrowRight } from "lucide-react";
 import AvantApres, { type Photo } from "./AvantApres";
 
 type Projet = {
@@ -66,12 +65,12 @@ export const PROJETS: Projet[] = [
     },
   },
   {
-    titre: "Cuisine — après sinistre DDE",
+    titre: "Cuisine — après sinistre",
     description:
-      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre DDE (dégât des eaux). Chantier de juin 2025.",
+      "Rénovation d'un plafond de cuisine et d'un mur, après un sinistre. Chantier de juin 2025.",
     avant: {
       src: "/images/realisations/cuisine-sinistre-avant.jpg",
-      alt: "Mur et plafond de cuisine endommagés par un dégât des eaux",
+      alt: "Mur et plafond de cuisine endommagés lors d'un sinistre",
     },
     apres: {
       src: "/images/realisations/cuisine-sinistre-apres.jpg",
@@ -101,10 +100,10 @@ const DERNIERES: Realisation[] = [
     alt: "Salle à manger rénovée par DPM Marigot, murs taupe et plafond blanc, charpente apparente",
   },
   {
-    titre: "Cuisine — après dégât des eaux",
+    titre: "Cuisine — après sinistre",
     legende: "Plafond et mur repris puis remis en peinture après sinistre. Juin 2025.",
     src: "/images/realisations/cuisine-sinistre-apres.jpg",
-    alt: "Mur et plafond de cuisine rénovés par DPM Marigot après un dégât des eaux",
+    alt: "Mur et plafond de cuisine rénovés par DPM Marigot après un sinistre",
   },
   {
     titre: "Plafond de séjour",
@@ -115,11 +114,6 @@ const DERNIERES: Realisation[] = [
 ];
 
 export default function RealisationsGallery() {
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container">
@@ -193,13 +187,6 @@ export default function RealisationsGallery() {
             </div>
           </Tabs.Content>
         </Tabs.Root>
-
-        <div className="mt-14">
-          <button onClick={handleCTA} className="cta-btn text-base">
-            Demander un devis
-            <ArrowRight size={18} className="cta-arrow" />
-          </button>
-        </div>
       </div>
     </section>
   );

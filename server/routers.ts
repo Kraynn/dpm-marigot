@@ -26,6 +26,13 @@ export const appRouter = router({
         z.object({
           nom: z.string().min(1, "Le nom est requis").max(100),
           telephone: z.string().min(5, "Le téléphone est requis").max(20),
+          // 14/10/2026 (RDV DPM) : code postal du chantier, pour savoir tout de suite
+          // s'il est dans la zone d'intervention. Cinq chiffres, espaces tolérés.
+          codePostal: z
+            .string()
+            .max(12)
+            .transform(v => v.replace(/\s+/g, ""))
+            .pipe(z.string().regex(/^\d{5}$/, "Code postal invalide (5 chiffres)")),
           email: z.string().email("Email invalide").max(320).optional(),
           projet: z.string().min(1, "Le type de projet est requis").max(100),
           message: z.string().max(2000).optional(),

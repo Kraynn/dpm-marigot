@@ -5,7 +5,8 @@
  * ⚠️ Seule la présentation a changé le 2026-08-28. La logique d'envoi reste
  * identique et ne doit pas être touchée sans mettre à jour le back-end :
  *   - mutation tRPC `contact.sendQuote` (server/routers.ts) ;
- *   - noms de champs exacts : nom / telephone / email / projet / message ;
+ *   - noms de champs exacts : nom / telephone / codePostal / email / projet / message ;
+ *     (codePostal ajouté le 14/10/2026 après le RDV DPM : cinq chiffres, obligatoire) ;
  *   - honeypot `website`, invisible pour les humains, doit rester vide ;
  *   - `emailSent === false` déclenche un toast d'avertissement, pas une erreur.
  * Tests associés : server/contact.sendQuote.test.ts
@@ -26,7 +27,8 @@ const projectTypes = [
   "Peinture extérieure",
   "Décoration intérieure",
   "Menuiserie",
-  "Rénovation après dégât des eaux",
+  // 14/10/2026 (RDV DPM) : « dégât des eaux » devient « sinistre » partout sur le site.
+  "Rénovation après sinistre",
   // 05/10/2026 : les travaux de l'adhésif vitrine, sauf ceux déjà couverts ci-dessus
   ...TRAVAUX_RENOVATION.filter((t) => !DEJA_COUVERTS.includes(t)),
   "Autre",
@@ -64,6 +66,7 @@ export default function ContactSection() {
   const [form, setForm] = useState({
     nom: "",
     telephone: "",
+    codePostal: "",
     email: "",
     projet: "",
     message: "",
@@ -85,6 +88,7 @@ export default function ContactSection() {
       const result = await sendQuoteMutation.mutateAsync({
         nom: form.nom,
         telephone: form.telephone,
+        codePostal: form.codePostal,
         email: form.email || undefined,
         projet: form.projet,
         message: form.message || undefined,
@@ -92,7 +96,15 @@ export default function ContactSection() {
       });
 
       setSubmitted(true);
-      setForm({ nom: "", telephone: "", email: "", projet: "", message: "", website: "" });
+      setForm({
+        nom: "",
+        telephone: "",
+        codePostal: "",
+        email: "",
+        projet: "",
+        message: "",
+        website: "",
+      });
 
       if (result.emailSent === false) {
         toast.warning(
@@ -234,19 +246,43 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="email" className="field-label">
-                    E-mail
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="jean@exemple.fr"
-                    className="field"
-                  />
+                {/* 14/10/2026 (RDV DPM) : le code postal du chantier, à côté de l'e-mail.
+                    Il dit tout de suite si le chantier est dans la zone d'intervention. */}
+                <div className="grid sm:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="codePostal" className="field-label">
+                      Code postal *
+                    </label>
+                    <input
+                      id="codePostal"
+                      type="text"
+                      name="codePostal"
+                      required
+                      inputMode="numeric"
+                      autoComplete="postal-code"
+                      pattern="[0-9]{5}"
+                      maxLength={5}
+                      title="Cinq chiffres, par exemple 78320"
+                      value={form.codePostal}
+                      onChange={handleChange}
+                      placeholder="78320"
+                      className="field"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="email" className="field-label">
+                      E-mail
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="jean@exemple.fr"
+                      className="field"
+                    />
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">

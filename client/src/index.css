@@ -591,6 +591,57 @@
   }
 }
 
+/* Variante « bannière » (14/10/2026, notes du RDV DPM) : la carte prend la place
+   des deux photos avant / après de la bannière d'accueil. En flux, jamais en
+   absolu ; plus grande que l'incrustée, inclinée comme le polaroïd qu'elle
+   remplace. Sous 640 px, à plat et pleine largeur sous le texte. Déclarée après
+   les règles de .carte-relais pour l'emporter à toutes les largeurs. */
+.carte-relais.carte-relais-banniere {
+  position: static;
+  transform: none;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 360px;
+}
+
+@media (min-width: 640px) {
+  .carte-relais.carte-relais-banniere {
+    transform: rotate(2.5deg);
+    width: 340px;
+    max-width: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .carte-relais.carte-relais-banniere {
+    width: 400px;
+    padding: 1.6rem 2rem 1.8rem;
+  }
+  .carte-relais-banniere .cr-etiquette {
+    font-size: 0.78rem;
+    margin-bottom: 1.1rem;
+  }
+  .carte-relais-banniere .cr-pickup {
+    height: 72px;
+    margin-bottom: 1.25rem;
+  }
+  .carte-relais-banniere .cr-logos {
+    gap: 1.6rem;
+    padding-top: 1.15rem;
+  }
+  .carte-relais-banniere .cr-logo {
+    height: calc(var(--cr-h) * 1.45);
+    width: calc(var(--cr-w) * 1.45);
+  }
+}
+
+@media (min-width: 1280px) {
+  .carte-relais.carte-relais-banniere {
+    left: auto;
+    width: 440px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     animation: none;

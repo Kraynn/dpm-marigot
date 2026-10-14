@@ -35,13 +35,15 @@
  * ailleurs — bannière, showroom, métiers — et de vrais avis valent mieux que
  * des promesses de notre main.
  *
- * Cette section sert aussi d'ancrage à la carte « Point relais » incrustée :
- * c'est elle qui porte `relative`. Voir PointRelaisCard.tsx.
+ * Jusqu'au 14/10/2026, cette section servait aussi d'ancrage à la carte « Point
+ * relais » incrustée. Notes du RDV DPM du 14/10 : les avis descendent sous le
+ * formulaire de devis, et le point relais monte dans la bannière, à la place des
+ * deux photos (voir HeroSection.tsx). Le bouton « Demander un devis » de bas de
+ * section part avec les autres (onglet « Contact » dans l'en-tête).
  */
 import { useState } from "react";
 import { ArrowRight, Facebook, Instagram, Star } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import PointRelaisCard from "@/components/PointRelaisCard";
 import { RESEAUX } from "@/reseaux";
 
 /**
@@ -188,11 +190,6 @@ function Etoiles({ note, taille = 15 }: { note: number; taille?: number }) {
 export default function TestimonialsSection() {
   const { ref, visible } = useScrollReveal();
 
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   /** Apparition commune de la bannière et du lien, après les deux cartes. */
   const apparition = {
     opacity: visible ? 1 : 0,
@@ -205,8 +202,6 @@ export default function TestimonialsSection() {
       id="avis"
       className="relative bg-ocre border-y-[3px] border-encre py-20 lg:py-24"
     >
-      <PointRelaisCard />
-
       <div className="container" ref={ref}>
         <div
           className="mb-12"
@@ -365,13 +360,6 @@ export default function TestimonialsSection() {
             Voir plus d'avis
             <ArrowRight size={16} />
           </a>
-        </div>
-
-        <div className="mt-12">
-          <button onClick={handleCTA} className="cta-btn text-base">
-            Demander un devis
-            <ArrowRight size={18} className="cta-arrow" />
-          </button>
         </div>
       </div>
     </section>

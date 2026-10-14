@@ -29,6 +29,7 @@ function createPublicContext(): TrpcContext {
 const validInput = {
   nom: "Jean Dupont",
   telephone: "06 12 34 56 78",
+  codePostal: "78320",
   email: "jean@example.com",
   projet: "Peinture intérieure",
   message: "Je souhaite peindre mon salon",
@@ -55,6 +56,7 @@ describe("contact.sendQuote", () => {
     const emailArg = vi.mocked(sendQuoteEmail).mock.calls[0][0];
     expect(emailArg.nom).toBe("Jean Dupont");
     expect(emailArg.telephone).toBe("06 12 34 56 78");
+    expect(emailArg.codePostal).toBe("78320");
     expect(emailArg.email).toBe("jean@example.com");
     expect(emailArg.projet).toBe("Peinture intérieure");
     expect(emailArg.message).toBe("Je souhaite peindre mon salon");
@@ -67,6 +69,7 @@ describe("contact.sendQuote", () => {
     const result = await caller.contact.sendQuote({
       nom: "Marie Martin",
       telephone: "+33 1 85 83 03 55",
+      codePostal: "78320",
       projet: "Menuiserie",
     });
 
@@ -91,6 +94,29 @@ describe("contact.sendQuote", () => {
       caller.contact.sendQuote({ ...validInput, telephone: "" })
     ).rejects.toThrow();
     expect(sendQuoteEmail).not.toHaveBeenCalled();
+  });
+
+  // 14/10/2026 — code postal du chantier : obligatoire, cinq chiffres.
+  it.each([
+    ["absent", undefined],
+    ["vide", ""],
+    ["à quatre chiffres", "7832"],
+    ["à six chiffres", "783200"],
+    ["avec des lettres", "78A20"],
+  ])("rejette un code postal %s", async (_cas, codePostal) => {
+    const caller = appRouter.createCaller(createPublicContext());
+    await expect(
+      caller.contact.sendQuote({ ...validInput, codePostal } as typeof validInput)
+    ).rejects.toThrow();
+    expect(sendQuoteEmail).not.toHaveBeenCalled();
+    expect(forwardToAsapDevis).not.toHaveBeenCalled();
+  });
+
+  it("accepte un code postal tapé avec une espace et le transmet sans", async () => {
+    const caller = appRouter.createCaller(createPublicContext());
+    await caller.contact.sendQuote({ ...validInput, codePostal: "78 320" });
+    expect(vi.mocked(sendQuoteEmail).mock.calls[0][0].codePostal).toBe("78320");
+    expect(vi.mocked(forwardToAsapDevis).mock.calls[0][0].codePostal).toBe("78320");
   });
 
   it("rejette si l'email est invalide", async () => {

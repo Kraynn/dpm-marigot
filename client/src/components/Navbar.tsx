@@ -27,12 +27,18 @@ const ICONE_RESEAU: Record<string, typeof Facebook> = {
 };
 
 // 2026-09-21 : « Avis » passe en tête et « Processus » sort de l'en-tête, à la
-// demande de Silva. La section Processus reste dans la page, sans lien direct.
+// demande de Silva.
+// 2026-10-14 (notes du RDV DPM) : les liens suivent l'ordre des sections de la
+// page. Les avis descendent sous le formulaire de devis, la section Processus
+// n'existe plus, et l'onglet « Contact » remplace les boutons « Demander un
+// devis » qui traînaient dans la page : il mène au formulaire (#contact, la
+// section garde son titre « Devis »).
 const navLinks = [
-  { label: "Avis", href: "#avis" },
   { label: "Services", href: "#services" },
   { label: "Réalisations", href: "#realisations" },
   { label: "Showroom", href: "#showroom" },
+  { label: "Contact", href: "#contact" },
+  { label: "Avis", href: "#avis" },
   { label: "FAQ", href: "#faq" },
 ];
 
@@ -230,20 +236,6 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <div className="pt-4 mt-2 border-t-2 border-encre">
-              <a
-                href={surAccueil ? "#contact" : "/#contact"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleLink("#contact");
-                }}
-                className="cta-btn w-full justify-center"
-              >
-                Demander un devis
-                <span className="cta-arrow">→</span>
-              </a>
-            </div>
-
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="flex items-center gap-2.5 pt-4 mt-2 border-t-2 border-encre/15">
                 {RESEAUX_CONNUS.map((r) => {

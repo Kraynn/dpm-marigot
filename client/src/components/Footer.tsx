@@ -7,9 +7,13 @@
  * rejoint la colonne Services (avec sa propre ancre, ce n'est pas un métier), et
  * les réseaux ne sont plus écrits en dur — ils viennent de src/reseaux.ts, comme
  * dans la Navbar.
+ *
+ * 2026-10-14 (notes du RDV DPM) : le bouton « Demander un devis » du bandeau part
+ * (onglet « Contact » dans l'en-tête à la place), « Dégâts des eaux » devient
+ * « Sinistre », et la marge basse rétrécit : le bouton WhatsApp n'existe plus.
  */
 import { Link } from "wouter";
-import { ArrowRight, Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
 import { RESEAUX_CONNUS } from "@/reseaux";
 
@@ -26,7 +30,7 @@ const services: { label: string; ancre: string }[] = [
   { label: "Décoration", ancre: "#services" },
   { label: "Sols & murs", ancre: "#services" },
   { label: "Menuiserie", ancre: "#services" },
-  { label: "Dégâts des eaux", ancre: "#services" },
+  { label: "Sinistre", ancre: "#services" },
   // 05/10/2026 : la liste complète de l'adhésif vitrine, sous les cartes métiers
   { label: "Tous nos travaux de rénovation", ancre: "#travaux" },
   { label: "Point relais colis", ancre: "#relais-colis" },
@@ -58,13 +62,6 @@ export default function Footer() {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <button
-              onClick={() => scrollTo("#contact")}
-              className="inline-flex items-center gap-2 bg-creme text-encre font-bold text-sm px-6 py-3.5 border-[3px] border-encre shadow-[5px_5px_0_var(--color-encre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-encre)] transition-all"
-            >
-              Demander un devis
-              <ArrowRight size={16} />
-            </button>
             <a
               href="tel:+33185830355"
               className="inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-6 py-3.5 border-[3px] border-encre shadow-[5px_5px_0_var(--color-ocre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-ocre)] transition-all"
@@ -76,11 +73,12 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Marge basse = place des boutons flottants (FloatingCTA) en bas de page :
-          sous 1024 px, barre « Appeler / Devis » de 79 px et WhatsApp jusqu'à 144 px
-          du bas ; au-delà, WhatsApp jusqu'à 78 px du bas. Sans elle, ils recouvraient
-          « Mentions légales » et « Politique de confidentialité » (05/10/2026). */}
-      <div className="container pt-14 pb-[168px] lg:pb-24">
+      {/* Marge basse = place de la barre flottante « Appeler » (FloatingCTA), 79 px
+          sous 1024 px. Sans elle, elle recouvrait « Mentions légales » et « Politique
+          de confidentialité » (05/10/2026). 14/10/2026 : le bouton WhatsApp, qui
+          montait jusqu'à 144 px du bas, est retiré ; la marge suit. Au-delà de
+          1024 px, plus rien ne flotte en bas de page. */}
+      <div className="container pt-14 pb-[112px] lg:pb-14">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Marque */}
           <div className="lg:col-span-2">
@@ -107,7 +105,7 @@ export default function Footer() {
             </div>
             <p className="text-creme/75 text-sm leading-relaxed max-w-sm">
               Artisan au Mesnil-Saint-Denis (78). Peinture, décoration, menuiserie, revêtements de
-              sols et murs, remise en état après dégât des eaux. Showroom ouvert au public.
+              sols et murs, remise en état après sinistre. Showroom ouvert au public.
             </p>
             <div className="flex flex-col gap-2.5 mt-6">
               <a

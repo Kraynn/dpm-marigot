@@ -11,7 +11,6 @@
  * sait rien. Ajout d'une question sur le point relais colis : c'est ce qu'un
  * voisin cherche, et ça n'était écrit nulle part.
  */
-import { ArrowRight } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useEditionActive } from "@/edition/journal";
 import {
@@ -31,7 +30,8 @@ const faqs = [
     a: "Nous répondons aux demandes sous 72h. La date de démarrage et la durée du chantier sont écrites sur le devis, avant que vous ne signiez quoi que ce soit.",
   },
   {
-    q: "Intervenez-vous après un dégât des eaux ?",
+    // 14/10/2026 (RDV DPM) : « dégât des eaux » devient « sinistre » sur tout le site.
+    q: "Intervenez-vous après un sinistre ?",
     a: "Oui, c'est une de nos spécialités : dépose des revêtements touchés, reprise des plafonds et des murs, remise en peinture. Nous connaissons le déroulé côté assurance et nous vous accompagnons dans les démarches.",
   },
   {
@@ -61,11 +61,6 @@ export default function FAQSection() {
   const { ref, visible } = useScrollReveal();
   const edition = useEditionActive();
 
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <section id="faq" className="bg-creme py-20 lg:py-24">
       <div className="container" ref={ref}>
@@ -87,10 +82,6 @@ export default function FAQSection() {
               qu'en ligne.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button onClick={handleCTA} className="cta-btn text-sm">
-                Demander un devis
-                <ArrowRight size={16} className="cta-arrow" />
-              </button>
               <a href="tel:+33185830355" className="cta-btn-ghost text-sm">
                 01 85 83 03 55
               </a>

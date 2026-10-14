@@ -7,14 +7,31 @@
  * photos de chantier réelles de client/public/images/realisations/. Elles étaient
  * servies par un CDN externe (d2xsxph8kpxj0f.cloudfront.net) qui répond 403 depuis :
  * ne jamais réintroduire de dépendance d'image hors du dépôt.
+ *
+ * 14/10/2026 (notes du RDV DPM) : la carte « Après un dégât des eaux » devient
+ * « Après un sinistre » et porte la phrase de la cliente « Rien à payer hormis la
+ * franchise en cas de sinistre » ; le bouton « Demander un devis » en bas de
+ * section est retiré (onglet « Contact » dans l'en-tête à la place).
  */
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { TRAVAUX_RENOVATION } from "@/travaux";
 
 const FALLBACK_IMAGE = "/images/services/placeholder.jpg";
 
-const services = [
+type Service = {
+  tag: string;
+  title: string;
+  description: string;
+  /** Phrase mise en avant dans la carte, au-dessus de la liste. */
+  mention?: string;
+  items: string[];
+  image: string;
+  tagClass: string;
+  puce: string;
+};
+
+const services: Service[] = [
   {
     tag: "Peinture",
     title: "Peinture intérieure et extérieure",
@@ -47,10 +64,11 @@ const services = [
   },
   {
     tag: "Sinistre",
-    title: "Après un dégât des eaux",
+    title: "Après un sinistre",
     description:
       "Remise en état complète après sinistre : plafonds et murs touchés, dépose des revêtements, finitions.",
-    items: ["Dégâts des eaux", "Reprise des supports", "Suivi du dossier assurance"],
+    mention: "Rien à payer hormis la franchise en cas de sinistre",
+    items: ["Reprise des supports", "Suivi du dossier assurance"],
     image: "/images/services/sinistre.jpg",
     tagClass: "bg-ocre text-encre",
     puce: "bg-ocre",
@@ -59,11 +77,6 @@ const services = [
 
 export default function ServicesSection() {
   const { ref, visible } = useScrollReveal();
-
-  const handleCTA = () => {
-    const el = document.querySelector("#contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <section id="services" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
@@ -119,6 +132,11 @@ export default function ServicesSection() {
                 </span>
                 <h3 className="text-[1.35rem] leading-tight text-encre">{service.title}</h3>
                 <p className="text-encre/70 text-sm leading-relaxed">{service.description}</p>
+                {service.mention && (
+                  <p className="text-sm font-bold text-encre leading-snug border-l-[3px] border-terre pl-3">
+                    {service.mention}
+                  </p>
+                )}
                 <ul className="mt-auto pt-2 flex flex-col gap-1.5">
                   {service.items.map((item) => (
                     <li key={item} className="flex items-center gap-2 text-xs text-encre/75">
@@ -137,7 +155,7 @@ export default function ServicesSection() {
             dix travaux n'apparaissaient nulle part sur le site. */}
         <div
           id="travaux"
-          className="card-hard card-hard-prusse p-6 lg:p-8 mb-12 scroll-mt-28"
+          className="card-hard card-hard-prusse p-6 lg:p-8 scroll-mt-28"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -154,11 +172,6 @@ export default function ServicesSection() {
             ))}
           </ul>
         </div>
-
-        <button onClick={handleCTA} className="cta-btn text-base">
-          Demander un devis
-          <ArrowRight size={18} className="cta-arrow" />
-        </button>
       </div>
     </section>
   );

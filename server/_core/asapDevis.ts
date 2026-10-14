@@ -12,6 +12,7 @@ import { ENV } from "./env.js";
 export type AsapDevisLead = {
   nom: string;
   telephone: string;
+  codePostal: string;
   email?: string;
   projet: string; // type de projet choisi au menu
   message?: string; // message libre (sera analysé côté service)
@@ -40,7 +41,8 @@ export async function forwardToAsapDevis(lead: AsapDevisLead): Promise<AsapDevis
     const r = await fetch(`${base.replace(/\/$/, "")}/api/lead`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ site: "dpm-marigot", ...lead }),
+      // Le service central lit le code postal sous `cp` (asap-devis/app/api/lead.js).
+      body: JSON.stringify({ site: "dpm-marigot", ...lead, cp: lead.codePostal }),
       signal: AbortSignal.timeout(15_000),
     });
     if (!r.ok) {

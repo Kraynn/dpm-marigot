@@ -24,6 +24,13 @@
  * milieu il n'y a plus de gouttière où se loger.
  *
  * Il garde l'ancre `#relais-colis` : le pied de page pointe dessus.
+ *
+ * 14/10/2026, notes du RDV DPM : la carte monte dans la bannière, à la place des
+ * deux photos avant / après (« mettre le relais colis direct à la place de cette
+ * zone là »). Variante `banniere` : en flux, plus grande, inclinée comme les
+ * polaroïds qu'elle remplace (classe .carte-relais-banniere dans index.css).
+ * L'ancienne position, à cheval sur la section des avis, n'est plus utilisée
+ * depuis que les avis sont descendus sous le formulaire.
  */
 
 import type * as React from "react";
@@ -46,9 +53,17 @@ const TRANSPORTEURS: Transporteur[] = [
   { nom: "DPD", fichier: "dpd", hauteur: 20, largeur: 48 },
 ];
 
-export default function PointRelaisCard() {
+export default function PointRelaisCard({
+  variante = "incrustee",
+}: {
+  variante?: "incrustee" | "banniere";
+}) {
   return (
-    <aside id="relais-colis" aria-label="Point relais colis" className="carte-relais">
+    <aside
+      id="relais-colis"
+      aria-label="Point relais colis"
+      className={variante === "banniere" ? "carte-relais carte-relais-banniere" : "carte-relais"}
+    >
       <p className="cr-etiquette">Point relais</p>
 
       <img

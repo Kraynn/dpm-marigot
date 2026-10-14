@@ -19,9 +19,12 @@ import { MapPin, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 // 14/10/2026 : Paris, Hauts-de-Seine, Val-d'Oise et Essonne retirés à la demande
-// de la cliente (éditeur de page, 13/10). Même liste dans Footer.tsx, la FAQ et
+// de la cliente (éditeur de page, 13/10). Même zone dans Footer.tsx, la FAQ et
 // le JSON-LD (areaServed) de client/index.html.
-const ZONES = ["Yvelines (78)"];
+// Même jour, notes du RDV DPM (« uniquement 78 comme ça on enlève le bloc et on
+// met l'info dans celui du dessus ») : la carte « Nous intervenons » est retirée
+// et la zone passe dans la carte du showroom, sous les horaires.
+const ZONE = "Yvelines (78)";
 
 // 14/10/2026 : l'ancien embed (pb=…, coordonnées seules, place 0x0) centrait sur
 // le restaurant voisin « Oh Mesnil » sans nommer DPM (Silva). La requête par nom +
@@ -109,9 +112,15 @@ export default function MapSection() {
               {/* 14/10/2026 : le paragraphe « Ouvert au public… » est retiré (demande de la
                   cliente, 13/10). La marge basse des horaires part avec lui, sinon le
                   téléphone tomberait à 40 px du filet au lieu de 20. */}
-              <div className="pb-5 border-b-2 border-encre/15">
-                <p className="section-label text-taupe mb-1.5">Horaires</p>
-                <p className="text-encre text-sm font-bold">Du mardi au vendredi · 9h00 – 18h30</p>
+              <div className="pb-5 border-b-2 border-encre/15 flex flex-col gap-4">
+                <div>
+                  <p className="section-label text-taupe mb-1.5">Horaires</p>
+                  <p className="text-encre text-sm font-bold">Du mardi au vendredi · 9h00 – 18h30</p>
+                </div>
+                <div>
+                  <p className="section-label text-taupe mb-1.5">Zone d'intervention</p>
+                  <p className="text-encre text-sm font-bold">{ZONE}</p>
+                </div>
               </div>
               <a
                 href="tel:+33185830355"
@@ -120,18 +129,6 @@ export default function MapSection() {
                 <Phone size={15} />
                 01 85 83 03 55
               </a>
-            </div>
-
-            <div className="bg-creme-2 border-[3px] border-encre p-6">
-              <p className="section-label mb-4">Nous intervenons</p>
-              <ul className="flex flex-col gap-2.5">
-                {ZONES.map((zone) => (
-                  <li key={zone} className="flex items-center gap-2.5 text-sm text-encre">
-                    <span className="w-2 h-2 bg-terre shrink-0" />
-                    {zone}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
