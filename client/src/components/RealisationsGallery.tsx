@@ -142,27 +142,19 @@ function CouvertureChantier({
           : `Voir les ${chantier.photos.length} photos du chantier de ${chantier.lieu}`
       }
     >
-      {animation ? (
-        <img
-          src={animation.apercu}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="couverture-chantier w-full h-full object-cover"
-        />
-      ) : (
-        <img
-          src={srcParDefaut(photo)}
-          srcSet={srcsetDe(photo)}
-          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-          width={photo.largeur}
-          height={photo.hauteur}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="couverture-chantier w-full h-full object-cover"
-        />
-      )}
+      {/* Toujours la photo de couverture (15/10) : l'image de fin du clip est en 3:4 avec une colonne de texte,
+          recadrée en 4:3 elle coupait le titre. Elle reste l'affiche (poster) de la fenêtre vidéo. */}
+      <img
+        src={srcParDefaut(photo)}
+        srcSet={srcsetDe(photo)}
+        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+        width={photo.largeur}
+        height={photo.hauteur}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="couverture-chantier w-full h-full object-cover"
+      />
       <span className="absolute left-3 top-3 flex flex-wrap gap-2">
         <span className="badge-carre">{chantier.photos.length} photos</span>
         {chantier.chronologique && (
