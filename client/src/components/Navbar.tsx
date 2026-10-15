@@ -14,7 +14,6 @@ import { lazy, Suspense, useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
-import BoutonEdition from "@/edition/BoutonEdition";
 import { useEditionActive } from "@/edition/journal";
 import { RESEAUX_CONNUS } from "@/reseaux";
 
@@ -167,9 +166,8 @@ export default function Navbar() {
             {/* Crayon de l'éditeur de page (06/10/2026), desktop seulement dans la barre.
                 13/10/2026 : la pastille du nuancier qui était à côté est retirée,
                 la palette « Papier & terracotta » est figée dans index.css. */}
-            <span className="hidden lg:inline-flex items-center">
-              <BoutonEdition />
-            </span>
+            {/* 15/10/2026 : le crayon « Modifier la page » est retiré (demande de Silva).
+                L'éditeur reste accessible par l'adresse ?edition=1. */}
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="hidden lg:flex items-center gap-1.5 mr-1">
                 {RESEAUX_CONNUS.map((r) => {
@@ -258,10 +256,6 @@ export default function Navbar() {
               </ul>
             )}
 
-            {/* Éditeur de page : sur mobile, la barre est pleine ; il vit au bas du menu. */}
-            <div className="pt-4 flex flex-wrap gap-2.5">
-              <BoutonEdition variante="menu" onOuvrir={() => setOpen(false)} />
-            </div>
           </div>
         </div>
       )}
