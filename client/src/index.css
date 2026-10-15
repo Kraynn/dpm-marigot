@@ -969,7 +969,8 @@
   50% { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--color-prusse); }
 }
 .rejouer-attente {
-  animation: rejouer-signal 1.1s ease-in-out infinite;
+  /* trois battements, pas une boucle sans fin qui distrait */
+  animation: rejouer-signal 1.1s ease-in-out 3;
 }
 
 /* Badge carré : bordure franche, sans arrondi. */
