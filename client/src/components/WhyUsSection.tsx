@@ -42,7 +42,16 @@ import PartenairesBand from "@/components/PartenairesBand";
 // Le 2026-09-19 : la vraie devanture remplace une photo d'intérieur générique.
 // La section parle du showroom au 92 avenue Habert de Montmort, elle montre donc
 // la vitrine et son enseigne, pas un exemple de décoration.
-const PHOTO_SHOWROOM = "/images/showroom-devanture.webp";
+// 2026-10-15 : la vitrine refaite par le client (photo envoyée par mail le
+// 13/10) remplace l'ancienne devanture, gardée sur le disque
+// (showroom-devanture.webp, plus utilisée). Original 1197 × 903 : les variantes
+// s'arrêtent à 1197 px, jamais d'agrandissement.
+const PHOTO_SHOWROOM = {
+  src: "/images/showroom-vitrine-800.webp",
+  srcSet: [480, 800, 1197].map((l) => `/images/showroom-vitrine-${l}.webp ${l}w`).join(", "),
+  largeur: 1197,
+  hauteur: 903,
+};
 
 // Les badges de réassurance, descendus de la bannière le 2026-09-21.
 // Rangés en deux lignes imposées (demande de Silva, même jour) : le lieu
@@ -153,8 +162,12 @@ export default function WhyUsSection() {
             }}
           >
             <img
-              src={PHOTO_SHOWROOM}
-              alt="La devanture du showroom DPM Marigot, enseigne « Travaux de rénovation intérieure », nuanciers et collections en vitrine"
+              src={PHOTO_SHOWROOM.src}
+              srcSet={PHOTO_SHOWROOM.srcSet}
+              sizes="(min-width: 1024px) 560px, calc(100vw - 3rem)"
+              width={PHOTO_SHOWROOM.largeur}
+              height={PHOTO_SHOWROOM.hauteur}
+              alt="Vitrine du showroom DPM Marigot, 92 avenue Habert de Montmort"
               loading="lazy"
               decoding="async"
               className="w-full h-[300px] lg:h-[320px] object-cover"
