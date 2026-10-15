@@ -10,15 +10,11 @@
  * téléphone ; sur mobile elles passent dans le menu burger, la barre étant
  * déjà pleine à 375 px avec le cube, le bouton d'appel et le burger.
  */
-import { lazy, Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Menu, X, Phone, Facebook, Instagram } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
-import { useEditionActive } from "@/edition/journal";
 import { RESEAUX_CONNUS } from "@/reseaux";
-
-// Éditeur de page (06/10/2026) : téléchargé seulement quand le mode est ouvert.
-const ModeEdition = lazy(() => import("@/edition/ModeEdition"));
 
 const ICONE_RESEAU: Record<string, typeof Facebook> = {
   Facebook,
@@ -62,7 +58,6 @@ function viserAncre(href: string, essaisRestants = 20) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const edition = useEditionActive();
   const [emplacement, naviguer] = useLocation();
   const surAccueil = emplacement === "/";
 
@@ -103,9 +98,7 @@ export default function Navbar() {
   };
 
   return (
-    // data-edition-socle : l'éditeur de page ne propose jamais de retirer l'en-tête.
     <header
-      data-edition-socle
       className="fixed top-0 left-0 right-0 z-50 bg-creme border-b-[3px] border-encre"
     >
       <NuancierBar />
@@ -163,11 +156,8 @@ export default function Navbar() {
 
           {/* Réseaux + téléphone – le numéro reste visible et cliquable */}
           <div className="flex items-center gap-3 lg:gap-2 xl:gap-3">
-            {/* Crayon de l'éditeur de page (06/10/2026), desktop seulement dans la barre.
-                13/10/2026 : la pastille du nuancier qui était à côté est retirée,
-                la palette « Papier & terracotta » est figée dans index.css. */}
-            {/* 15/10/2026 : le crayon « Modifier la page » est retiré (demande de Silva).
-                L'éditeur reste accessible par l'adresse ?edition=1. */}
+            {/* 15/10/2026 : l'éditeur de page est supprimé (demande de Silva), crayon compris.
+                Code d'origine dans _to_delete/editeur-de-page-2026-10-15/. */}
             {RESEAUX_CONNUS.length > 0 && (
               <ul className="hidden lg:flex items-center gap-1.5 mr-1">
                 {RESEAUX_CONNUS.map((r) => {
@@ -260,11 +250,6 @@ export default function Navbar() {
         </div>
       )}
 
-      {edition && (
-        <Suspense fallback={null}>
-          <ModeEdition />
-        </Suspense>
-      )}
     </header>
   );
 }

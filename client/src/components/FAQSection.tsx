@@ -12,7 +12,6 @@
  * voisin cherche, et ça n'était écrit nulle part.
  */
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useEditionActive } from "@/edition/journal";
 import {
   Accordion,
   AccordionContent,
@@ -59,7 +58,6 @@ const faqs = [
 
 export default function FAQSection() {
   const { ref, visible } = useScrollReveal();
-  const edition = useEditionActive();
 
   return (
     <section id="faq" className="bg-creme py-20 lg:py-24">
@@ -96,14 +94,7 @@ export default function FAQSection() {
               transition: "opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s",
             }}
           >
-            {/* 06/10/2026 — en mode édition, toutes les réponses sont ouvertes : fermée,
-                une réponse n'existe pas dans la page et ne pourrait pas être modifiée. */}
-            <Accordion
-              {...(edition
-                ? { type: "multiple" as const, value: faqs.map((_, i) => `faq-${i}`) }
-                : { type: "single" as const, collapsible: true })}
-              className="flex flex-col gap-3"
-            >
+            <Accordion type="single" collapsible className="flex flex-col gap-3">
               {faqs.map((faq, i) => (
                 <AccordionItem
                   key={i}

@@ -11,11 +11,9 @@
  */
 import { useState, useEffect } from "react";
 import { Phone } from "lucide-react";
-import { useEditionActive } from "@/edition/journal";
 
 export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
-  const edition = useEditionActive();
 
   useEffect(() => {
     const handler = () => setVisible(window.scrollY > 300);
@@ -24,7 +22,7 @@ export default function FloatingCTA() {
   }, []);
 
   // 06/10/2026 — en mode édition, la barre de l'éditeur occupe le bas de l'écran.
-  if (!visible || edition) return null;
+  if (!visible) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-creme border-t-[3px] border-encre p-3 flex">

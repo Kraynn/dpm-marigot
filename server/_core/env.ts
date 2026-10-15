@@ -11,9 +11,6 @@ export const ENV = {
   // ASap Devis — URL du service central de génération d'estimations.
   // Vide = comportement historique (email simple). Renseignée = forward opt-in.
   asapDevisApiUrl: process.env.ASAP_DEVIS_API_URL ?? "",
-  // Éditeur de page (06/10/2026) — les retouches demandées par le client partent
-  // vers ASap Web, pas vers la boîte des devis. Le domaine asapworks.fr est vérifié
-  // chez Resend ; les valeurs par défaut suffisent, aucune variable à poser sur Vercel.
-  editionEmailFrom: process.env.EDITION_EMAIL_FROM ?? "ASap Web <contact@asapworks.fr>",
-  editionEmailTo: process.env.EDITION_EMAIL_TO ?? "contact@asapworks.fr",
+  // 15/10/2026 : éditeur de page supprimé, ses deux réglages de mail aussi
+  // (code d'origine dans _to_delete/editeur-de-page-2026-10-15/, et commit 856b0cc).
 };

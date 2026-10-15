@@ -7,14 +7,11 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
-import { editionInitiale } from "./edition/journal";
 import { oublierNuancier } from "./nuancier";
 
 // Palette figée le 13/10/2026 : un ancien choix du nuancier (localStorage ou
 // ?nuancier=) est effacé avant le premier rendu, sans flash d'une autre palette.
 oublierNuancier();
-// Éditeur de page : `?edition=1` ouvre le mode édition dès le premier rendu.
-editionInitiale();
 
 const queryClient = new QueryClient();
 
