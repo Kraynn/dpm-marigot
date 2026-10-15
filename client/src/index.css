@@ -823,3 +823,278 @@
 .defil-nuancier.a-la-fin {
   --fondu-bas: 0px;
 }
+
+/* ---- Dernières réalisations : cartes de chantier (15/10/2026) --------------
+   Une carte par chantier. Le bouton « Voir les N photos » étend sa zone de
+   clic à toute la carte par un ::after. Survol : la carte s'enfonce comme les
+   boutons (ombre dure qui se réduit) et la photo se rapproche à peine.
+   Ces animations jouent pour tout le monde, mouvement réduit compris. */
+.carte-chantier {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.carte-chantier:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 3px 3px 0 var(--color-encre);
+}
+.carte-chantier.card-hard-terre:hover {
+  box-shadow: 3px 3px 0 var(--color-terre);
+}
+.carte-chantier.card-hard-prusse:hover {
+  box-shadow: 3px 3px 0 var(--color-prusse);
+}
+.carte-chantier:has(.ouvrir-chantier:focus-visible) {
+  outline: 3px solid var(--color-prusse);
+  outline-offset: 4px;
+}
+.couverture-chantier {
+  transition: transform 0.5s ease;
+}
+.carte-chantier:hover .couverture-chantier {
+  transform: scale(1.03);
+}
+.carte-chantier:hover .cta-arrow {
+  transform: translateX(4px);
+}
+.ouvrir-chantier {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin-top: 0.35rem;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-encre);
+  border-bottom: 3px solid var(--color-terre);
+  cursor: pointer;
+}
+.ouvrir-chantier::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.ouvrir-chantier:focus-visible {
+  outline: none;
+}
+
+/* Badge carré : bordure franche, sans arrondi. */
+.badge-carre {
+  display: inline-block;
+  background: #fff;
+  color: var(--color-encre);
+  border: 2px solid var(--color-encre);
+  box-shadow: 3px 3px 0 var(--color-encre);
+  padding: 0.25rem 0.55rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.badge-carre-terre {
+  background: var(--color-terre);
+  color: #fff;
+}
+
+/* ---- Visionneuse d'un chantier ------------------------------------------- */
+@keyframes visionneuse-voile-entree {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes visionneuse-entree {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 18px)); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+@keyframes visionneuse-photo-entree {
+  from { opacity: 0; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+.visionneuse-voile {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--color-encre) 82%, transparent);
+  animation: visionneuse-voile-entree 0.2s ease;
+}
+.visionneuse {
+  position: fixed;
+  z-index: 61;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(1180px, calc(100vw - 3rem));
+  height: min(920px, calc(100dvh - 3rem));
+  display: flex;
+  flex-direction: column;
+  background: var(--color-creme-2);
+  border: 3px solid var(--color-encre);
+  box-shadow: 8px 8px 0 var(--color-terre);
+  animation: visionneuse-entree 0.25s ease;
+  outline: none;
+}
+@media (max-width: 639px) {
+  .visionneuse {
+    width: 100vw;
+    height: 100dvh;
+    border: 0;
+    box-shadow: none;
+  }
+}
+.visionneuse-entete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 3px solid var(--color-encre);
+  background: #fff;
+}
+.visionneuse-fermer {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  color: var(--color-encre);
+  border: 3px solid var(--color-encre);
+  box-shadow: 3px 3px 0 var(--color-encre);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.visionneuse-fermer:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-encre);
+}
+.visionneuse-fermer:focus-visible,
+.vignette:focus-visible,
+.visionneuse-moitie:focus-visible {
+  outline: 3px solid var(--color-prusse);
+  outline-offset: 2px;
+}
+.visionneuse-scene {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+  user-select: none;
+  /* les unités cqw/cqh de la photo se rapportent à cette scène */
+  container-type: size;
+}
+.visionneuse-cadre {
+  position: relative;
+  line-height: 0;
+}
+.visionneuse-photo {
+  display: block;
+  max-width: 100cqw;
+  max-height: 100cqh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 3px solid var(--color-encre);
+  background: #fff;
+  animation: visionneuse-photo-entree 0.28s ease;
+}
+.badge-etape {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 2;
+  pointer-events: none;
+}
+/* Les deux moitiés de la photo : clic = précédente / suivante. Pas de flèche
+   dessinée (règle de Silva), le curseur suffit à la souris. */
+.visionneuse-moitie {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.visionneuse-moitie:disabled {
+  pointer-events: none;
+}
+.visionneuse-moitie-g {
+  left: 0;
+  cursor: w-resize;
+}
+.visionneuse-moitie-d {
+  right: 0;
+  cursor: e-resize;
+}
+/* Bande de vignettes : fondu aux bords quand elle déborde, comme
+   .defil-nuancier ; elle se centre quand tout tient. La molette verticale
+   n'est pas captée (débordement horizontal natif). */
+.visionneuse-bande {
+  --fondu-g: 2.5rem;
+  --fondu-d: 2.5rem;
+  flex: none;
+  display: flex;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 1.25rem 1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fondu-g), #000 calc(100% - var(--fondu-d)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fondu-g), #000 calc(100% - var(--fondu-d)), transparent);
+}
+.visionneuse-bande::-webkit-scrollbar {
+  display: none;
+}
+.visionneuse-bande.au-debut {
+  --fondu-g: 0px;
+}
+.visionneuse-bande.a-la-fin {
+  --fondu-d: 0px;
+}
+.visionneuse-bande > li {
+  flex: none;
+}
+.visionneuse-bande > li:first-child {
+  margin-left: auto;
+}
+.visionneuse-bande > li:last-child {
+  margin-right: auto;
+}
+.vignette {
+  display: block;
+  height: 72px;
+  padding: 0;
+  background: #fff;
+  border: 3px solid var(--color-encre);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.vignette:hover {
+  opacity: 1;
+}
+.vignette[aria-current="true"] {
+  opacity: 1;
+  border-color: var(--color-terre);
+  box-shadow: 3px 3px 0 var(--color-encre);
+  transform: translateY(-3px);
+}
+.vignette img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

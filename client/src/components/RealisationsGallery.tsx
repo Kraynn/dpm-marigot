@@ -25,9 +25,19 @@
  * bg-muted et une hauteur fixe de 36 px, qu'il aurait fallu défaire classe par
  * classe. On garde la primitive — c'est elle qui porte l'accessibilité, les
  * flèches du clavier et le roving tabindex — et on l'habille au Nuancier.
+ *
+ * 2026-10-15 : « Nos dernières réalisations » passe d'une photo par carte à une
+ * carte par chantier (un lieu = un chantier) : Demany, Buc, La Queue-les-Yvelines.
+ * Un clic ouvre la visionneuse sur toutes les photos du chantier
+ * (VisionneuseChantier.tsx). Les données sont dans client/src/chantiers.ts.
+ * Les trois photos d'amorce sont retirées : c'étaient les « après » des trois
+ * avant/après de l'autre onglet, donc des doublons.
  */
 import * as Tabs from "@radix-ui/react-tabs";
+import { useState } from "react";
 import AvantApres, { type Photo } from "./AvantApres";
+import VisionneuseChantier from "./VisionneuseChantier";
+import { CHANTIERS, type Chantier, srcParDefaut, srcsetDe } from "@/chantiers";
 
 type Projet = {
   titre: string;
@@ -79,41 +89,48 @@ export const PROJETS: Projet[] = [
   },
 ];
 
-type Realisation = {
-  titre: string;
-  legende: string;
-  src: string;
-  alt: string;
-};
+/**
+ * Les dernières réalisations, de la plus récente à la plus ancienne : un
+ * chantier par carte. Les chantiers se complètent dans client/src/chantiers.ts.
+ * Règle : photos réelles du client, textes du client. Pas de photo de banque,
+ * pas de légende qui promet ce que la photo ne montre pas.
+ */
+const DERNIERES: Chantier[] = CHANTIERS;
 
 /**
- * Les dernières réalisations, de la plus récente à la plus ancienne.
- * Ajouter une entrée en tête suffit — la grille s'ajuste seule.
- * Règle : une photo réelle du client, une légende qui décrit ce qui a été fait.
- * Pas de photo de banque, pas de légende qui promet ce que la photo ne montre pas.
+ * Le visuel de la carte. C'est ici que viendra l'animation du chantier
+ * (`chantier.animation`, voir AnimationChantier dans chantiers.ts) : un aperçu
+ * figé à la place de la couverture, le clic restant celui de la carte. Pas
+ * encore câblé : l'animation est en validation à part.
  */
-const DERNIERES: Realisation[] = [
-  {
-    titre: "Salle à manger",
-    legende: "Murs en teinte taupe et plafond repeints, après préparation des supports.",
-    src: "/images/realisations/salle-a-manger-apres.jpg",
-    alt: "Salle à manger rénovée par DPM Marigot, murs taupe et plafond blanc, charpente apparente",
-  },
-  {
-    titre: "Cuisine — après dégât des eaux",
-    legende: "Plafond et mur repris puis remis en peinture après sinistre. Juin 2025.",
-    src: "/images/realisations/cuisine-sinistre-apres.jpg",
-    alt: "Mur et plafond de cuisine rénovés par DPM Marigot après un dégât des eaux",
-  },
-  {
-    titre: "Plafond de séjour",
-    legende: "Fissures ouvertes, rebouchées et ratissées, puis plafond et murs repeints.",
-    src: "/images/realisations/plafond-apres.jpg",
-    alt: "Plafond de séjour rénové par DPM Marigot, surface lisse et repeinte",
-  },
-];
+function CouvertureChantier({ chantier }: { chantier: Chantier }) {
+  const photo = chantier.photos[chantier.couverture];
+  return (
+    <div className="relative aspect-[4/3] overflow-hidden border-b-[3px] border-encre bg-creme-2">
+      <img
+        src={srcParDefaut(photo)}
+        srcSet={srcsetDe(photo)}
+        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+        width={photo.largeur}
+        height={photo.hauteur}
+        alt={photo.alt}
+        loading="lazy"
+        decoding="async"
+        className="couverture-chantier w-full h-full object-cover"
+      />
+      <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+        <span className="badge-carre">{chantier.photos.length} photos</span>
+        {chantier.chronologique && (
+          <span className="badge-carre badge-carre-terre">Avant → après</span>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function RealisationsGallery() {
+  const [ouvert, setOuvert] = useState<Chantier | null>(null);
+
   return (
     <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
       <div className="container">
@@ -161,33 +178,39 @@ export default function RealisationsGallery() {
           </Tabs.Content>
 
           <Tabs.Content value="dernieres" className="outline-none">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {DERNIERES.map((rea, i) => (
-                <figure
-                  key={rea.src}
-                  className={`card-hard flex flex-col ${
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
+              {DERNIERES.map((chantier, i) => (
+                <article
+                  key={chantier.id}
+                  className={`card-hard carte-chantier relative flex flex-col ${
                     i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
                   }`}
                 >
-                  <div className="aspect-[4/3] overflow-hidden border-b-[3px] border-encre bg-creme-2">
-                    <img
-                      src={rea.src}
-                      alt={rea.alt}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover"
-                    />
+                  <CouvertureChantier chantier={chantier} />
+                  <div className="p-5 flex flex-col gap-2">
+                    <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
+                    <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
+                    {chantier.detail && (
+                      <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>
+                    )}
+                    {/* Le ::after de ce bouton couvre toute la carte : un clic n'importe où l'ouvre. */}
+                    <button
+                      type="button"
+                      className="ouvrir-chantier"
+                      aria-haspopup="dialog"
+                      onClick={() => setOuvert(chantier)}
+                    >
+                      Voir les {chantier.photos.length} photos
+                      <span aria-hidden className="cta-arrow">→</span>
+                    </button>
                   </div>
-                  <figcaption className="p-5">
-                    <h3 className="text-xl text-encre leading-tight">{rea.titre}</h3>
-                    <p className="mt-2 text-sm text-encre/70 leading-relaxed">{rea.legende}</p>
-                  </figcaption>
-                </figure>
+                </article>
               ))}
             </div>
           </Tabs.Content>
         </Tabs.Root>
       </div>
+      <VisionneuseChantier chantier={ouvert} onFermer={() => setOuvert(null)} />
     </section>
   );
 }
