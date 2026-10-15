@@ -25,29 +25,40 @@ import { X } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type Chantier, srcDe, srcParDefaut, srcsetDe } from "@/chantiers";
 
+/** Le chantier à montrer, et la photo sur laquelle ouvrir (index dans `photos`). */
+export type OuvertureVisionneuse = { chantier: Chantier; index?: number };
+
 type Props = {
-  chantier: Chantier | null;
+  ouverture: OuvertureVisionneuse | null;
   onFermer: () => void;
 };
 
 const SEUIL_GLISSE = 50;
 
-export default function VisionneuseChantier({ chantier, onFermer }: Props) {
+export default function VisionneuseChantier({ ouverture, onFermer }: Props) {
   return (
-    <Dialog.Root open={chantier !== null} onOpenChange={(ouvert) => !ouvert && onFermer()}>
+    <Dialog.Root open={ouverture !== null} onOpenChange={(ouvert) => !ouvert && onFermer()}>
       <Dialog.Portal>
         <Dialog.Overlay className="visionneuse-voile" />
-        {chantier && <Contenu key={chantier.id} chantier={chantier} />}
+        {ouverture && (
+          <Contenu
+            key={`${ouverture.chantier.id}-${ouverture.index ?? "defaut"}`}
+            chantier={ouverture.chantier}
+            depart={ouverture.index}
+          />
+        )}
       </Dialog.Portal>
     </Dialog.Root>
   );
 }
 
-function Contenu({ chantier }: { chantier: Chantier }) {
+function Contenu({ chantier, depart: indexDemande }: { chantier: Chantier; depart?: number }) {
   const { photos } = chantier;
-  // Un chantier qui se lit dans l'ordre s'ouvre sur l'« avant » ; les autres
-  // sur la photo de couverture, celle sur laquelle on vient de cliquer.
-  const [index, setIndex] = useState(chantier.chronologique ? 0 : chantier.couverture);
+  // Ouverte depuis une miniature : sur cette photo. Sinon, un chantier qui se
+  // lit dans l'ordre s'ouvre sur l'« avant », les autres sur la couverture.
+  const [index, setIndex] = useState(
+    indexDemande ?? (chantier.chronologique ? 0 : chantier.couverture),
+  );
   const photo = photos[index];
   const dernier = photos.length - 1;
 

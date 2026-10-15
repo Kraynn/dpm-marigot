@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { defineConfig } from "vite";
 
@@ -7,8 +8,31 @@ import { defineConfig } from "vite";
 // l'environnement Manus ont été retirés : vite-plugin-manus-runtime,
 // jsx-loc et le collecteur de logs de debug, inutiles en production).
 
+// 2026-10-15 : relève les vidéos de chantier présentes dans client/public.
+// Une vidéo absente ne peut pas se détecter depuis le navigateur (la
+// réécriture SPA de Vercel renvoie index.html en 200), donc on la relève ici.
+// Chemins : videos/realisations/<id>.{webm,mp4} et images/realisations/<id>/<id>-fin.webp.
+function videosRealisations() {
+  const pub = path.resolve(import.meta.dirname, "client", "public");
+  const dossierImages = path.join(pub, "images", "realisations");
+  const releve: Record<string, { webm: boolean; mp4: boolean; apercu: boolean }> = {};
+  for (const id of readdirSync(dossierImages, { withFileTypes: true })) {
+    if (!id.isDirectory()) continue;
+    const n = id.name;
+    releve[n] = {
+      webm: existsSync(path.join(pub, "videos", "realisations", `${n}.webm`)),
+      mp4: existsSync(path.join(pub, "videos", "realisations", `${n}.mp4`)),
+      apercu: existsSync(path.join(dossierImages, n, `${n}-fin.webp`)),
+    };
+  }
+  return releve;
+}
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  define: {
+    __VIDEOS_REALISATIONS__: JSON.stringify(videosRealisations()),
+  },
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

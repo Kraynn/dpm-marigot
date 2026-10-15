@@ -825,34 +825,31 @@
 }
 
 /* ---- Dernières réalisations : cartes de chantier (15/10/2026) --------------
-   Une carte par chantier. Le bouton « Voir les N photos » étend sa zone de
-   clic à toute la carte par un ::after. Survol : la carte s'enfonce comme les
-   boutons (ombre dure qui se réduit) et la photo se rapproche à peine.
+   Une carte par chantier. Second passage le même jour : la carte porte trois
+   gestes distincts (le visuel ouvre la vidéo ou les photos, une miniature
+   ouvre sa photo, « Voir les N photos » ouvre la visionneuse), donc plus de
+   zone de clic étendue à toute la carte. Survol du visuel : il s'enfonce
+   comme les boutons et la photo se rapproche à peine.
    Ces animations jouent pour tout le monde, mouvement réduit compris. */
-.carte-chantier {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+.couverture-bouton {
+  padding: 0;
+  cursor: pointer;
 }
-.carte-chantier:hover {
-  transform: translate(3px, 3px);
-  box-shadow: 3px 3px 0 var(--color-encre);
-}
-.carte-chantier.card-hard-terre:hover {
-  box-shadow: 3px 3px 0 var(--color-terre);
-}
-.carte-chantier.card-hard-prusse:hover {
-  box-shadow: 3px 3px 0 var(--color-prusse);
-}
-.carte-chantier:has(.ouvrir-chantier:focus-visible) {
+.couverture-bouton:focus-visible {
   outline: 3px solid var(--color-prusse);
-  outline-offset: 4px;
+  outline-offset: -6px;
 }
 .couverture-chantier {
   transition: transform 0.5s ease;
 }
-.carte-chantier:hover .couverture-chantier {
+.couverture-bouton:hover .couverture-chantier {
   transform: scale(1.03);
 }
-.carte-chantier:hover .cta-arrow {
+.couverture-bouton:hover .badge-video {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-encre);
+}
+.ouvrir-chantier:hover .cta-arrow {
   transform: translateX(4px);
 }
 .ouvrir-chantier {
@@ -874,13 +871,105 @@
   border-bottom: 3px solid var(--color-terre);
   cursor: pointer;
 }
-.ouvrir-chantier::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
 .ouvrir-chantier:focus-visible {
-  outline: none;
+  outline: 3px solid var(--color-prusse);
+  outline-offset: 3px;
+}
+
+/* Bouton « Voir la vidéo » posé sur l'image de fin du clip. */
+.badge-video {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-terre);
+  color: #fff;
+  border: 3px solid var(--color-encre);
+  box-shadow: 4px 4px 0 var(--color-encre);
+  padding: 0.55rem 1rem;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Rangée de miniatures d'une carte : même recette que la bande de la
+   visionneuse (fondu du côté où il reste à voir, pas de barre visible). */
+.rangee-miniatures {
+  --fondu-g: 2rem;
+  --fondu-d: 2rem;
+  display: flex;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.2rem 0.3rem 0.45rem 0.1rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fondu-g), #000 calc(100% - var(--fondu-d)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fondu-g), #000 calc(100% - var(--fondu-d)), transparent);
+}
+.rangee-miniatures::-webkit-scrollbar {
+  display: none;
+}
+.rangee-miniatures.au-debut {
+  --fondu-g: 0px;
+}
+.rangee-miniatures.a-la-fin {
+  --fondu-d: 0px;
+}
+.rangee-miniatures > li {
+  flex: none;
+}
+.miniature {
+  display: block;
+  height: 56px;
+  padding: 0;
+  background: #fff;
+  border: 2px solid var(--color-encre);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.miniature:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--color-terre);
+}
+.miniature:focus-visible {
+  outline: 3px solid var(--color-prusse);
+  outline-offset: 1px;
+}
+.miniature img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Fenêtre vidéo : même cadre que la visionneuse, un pied pour « Rejouer ». */
+.fenetre-video-clip {
+  background: var(--color-encre);
+}
+.fenetre-video-pied {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: 0 1.25rem 1.25rem;
+}
+/* À la fin du clip, « Rejouer » s'anime pour se signaler. */
+@keyframes rejouer-signal {
+  0%, 100% { transform: translate(0, 0); box-shadow: 6px 6px 0 var(--color-prusse); }
+  50% { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--color-prusse); }
+}
+.rejouer-attente {
+  animation: rejouer-signal 1.1s ease-in-out infinite;
 }
 
 /* Badge carré : bordure franche, sans arrondi. */

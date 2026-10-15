@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { CHANTIERS, LARGEURS, largeursDe, srcDe } from "./chantiers";
+import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, largeursDe, srcDe } from "./chantiers";
 
 const PUBLIC = path.resolve(import.meta.dirname, "..", "public");
 
@@ -43,6 +43,37 @@ describe("chantiers des dernières réalisations", () => {
     const tout = CHANTIERS.flatMap((c) => c.photos.map((p) => p.fichier.toLowerCase()));
     expect(tout.some((f) => f.includes("vitrine"))).toBe(false);
     expect(tout).not.toContain("la-queue-les-yvelines/la-queue-les-yvelines-03");
+  });
+
+  it("Demany s'appelle Magny-les-Hameaux : plus aucune trace de « demany »", () => {
+    const texte = JSON.stringify(CHANTIERS).toLowerCase();
+    expect(texte).not.toContain("demany");
+    const magny = CHANTIERS.find((c) => c.id === "magny");
+    expect(magny?.lieu).toBe("Magny-les-Hameaux");
+    expect(existsSync(path.join(PUBLIC, "images", "realisations", "demany"))).toBe(false);
+  });
+
+  it("une vidéo absente laisse la carte sur sa photo, sans erreur", () => {
+    expect(animationDe("buc", {})).toBeUndefined();
+    expect(animationDe("buc", { buc: { webm: true, mp4: true, apercu: false } })).toBeUndefined();
+    expect(animationDe("buc", { buc: { webm: false, mp4: false, apercu: true } })).toBeUndefined();
+    expect(animationDe("buc", { buc: { webm: false, mp4: true, apercu: true } })).toEqual({
+      apercu: "/images/realisations/buc/buc-fin.webp",
+      webm: undefined,
+      mp4: "/videos/realisations/buc.mp4",
+    });
+    expect(animationDe("magny", { magny: { webm: true, mp4: true, apercu: true } })).toEqual({
+      apercu: "/images/realisations/magny/magny-fin.webp",
+      webm: "/videos/realisations/magny.webm",
+      mp4: "/videos/realisations/magny.mp4",
+    });
+  });
+
+  it("le dossier d'images de chaque chantier porte son id (chemins vidéo)", () => {
+    for (const c of CHANTIERS) {
+      for (const p of c.photos) expect(p.fichier.startsWith(`${c.id}/${c.id}-`), p.fichier).toBe(true);
+      expect(cheminsVideo(c.id).webm).toBe(`/videos/realisations/${c.id}.webm`);
+    }
   });
 
   it("les chantiers avant → après commencent par l'avant et finissent par l'après", () => {

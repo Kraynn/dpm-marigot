@@ -2,11 +2,13 @@
  * DPM Marigot – Les dernières réalisations, regroupées par chantier.
  *
  * Un lieu = un chantier = une carte dans l'onglet « Nos dernières
- * réalisations ». Un clic ouvre la visionneuse sur toutes ses photos.
+ * réalisations ». La carte ouvre la vidéo du chantier quand elle existe, et
+ * toujours la visionneuse des photos (« Voir les N photos », ou une miniature
+ * pour ouvrir directement sur cette photo).
  *
  * Ajouter un chantier :
- *   1. produire les WebP dans client/public/images/realisations/<dossier>/,
- *      nommés <dossier>-<num>-<largeur>.webp, aux largeurs de LARGEURS qui ne
+ *   1. produire les WebP dans client/public/images/realisations/<id>/,
+ *      nommés <id>-<num>-<largeur>.webp, aux largeurs de LARGEURS qui ne
  *      dépassent pas l'original (jamais d'agrandissement) ;
  *   2. ajouter une entrée en tête de CHANTIERS. Le test chantiers.test.ts
  *      vérifie que chaque fichier annoncé existe bien sur le disque.
@@ -14,6 +16,10 @@
  * Règles (inchangées depuis le 21/09) : photos réelles du client, aucune
  * retouche ; textes du client, rien d'inventé (ni date, ni durée, ni surface).
  * « Dégât des eaux » en toutes lettres : c'est le terme du site.
+ *
+ * 2026-10-15 (2e passage) : « Demany » est en réalité Magny-les-Hameaux
+ * (DEMANY = « de Magny » dans les noms de fichiers du client). Les images sont
+ * passées de demany/ à magny/ ; l'ancien dossier est rangé dans _to_delete/.
  */
 
 /** Largeurs produites pour chaque photo, plafonnées à la largeur d'origine. */
@@ -31,19 +37,19 @@ export type PhotoChantier = {
 };
 
 /**
- * Emplacement réservé pour l'animation d'un chantier (Remotion, en cours de
- * validation à part le 15/10/2026). Rien n'est câblé : tant que le champ est
- * absent, la carte montre sa photo de couverture.
- * Prévu : `apercu` remplace la couverture sur la carte (image figée), et le
- * clic lance `video` dans la visionneuse avant les photos. Le point
- * d'entrée côté interface est CouvertureChantier, dans RealisationsGallery.tsx.
+ * La vidéo d'un chantier (clip Remotion rendu à part). Chemins fixes :
+ *   client/public/videos/realisations/<id>.webm et <id>.mp4
+ *   client/public/images/realisations/<id>/<id>-fin.webp (image de fin = vignette)
+ * Seules les sources réellement présentes sont proposées au navigateur.
  */
 export type AnimationChantier = {
   apercu: string;
-  video: string;
+  webm?: string;
+  mp4?: string;
 };
 
 export type Chantier = {
+  /** Identifiant, nom du dossier d'images et de la vidéo : "magny". */
   id: string;
   /** Titre de la carte : le lieu. */
   lieu: string;
@@ -56,7 +62,6 @@ export type Chantier = {
   /** Index, dans `photos`, de la photo de couverture. */
   couverture: number;
   photos: PhotoChantier[];
-  animation?: AnimationChantier;
 };
 
 const portrait = (fichier: string, alt: string, etape?: string): PhotoChantier => ({
@@ -76,25 +81,37 @@ const paysage = (fichier: string, alt: string, etape?: string): PhotoChantier =>
 
 export const CHANTIERS: Chantier[] = [
   {
-    id: "demany",
-    lieu: "Demany",
+    id: "magny",
+    lieu: "Magny-les-Hameaux",
     travaux: "Rénovation complète",
     detail:
       "Mise à nu de toute la maison, casse d'un mur porteur avec pose d'IPN, changement des fenêtres, plomberie, électricité, carrelage, parquet et peinture.",
     chronologique: false,
     couverture: 5,
     photos: [
-      portrait("demany/demany-01", "Chambre sous combles à Demany : sol aspect bois, murs et plafond blancs"),
-      portrait("demany/demany-02", "Chambre à Demany : sol aspect bois, murs blancs, fenêtre à deux vantaux"),
-      portrait("demany/demany-03", "WC suspendu à Demany, mur carrelé derrière la cuvette, sol aspect bois"),
-      paysage("demany/demany-04", "Grand séjour à Demany : sol aspect bois, baie vitrée, murs et plafond blancs"),
-      paysage("demany/demany-05", "Chambre mansardée à Demany : sol aspect bois, fenêtre et radiateur"),
-      paysage("demany/demany-06", "Pièce mansardée lumineuse à Demany : sol aspect bois, porte-fenêtre ouverte"),
-      paysage("demany/demany-07", "Grande pièce sous combles à Demany : sol aspect bois, murs blancs, portes intérieures"),
-      portrait("demany/demany-08", "Salle d'eau à Demany : WC suspendu, meuble vasque, sèche-serviettes, fenêtre de toit"),
-      portrait("demany/demany-09", "Salle de bains à Demany : baignoire, murs carrelés, fenêtre de toit, sèche-serviettes"),
-      portrait("demany/demany-10", "Salle d'eau à Demany : douche à paroi vitrée, meuble vasque, sol carrelé clair"),
-      portrait("demany/demany-11", "Verrière intérieure à arches dans un mur blanc, à Demany"),
+      portrait("magny/magny-01", "Chambre sous combles à Magny-les-Hameaux : sol aspect bois, murs et plafond blancs"),
+      portrait("magny/magny-02", "Chambre à Magny-les-Hameaux : sol aspect bois, murs blancs, fenêtre à deux vantaux"),
+      portrait("magny/magny-03", "WC suspendu à Magny-les-Hameaux, mur carrelé derrière la cuvette, sol aspect bois"),
+      paysage("magny/magny-04", "Grand séjour à Magny-les-Hameaux : sol aspect bois, baie vitrée, murs et plafond blancs"),
+      paysage("magny/magny-05", "Chambre mansardée à Magny-les-Hameaux : sol aspect bois, fenêtre et radiateur"),
+      paysage("magny/magny-06", "Pièce mansardée lumineuse à Magny-les-Hameaux : sol aspect bois, porte-fenêtre ouverte"),
+      paysage(
+        "magny/magny-07",
+        "Grande pièce sous combles à Magny-les-Hameaux : sol aspect bois, murs blancs, portes intérieures",
+      ),
+      portrait(
+        "magny/magny-08",
+        "Salle d'eau à Magny-les-Hameaux : WC suspendu, meuble vasque, sèche-serviettes, fenêtre de toit",
+      ),
+      portrait(
+        "magny/magny-09",
+        "Salle de bains à Magny-les-Hameaux : baignoire, murs carrelés, fenêtre de toit, sèche-serviettes",
+      ),
+      portrait(
+        "magny/magny-10",
+        "Salle d'eau à Magny-les-Hameaux : douche à paroi vitrée, meuble vasque, sol carrelé clair",
+      ),
+      portrait("magny/magny-11", "Verrière intérieure à arches dans un mur blanc, à Magny-les-Hameaux"),
     ],
   },
   {
@@ -147,6 +164,38 @@ export const CHANTIERS: Chantier[] = [
 ];
 
 const BASE = "/images/realisations/";
+
+/** Chemins publics attendus pour la vidéo d'un chantier, présents ou non. */
+export function cheminsVideo(id: string) {
+  return {
+    apercu: `${BASE}${id}/${id}-fin.webp`,
+    webm: `/videos/realisations/${id}.webm`,
+    mp4: `/videos/realisations/${id}.mp4`,
+  };
+}
+
+/**
+ * Les fichiers vidéo présents, relevés sur le disque au moment du build par
+ * vite.config.ts (constante __VIDEOS_REALISATIONS__). Un fichier manquant est
+ * renvoyé en index.html par la réécriture SPA de Vercel : le tester depuis le
+ * navigateur ne marcherait pas, d'où le relevé au build. Après l'arrivée des
+ * fichiers, un nouveau build (ou un redémarrage du serveur de dev) suffit.
+ */
+export type VideosDisponibles = Record<string, { webm: boolean; mp4: boolean; apercu: boolean }>;
+
+const VIDEOS: VideosDisponibles =
+  typeof __VIDEOS_REALISATIONS__ !== "undefined" ? __VIDEOS_REALISATIONS__ : {};
+
+/**
+ * La vidéo du chantier, ou undefined : il faut l'image de fin et au moins une
+ * des deux sources. Sans elle, la carte garde sa photo de couverture.
+ */
+export function animationDe(id: string, dispo: VideosDisponibles = VIDEOS): AnimationChantier | undefined {
+  const d = dispo[id];
+  if (!d || !d.apercu || (!d.webm && !d.mp4)) return undefined;
+  const c = cheminsVideo(id);
+  return { apercu: c.apercu, webm: d.webm ? c.webm : undefined, mp4: d.mp4 ? c.mp4 : undefined };
+}
 
 /** Les largeurs réellement produites pour cette photo. */
 export function largeursDe(photo: PhotoChantier): number[] {

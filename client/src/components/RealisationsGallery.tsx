@@ -27,17 +27,31 @@
  * flèches du clavier et le roving tabindex — et on l'habille au Nuancier.
  *
  * 2026-10-15 : « Nos dernières réalisations » passe d'une photo par carte à une
- * carte par chantier (un lieu = un chantier) : Demany, Buc, La Queue-les-Yvelines.
+ * carte par chantier (un lieu = un chantier) : Magny-les-Hameaux, Buc,
+ * La Queue-les-Yvelines.
+ * Second passage le même jour : la carte ouvre la vidéo du chantier quand elle
+ * est livrée (FenetreVideo.tsx), et une rangée de miniatures ouvre la
+ * visionneuse directement sur la photo choisie.
  * Un clic ouvre la visionneuse sur toutes les photos du chantier
  * (VisionneuseChantier.tsx). Les données sont dans client/src/chantiers.ts.
  * Les trois photos d'amorce sont retirées : c'étaient les « après » des trois
  * avant/après de l'autre onglet, donc des doublons.
  */
 import * as Tabs from "@radix-ui/react-tabs";
-import { useState } from "react";
+import { Play } from "lucide-react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import AvantApres, { type Photo } from "./AvantApres";
-import VisionneuseChantier from "./VisionneuseChantier";
-import { CHANTIERS, type Chantier, srcParDefaut, srcsetDe } from "@/chantiers";
+import FenetreVideo, { type OuvertureVideo } from "./FenetreVideo";
+import VisionneuseChantier, { type OuvertureVisionneuse } from "./VisionneuseChantier";
+import {
+  type AnimationChantier,
+  CHANTIERS,
+  type Chantier,
+  animationDe,
+  srcDe,
+  srcParDefaut,
+  srcsetDe,
+} from "@/chantiers";
 
 type Projet = {
   titre: string;
@@ -98,38 +112,162 @@ export const PROJETS: Projet[] = [
 const DERNIERES: Chantier[] = CHANTIERS;
 
 /**
- * Le visuel de la carte. C'est ici que viendra l'animation du chantier
- * (`chantier.animation`, voir AnimationChantier dans chantiers.ts) : un aperçu
- * figé à la place de la couverture, le clic restant celui de la carte. Pas
- * encore câblé : l'animation est en validation à part.
+ * Le visuel de la carte, cliquable.
+ * Avec une vidéo (voir animationDe dans chantiers.ts) : l'image de fin du clip
+ * et le bouton « Voir la vidéo », qui ouvre FenetreVideo.
+ * Sans vidéo (fichiers pas encore livrés) : la photo de couverture, et le clic
+ * ouvre la visionneuse des photos, comme avant.
  */
-function CouvertureChantier({ chantier }: { chantier: Chantier }) {
+function CouvertureChantier({
+  chantier,
+  animation,
+  onVideo,
+  onPhotos,
+}: {
+  chantier: Chantier;
+  animation?: AnimationChantier;
+  onVideo: () => void;
+  onPhotos: () => void;
+}) {
   const photo = chantier.photos[chantier.couverture];
   return (
-    <div className="relative aspect-[4/3] overflow-hidden border-b-[3px] border-encre bg-creme-2">
-      <img
-        src={srcParDefaut(photo)}
-        srcSet={srcsetDe(photo)}
-        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-        width={photo.largeur}
-        height={photo.hauteur}
-        alt={photo.alt}
-        loading="lazy"
-        decoding="async"
-        className="couverture-chantier w-full h-full object-cover"
-      />
-      <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+    <button
+      type="button"
+      className="couverture-bouton relative block w-full aspect-[4/3] overflow-hidden border-b-[3px] border-encre bg-creme-2"
+      onClick={animation ? onVideo : onPhotos}
+      aria-haspopup="dialog"
+      aria-label={
+        animation
+          ? `Voir la vidéo du chantier de ${chantier.lieu}`
+          : `Voir les ${chantier.photos.length} photos du chantier de ${chantier.lieu}`
+      }
+    >
+      {animation ? (
+        <img
+          src={animation.apercu}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="couverture-chantier w-full h-full object-cover"
+        />
+      ) : (
+        <img
+          src={srcParDefaut(photo)}
+          srcSet={srcsetDe(photo)}
+          sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+          width={photo.largeur}
+          height={photo.hauteur}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="couverture-chantier w-full h-full object-cover"
+        />
+      )}
+      <span className="absolute left-3 top-3 flex flex-wrap gap-2">
         <span className="badge-carre">{chantier.photos.length} photos</span>
         {chantier.chronologique && (
           <span className="badge-carre badge-carre-terre">Avant → après</span>
         )}
-      </div>
-    </div>
+      </span>
+      {animation && (
+        <span className="badge-video" aria-hidden>
+          <Play size={16} strokeWidth={2.5} fill="currentColor" />
+          Voir la vidéo
+        </span>
+      )}
+    </button>
+  );
+}
+
+/**
+ * Toutes les photos du chantier en miniatures : un clic ouvre la visionneuse
+ * directement sur celle-là (demande de Silva, 15/10 : « voir juste la photo
+ * qu'on veut »).
+ * Défileur maison : bords fondus seulement du côté où il reste à voir, jamais
+ * de flèche ni de « 1/X ». Au doigt, défilement natif. À la souris, on glisse
+ * depuis une miniature (un glisser n'ouvre pas la photo). La molette verticale
+ * n'est pas captée : elle fait défiler la page.
+ */
+function RangeeMiniatures({
+  chantier,
+  onChoisir,
+}: {
+  chantier: Chantier;
+  onChoisir: (index: number) => void;
+}) {
+  const rangee = useRef<HTMLUListElement>(null);
+  const [bords, setBords] = useState({ debut: true, fin: true });
+  const glisse = useRef<{ x: number; gauche: number; bouge: boolean } | null>(null);
+
+  const mesurer = useCallback(() => {
+    const el = rangee.current;
+    if (!el) return;
+    setBords({
+      debut: el.scrollLeft <= 1,
+      fin: el.scrollLeft + el.clientWidth >= el.scrollWidth - 1,
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    mesurer();
+    window.addEventListener("resize", mesurer);
+    return () => window.removeEventListener("resize", mesurer);
+  }, [mesurer]);
+
+  const surPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || !rangee.current) return;
+    glisse.current = { x: e.clientX, gauche: rangee.current.scrollLeft, bouge: false };
+  };
+  const surPointerMove = (e: React.PointerEvent) => {
+    const g = glisse.current;
+    if (!g || !rangee.current) return;
+    const dx = e.clientX - g.x;
+    if (Math.abs(dx) > 5) g.bouge = true;
+    if (g.bouge) rangee.current.scrollLeft = g.gauche - dx;
+  };
+  const surPointerFin = () => {
+    // le clic qui suit un glisser est annulé dans onClickCapture
+    setTimeout(() => (glisse.current = null), 0);
+  };
+
+  return (
+    <ul
+      ref={rangee}
+      onScroll={mesurer}
+      onPointerDown={surPointerDown}
+      onPointerMove={surPointerMove}
+      onPointerUp={surPointerFin}
+      onPointerLeave={surPointerFin}
+      onClickCapture={(e) => {
+        if (glisse.current?.bouge) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+      aria-label={`Photos du chantier de ${chantier.lieu}`}
+      className={`rangee-miniatures ${bords.debut ? "au-debut" : ""} ${bords.fin ? "a-la-fin" : ""}`}
+    >
+      {chantier.photos.map((p, i) => (
+        <li key={p.fichier}>
+          <button
+            type="button"
+            className="miniature"
+            aria-haspopup="dialog"
+            aria-label={`Voir la photo ${i + 1}${p.etape ? `, ${p.etape}` : ""} : ${p.alt}`}
+            onClick={() => onChoisir(i)}
+            style={{ aspectRatio: `${p.largeur} / ${p.hauteur}` }}
+          >
+            <img src={srcDe(p, 240)} alt="" loading="lazy" decoding="async" draggable={false} />
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 
 export default function RealisationsGallery() {
-  const [ouvert, setOuvert] = useState<Chantier | null>(null);
+  const [photos, setPhotos] = useState<OuvertureVisionneuse | null>(null);
+  const [video, setVideo] = useState<OuvertureVideo | null>(null);
 
   return (
     <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
@@ -179,38 +317,51 @@ export default function RealisationsGallery() {
 
           <Tabs.Content value="dernieres" className="outline-none">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
-              {DERNIERES.map((chantier, i) => (
-                <article
-                  key={chantier.id}
-                  className={`card-hard carte-chantier relative flex flex-col ${
-                    i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
-                  }`}
-                >
-                  <CouvertureChantier chantier={chantier} />
-                  <div className="p-5 flex flex-col gap-2">
-                    <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
-                    <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
-                    {chantier.detail && (
-                      <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>
-                    )}
-                    {/* Le ::after de ce bouton couvre toute la carte : un clic n'importe où l'ouvre. */}
-                    <button
-                      type="button"
-                      className="ouvrir-chantier"
-                      aria-haspopup="dialog"
-                      onClick={() => setOuvert(chantier)}
-                    >
-                      Voir les {chantier.photos.length} photos
-                      <span aria-hidden className="cta-arrow">→</span>
-                    </button>
-                  </div>
-                </article>
-              ))}
+              {DERNIERES.map((chantier, i) => {
+                const animation = animationDe(chantier.id);
+                return (
+                  <article
+                    key={chantier.id}
+                    data-chantier={chantier.id}
+                    className={`card-hard carte-chantier relative flex flex-col ${
+                      i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
+                    }`}
+                  >
+                    <CouvertureChantier
+                      chantier={chantier}
+                      animation={animation}
+                      onVideo={() => animation && setVideo({ chantier, animation })}
+                      onPhotos={() => setPhotos({ chantier })}
+                    />
+                    <div className="p-5 flex flex-col gap-2 min-w-0">
+                      <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
+                      <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
+                      {chantier.detail && (
+                        <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>
+                      )}
+                      <RangeeMiniatures
+                        chantier={chantier}
+                        onChoisir={(index) => setPhotos({ chantier, index })}
+                      />
+                      <button
+                        type="button"
+                        className="ouvrir-chantier"
+                        aria-haspopup="dialog"
+                        onClick={() => setPhotos({ chantier })}
+                      >
+                        Voir les {chantier.photos.length} photos
+                        <span aria-hidden className="cta-arrow">→</span>
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </Tabs.Content>
         </Tabs.Root>
       </div>
-      <VisionneuseChantier chantier={ouvert} onFermer={() => setOuvert(null)} />
+      <VisionneuseChantier ouverture={photos} onFermer={() => setPhotos(null)} />
+      <FenetreVideo ouverture={video} onFermer={() => setVideo(null)} />
     </section>
   );
 }
