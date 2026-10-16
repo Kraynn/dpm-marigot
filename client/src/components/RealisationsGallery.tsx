@@ -59,6 +59,7 @@ import {
   srcDe,
   srcParDefaut,
   srcsetDe,
+  taillesApercu,
 } from "@/chantiers";
 
 type Projet = {
@@ -161,7 +162,7 @@ function CouvertureChantier({
   return (
     <button
       type="button"
-      className="couverture-bouton relative block w-full aspect-[4/3] overflow-hidden border-b-[3px] border-encre bg-creme-2"
+      className="couverture-bouton relative block w-full aspect-[4/5] overflow-hidden border-b-[3px] border-encre bg-creme-2"
       onClick={animation ? onVideo : onPhotos}
       aria-haspopup="dialog"
       aria-label={
@@ -180,7 +181,7 @@ function CouvertureChantier({
             key={photo.fichier}
             src={srcParDefaut(photo)}
             srcSet={srcsetDe(photo)}
-            sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+            sizes={taillesApercu(photo)}
             width={photo.largeur}
             height={photo.hauteur}
             alt=""
@@ -207,15 +208,13 @@ function CouvertureChantier({
           />
         );
       })}
-      <span className="absolute left-3 top-3 flex flex-wrap gap-2">
-        <span className="badge-carre">{chantier.photos.length} photos</span>
-        {chantier.chronologique && (
-          <span className="badge-carre badge-carre-terre">Avant → après</span>
-        )}
-      </span>
+      {/* 16/10 (Silva : « petite photo avec beaucoup d'indications pas discrètes, ça
+          surcharge ») : plus de pastilles « N photos » ni « Avant → après » sur la
+          photo (reprises sous les miniatures), et « Voir la vidéo » devient une
+          étiquette sobre dans le coin. */}
       {animation && (
         <span className="badge-video" aria-hidden>
-          <Play size={16} strokeWidth={2.5} fill="currentColor" />
+          <Play size={11} strokeWidth={2.5} fill="currentColor" />
           Voir la vidéo
         </span>
       )}
@@ -360,10 +359,11 @@ function CarteChantier({
         onVideo={() => animation && onVideo({ chantier, animation })}
         onPhotos={() => onPhotos({ chantier })}
       />
-      <div className="p-5 flex flex-col gap-2 min-w-0">
+      {/* 16/10 : texte allégé (moins de graisse et de couleur) pour laisser la photo dominer. */}
+      <div className="px-4 pt-3 pb-4 flex flex-col gap-1.5 min-w-0">
         <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
-        <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
-        {chantier.detail && <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>}
+        <p className="text-sm text-encre/70 leading-snug">{chantier.travaux}</p>
+        {chantier.detail && <p className="text-[0.8rem] text-encre/55 leading-relaxed">{chantier.detail}</p>}
         <RangeeMiniatures
           chantier={chantier}
           actif={apercu}
@@ -377,6 +377,7 @@ function CarteChantier({
           onClick={() => onPhotos({ chantier })}
         >
           Voir les {chantier.photos.length} photos
+          {chantier.chronologique && <span className="ouvrir-chantier-note">avant → après</span>}
           <span aria-hidden className="cta-arrow">→</span>
         </button>
       </div>

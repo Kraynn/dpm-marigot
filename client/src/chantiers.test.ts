@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, formatAJouer, largeursDe, srcDe } from "./chantiers";
+import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, formatAJouer, largeursDe, srcDe, taillesApercu } from "./chantiers";
 
 const PUBLIC = path.resolve(import.meta.dirname, "..", "public");
 
@@ -111,6 +111,13 @@ describe("chantiers des dernières réalisations", () => {
       // La couverture d'un chantier qui se lit dans l'ordre montre le résultat.
       expect(c.photos[c.couverture].etape, c.id).toBe("Après");
     }
+  });
+
+  it("sizes de l'aperçu : une photo paysage recadrée en 4:5 demande un fichier plus large", () => {
+    const buc = CHANTIERS.find((c) => c.id === "buc")!;
+    expect(taillesApercu(buc.photos[0])).toBe("(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw");
+    const magny = CHANTIERS.find((c) => c.id === "magny")!;
+    expect(taillesApercu(magny.photos[5])).toBe("(min-width: 1024px) 667px, (min-width: 640px) 83vw, 167vw");
   });
 
   it("aperçu par défaut : l'avant-dernière photo pour Buc, la dernière pour La Queue-les-Yvelines", () => {

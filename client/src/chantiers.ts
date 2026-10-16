@@ -260,6 +260,24 @@ export function srcsetDe(photo: PhotoChantier): string {
     .join(", ");
 }
 
+/**
+ * Cadre de l'aperçu d'une carte, largeur / hauteur. 16/10/2026 (Silva : « la
+ * photo de preview plus grande ») : 4:5 au lieu de 4:3, la photo domine la carte.
+ */
+export const RATIO_APERCU = 4 / 5;
+
+/**
+ * L'attribut `sizes` de l'aperçu pour cette photo. Une photo plus large que le
+ * cadre (paysage dans un cadre 4:5) est recadrée par object-fit: cover : elle
+ * s'affiche plus large que la carte, d'un facteur qu'on reporte ici pour que le
+ * navigateur choisisse un fichier assez large plutôt que d'en étirer un petit.
+ */
+export function taillesApercu(photo: PhotoChantier): string {
+  const facteur = Math.max(1, photo.largeur / photo.hauteur / RATIO_APERCU);
+  const f = (n: number) => Math.round(n * facteur);
+  return `(min-width: 1024px) ${f(400)}px, (min-width: 640px) ${f(50)}vw, ${f(100)}vw`;
+}
+
 /** Repli `src` : une largeur moyenne, jamais au-delà de l'original. */
 export function srcParDefaut(photo: PhotoChantier): string {
   const l = largeursDe(photo);
