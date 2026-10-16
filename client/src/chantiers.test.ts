@@ -108,7 +108,17 @@ describe("chantiers des dernières réalisations", () => {
     for (const c of CHANTIERS.filter((x) => x.chronologique)) {
       expect(c.photos[0].etape).toBe("Avant");
       expect(c.photos[c.photos.length - 1].etape).toBe("Après");
-      expect(c.couverture).toBe(c.photos.length - 1);
+      // La couverture d'un chantier qui se lit dans l'ordre montre le résultat.
+      expect(c.photos[c.couverture].etape, c.id).toBe("Après");
     }
+  });
+
+  it("aperçu par défaut : l'avant-dernière photo pour Buc, la dernière pour La Queue-les-Yvelines", () => {
+    // Demande de Silva du 16/10/2026, portée par la donnée (couverture), pas par le composant.
+    const buc = CHANTIERS.find((c) => c.id === "buc")!;
+    expect(buc.couverture).toBe(buc.photos.length - 2);
+    const lq = CHANTIERS.find((c) => c.id === "la-queue-les-yvelines")!;
+    expect(lq.couverture).toBe(lq.photos.length - 1);
+    expect(CHANTIERS.find((c) => c.id === "magny")!.couverture).toBe(5);
   });
 });

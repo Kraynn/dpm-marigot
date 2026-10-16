@@ -74,7 +74,10 @@ export type Chantier = {
   detail?: string;
   /** true : les photos suivent l'ordre du chantier, de l'avant à l'après. */
   chronologique: boolean;
-  /** Index, dans `photos`, de la photo de couverture. */
+  /**
+   * Index, dans `photos`, de la photo de couverture : celle que l'aperçu de la
+   * carte montre par défaut, avant tout survol d'une miniature.
+   */
   couverture: number;
   photos: PhotoChantier[];
 };
@@ -134,7 +137,8 @@ export const CHANTIERS: Chantier[] = [
     lieu: "Buc",
     travaux: "Parquet déposé et reposé après un dégât des eaux",
     chronologique: true,
-    couverture: 7,
+    // 16/10 (Silva) : « par défaut pour buc montre l'avant-dernière, pas la dernière ».
+    couverture: 6,
     photos: [
       portrait("buc/buc-01", "Buc, avant travaux : ancien parquet foncé abîmé", "Avant"),
       portrait("buc/buc-02", "Buc, avant travaux : ancien parquet foncé sur le palier, le long du garde-corps", "Avant"),

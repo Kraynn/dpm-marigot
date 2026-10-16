@@ -47,7 +47,7 @@
  */
 import * as Tabs from "@radix-ui/react-tabs";
 import { Play } from "lucide-react";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import AvantApres, { type Photo } from "./AvantApres";
 import FenetreVideo, { type OuvertureVideo } from "./FenetreVideo";
 import VisionneuseChantier, { type OuvertureVisionneuse } from "./VisionneuseChantier";
@@ -126,19 +126,38 @@ const DERNIERES: Chantier[] = CHANTIERS;
  * et le bouton « Voir la vidéo », qui ouvre FenetreVideo.
  * Sans vidéo (fichiers pas encore livrés) : la photo de couverture, et le clic
  * ouvre la visionneuse des photos, comme avant.
+ *
+ * 16/10/2026 (Silva : « hover sur une photo devrait nous permettre de
+ * l'afficher dans la preview ») : l'aperçu montre la photo `apercu`, choisie
+ * par la rangée de miniatures (couverture du chantier au départ). Le clic sur
+ * le visuel lance toujours la vidéo, quelle que soit la photo montrée.
+ * Changement en fondu : la nouvelle photo se pose sur l'ancienne une fois
+ * chargée, puis la remplace. Fondu joué pour tout le monde, mouvement réduit
+ * compris (aucune condition sur prefers-reduced-motion).
  */
 function CouvertureChantier({
   chantier,
+  apercu,
   animation,
   onVideo,
   onPhotos,
 }: {
   chantier: Chantier;
+  apercu: number;
   animation?: AnimationChantier;
   onVideo: () => void;
   onPhotos: () => void;
 }) {
-  const photo = chantier.photos[chantier.couverture];
+  const [affiche, setAffiche] = useState(apercu);
+  const [arrivee, setArrivee] = useState<{ index: number; prete: boolean } | null>(null);
+
+  useEffect(() => {
+    setArrivee(apercu === affiche ? null : { index: apercu, prete: false });
+    // `affiche` est lu à jour : seul un changement d'aperçu doit relancer le fondu.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apercu]);
+
+  const couches = arrivee && arrivee.index !== affiche ? [affiche, arrivee.index] : [affiche];
   return (
     <button
       type="button"
@@ -153,17 +172,41 @@ function CouvertureChantier({
     >
       {/* Toujours la photo de couverture (15/10) : l'image de fin du clip est en 3:4 avec une colonne de texte,
           recadrée en 4:3 elle coupait le titre. Elle reste l'affiche (poster) de la fenêtre vidéo. */}
-      <img
-        src={srcParDefaut(photo)}
-        srcSet={srcsetDe(photo)}
-        sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
-        width={photo.largeur}
-        height={photo.hauteur}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="couverture-chantier w-full h-full object-cover"
-      />
+      {couches.map((index, rang) => {
+        const photo = chantier.photos[index];
+        const dessus = rang === 1;
+        return (
+          <img
+            key={photo.fichier}
+            src={srcParDefaut(photo)}
+            srcSet={srcsetDe(photo)}
+            sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+            width={photo.largeur}
+            height={photo.hauteur}
+            alt=""
+            loading={dessus ? "eager" : "lazy"}
+            decoding="async"
+            data-apercu={index}
+            className={`couverture-chantier absolute inset-0 w-full h-full object-cover ${
+              dessus ? (arrivee?.prete ? "apercu-fondu" : "apercu-attente") : ""
+            }`}
+            onLoad={
+              dessus
+                ? () => setArrivee((a) => (a && a.index === index ? { ...a, prete: true } : a))
+                : undefined
+            }
+            onAnimationEnd={
+              dessus
+                ? (e) => {
+                    if (e.animationName !== "apercu-fondu") return;
+                    setAffiche(index);
+                    setArrivee(null);
+                  }
+                : undefined
+            }
+          />
+        );
+      })}
       <span className="absolute left-3 top-3 flex flex-wrap gap-2">
         <span className="badge-carre">{chantier.photos.length} photos</span>
         {chantier.chronologique && (
@@ -191,9 +234,14 @@ function CouvertureChantier({
  */
 function RangeeMiniatures({
   chantier,
+  actif,
+  onApercu,
   onChoisir,
 }: {
   chantier: Chantier;
+  /** Index de la photo montrée dans l'aperçu de la carte. */
+  actif: number;
+  onApercu: (index: number) => void;
   onChoisir: (index: number) => void;
 }) {
   const rangee = useRef<HTMLUListElement>(null);
@@ -255,7 +303,20 @@ function RangeeMiniatures({
             className="miniature"
             aria-haspopup="dialog"
             aria-label={`Voir la photo ${i + 1}${p.etape ? `, ${p.etape}` : ""} : ${p.alt}`}
-            onClick={() => onChoisir(i)}
+            data-apercu={i === actif ? "" : undefined}
+            // 16/10 : survol à la souris (ou au stylet) et focus clavier montrent la
+            // photo dans l'aperçu de la carte, qui la garde ensuite. Pas pendant un
+            // glisser de la rangée. Au doigt, pas de survol : le toucher (le clic)
+            // met l'aperçu à jour et ouvre la visionneuse, comme à la souris.
+            onPointerEnter={(e) => {
+              if (e.pointerType === "touch" || glisse.current?.bouge) return;
+              onApercu(i);
+            }}
+            onFocus={() => onApercu(i)}
+            onClick={() => {
+              onApercu(i);
+              onChoisir(i);
+            }}
             style={{ aspectRatio: `${p.largeur} / ${p.hauteur}` }}
           >
             <img src={srcDe(p, 240)} alt="" loading="lazy" decoding="async" draggable={false} />
@@ -263,6 +324,63 @@ function RangeeMiniatures({
         </li>
       ))}
     </ul>
+  );
+}
+
+/**
+ * Une carte de chantier. Elle garde l'index de la photo d'aperçu : la
+ * couverture du chantier au départ (donnée de chantiers.ts), puis la dernière
+ * miniature survolée, focalisée ou touchée. Pas de retour à la couverture quand
+ * la souris sort : la photo choisie reste, comme sur une fiche produit.
+ */
+function CarteChantier({
+  chantier,
+  rang,
+  onVideo,
+  onPhotos,
+}: {
+  chantier: Chantier;
+  rang: number;
+  onVideo: (o: OuvertureVideo) => void;
+  onPhotos: (o: OuvertureVisionneuse) => void;
+}) {
+  const animation = animationDe(chantier.id);
+  const [apercu, setApercu] = useState(chantier.couverture);
+  return (
+    <article
+      data-chantier={chantier.id}
+      className={`card-hard carte-chantier relative flex flex-col ${
+        rang === 1 ? "card-hard-terre lg:mt-6" : rang === 2 ? "card-hard-prusse" : ""
+      }`}
+    >
+      <CouvertureChantier
+        chantier={chantier}
+        apercu={apercu}
+        animation={animation}
+        onVideo={() => animation && onVideo({ chantier, animation })}
+        onPhotos={() => onPhotos({ chantier })}
+      />
+      <div className="p-5 flex flex-col gap-2 min-w-0">
+        <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
+        <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
+        {chantier.detail && <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>}
+        <RangeeMiniatures
+          chantier={chantier}
+          actif={apercu}
+          onApercu={setApercu}
+          onChoisir={(index) => onPhotos({ chantier, index })}
+        />
+        <button
+          type="button"
+          className="ouvrir-chantier"
+          aria-haspopup="dialog"
+          onClick={() => onPhotos({ chantier })}
+        >
+          Voir les {chantier.photos.length} photos
+          <span aria-hidden className="cta-arrow">→</span>
+        </button>
+      </div>
+    </article>
   );
 }
 
@@ -297,45 +415,15 @@ export default function RealisationsGallery() {
 
           <Tabs.Content value="dernieres" className="outline-none">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
-              {DERNIERES.map((chantier, i) => {
-                const animation = animationDe(chantier.id);
-                return (
-                  <article
-                    key={chantier.id}
-                    data-chantier={chantier.id}
-                    className={`card-hard carte-chantier relative flex flex-col ${
-                      i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
-                    }`}
-                  >
-                    <CouvertureChantier
-                      chantier={chantier}
-                      animation={animation}
-                      onVideo={() => animation && setVideo({ chantier, animation })}
-                      onPhotos={() => setPhotos({ chantier })}
-                    />
-                    <div className="p-5 flex flex-col gap-2 min-w-0">
-                      <h3 className="text-xl text-encre leading-tight">{chantier.lieu}</h3>
-                      <p className="text-sm font-semibold text-terre leading-snug">{chantier.travaux}</p>
-                      {chantier.detail && (
-                        <p className="text-sm text-encre/70 leading-relaxed">{chantier.detail}</p>
-                      )}
-                      <RangeeMiniatures
-                        chantier={chantier}
-                        onChoisir={(index) => setPhotos({ chantier, index })}
-                      />
-                      <button
-                        type="button"
-                        className="ouvrir-chantier"
-                        aria-haspopup="dialog"
-                        onClick={() => setPhotos({ chantier })}
-                      >
-                        Voir les {chantier.photos.length} photos
-                        <span aria-hidden className="cta-arrow">→</span>
-                      </button>
-                    </div>
-                  </article>
-                );
-              })}
+              {DERNIERES.map((chantier, i) => (
+                <CarteChantier
+                  key={chantier.id}
+                  chantier={chantier}
+                  rang={i}
+                  onVideo={setVideo}
+                  onPhotos={setPhotos}
+                />
+              ))}
             </div>
           </Tabs.Content>
 

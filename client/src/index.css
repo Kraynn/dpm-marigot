@@ -915,6 +915,28 @@
   outline: 3px solid var(--color-prusse);
   outline-offset: 1px;
 }
+/* 16/10/2026 : la miniature montrée dans l'aperçu de la carte. */
+.miniature[data-apercu] {
+  border-color: var(--color-terre);
+}
+/* Changement d'aperçu au survol d'une miniature : la nouvelle photo attend
+   d'être chargée, puis apparaît en fondu court par-dessus l'ancienne. Joué pour
+   tout le monde, mouvement réduit compris : pas de condition sur
+   prefers-reduced-motion. */
+.apercu-attente {
+  opacity: 0;
+}
+.apercu-fondu {
+  animation: apercu-fondu 0.28s ease-out both;
+}
+@keyframes apercu-fondu {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .miniature img {
   display: block;
   width: 100%;
