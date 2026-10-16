@@ -642,41 +642,11 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    animation: none;
-  }
-  .cta-btn,
-  .cta-btn-ghost,
-  .cta-arrow {
-    transition: none;
-  }
-  /* Sans animation, une piste figée masquerait la moitié des logos :
-     le doublon disparaît et le groupe passe à la ligne. La barre grandit en
-     hauteur — elle n'a pas de hauteur fixe, justement pour ça. */
-  .bandeau-partenaires {
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-  .piste-partenaires {
-    animation: none;
-    width: 100%;
-  }
-  .groupe-partenaires {
-    /* sans cette largeur, le groupe garde celle de son contenu et
-       justify-content n'a rien à centrer : les logos restent collés à gauche.
-       min-width est remis à zéro, sinon le groupe déborde de la barre. */
-    width: 100%;
-    min-width: 0;
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 1.25rem;
-    padding: 0.85rem 1rem;
-  }
-  .piste-partenaires [data-copie] {
-    display: none;
-  }
-}
+/* 2026-10-16 — Règle de Silva « animations pour tout le monde » (01/09, 07/10) :
+   le bloc @media (prefers-reduced-motion: reduce) qui coupait ici l'apparition
+   .reveal, les transitions des boutons et le défilement du bandeau des
+   partenaires est retiré. Ces animations jouent pour tous les visiteurs ;
+   ne pas remettre de condition sur prefers-reduced-motion. */
 
 /* ── Pages légales (25/09/2026) ─────────────────────────────
    Un seul bloc de typographie pour les mentions légales et la politique de

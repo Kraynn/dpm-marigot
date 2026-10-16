@@ -3,37 +3,17 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Révèle un bloc quand il entre dans le champ.
  *
- * 2026-09-21 — `prefers-reduced-motion` est maintenant respecté ici aussi.
- * index.css neutralisait déjà les animations de `.reveal` et des boutons, mais
- * pas celles-ci : elles sont posées en style inline par les composants
- * (`opacity: visible ? 1 : 0`), donc hors de portée d'une règle CSS. Un
- * visiteur qui demande moins d'animation voyait quand même chaque section
- * apparaître en fondu et en translation. Il reçoit désormais la page déjà
- * révélée, sans transition.
- *
- * Effet de bord utile : les captures en navigateur sans tête, qui se prennent
- * avec `--force-prefers-reduced-motion`, ne sortent plus à moitié transparentes.
+ * 2026-10-16 — Règle de Silva « animations pour tout le monde » (01/09, 07/10) :
+ * l'apparition au défilement joue pour tous les visiteurs, avec ou sans le
+ * réglage « réduire les animations » du système. Le passage du 2026-09-21, qui
+ * livrait la page déjà révélée en mouvement réduit, est retiré. Aucune
+ * condition sur prefers-reduced-motion ne doit revenir ici.
  */
-const SANS_ANIMATION = "(prefers-reduced-motion: reduce)";
-
-function reduireLesAnimations() {
-  return typeof window !== "undefined" && window.matchMedia
-    ? window.matchMedia(SANS_ANIMATION).matches
-    : false;
-}
-
 export function useScrollReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
-  // L'état initial décide du premier rendu : le calculer ici, et pas dans un
-  // effet, évite une frame où le bloc est encore invisible.
-  const [visible, setVisible] = useState(reduireLesAnimations);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (reduireLesAnimations()) {
-      setVisible(true);
-      return;
-    }
-
     const el = ref.current;
     if (!el) return;
 
