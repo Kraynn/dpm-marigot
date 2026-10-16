@@ -36,21 +36,13 @@ import { Phone } from "lucide-react";
 import PointRelaisCard from "./PointRelaisCard";
 
 // La bannière n'attend pas d'entrer dans le champ — elle y est déjà. Elle a
-// donc son propre déclencheur, et sa propre prise en compte de
-// prefers-reduced-motion (2026-09-21, même raison que dans useScrollReveal).
-const sansAnimation = () =>
-  typeof window !== "undefined" && window.matchMedia
-    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    : false;
-
+// donc son propre déclencheur. 2026-10-16, règle de Silva « animations pour
+// tout le monde » : l'apparition joue aussi en mouvement réduit, aucune
+// condition sur prefers-reduced-motion (celle du 2026-09-21 est retirée).
 export default function HeroSection() {
-  const [visible, setVisible] = useState(sansAnimation);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (sansAnimation()) {
-      setVisible(true);
-      return;
-    }
     const timer = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
