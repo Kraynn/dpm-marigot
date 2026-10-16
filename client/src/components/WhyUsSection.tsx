@@ -127,11 +127,13 @@ export default function WhyUsSection() {
             <div className="flex flex-col gap-2.5 mt-7">
               {faits.map((ligne, i) => (
                 <div key={i} className="flex flex-wrap gap-2.5">
+                  {/* 16/10/2026 (Silva) : couleurs inversées. Seuls le badge « fort » et le
+                      numéro portent la couleur ; les autres badges passent en clair. */}
                   {ligne.map((f) => (
                     <span
                       key={f.label}
                       className={
-                        f.fort ? "trust-badge trust-badge-ocre" : "trust-badge"
+                        f.fort ? "trust-badge" : "trust-badge trust-badge-ocre"
                       }
                     >
                       {f.label}
@@ -170,7 +172,10 @@ export default function WhyUsSection() {
               alt="Vitrine du showroom DPM Marigot, 92 avenue Habert de Montmort"
               loading="lazy"
               decoding="async"
-              className="w-full h-[300px] lg:h-[320px] object-cover"
+              // 16/10/2026 (Silva) : dézoom pour voir le haut de l'enseigne. La photo est
+              // montrée entière, à son propre format (1197 × 903), au lieu d'être rognée
+              // en 300-320 px de haut.
+              className="w-full h-auto aspect-[1197/903] object-cover"
             />
             <figcaption className="text-[11px] uppercase tracking-[0.12em] font-bold pt-3 pb-1 text-encre">
               Le showroom · 92 avenue Habert de Montmort
