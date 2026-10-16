@@ -1,29 +1,27 @@
 /**
  * DPM Marigot – Footer
- * Direction « Le Nuancier » : bande de nuancier inversée, bandeau de rappel terre
- * cuite, puis pied encre. Le téléphone est cliquable ici aussi (4e emplacement).
+ * Direction « Le Nuancier » : bande de nuancier inversée, pied encre.
  *
- * 2026-09-21 : les horaires rejoignent le bloc de contact, le point relais colis
- * rejoint la colonne Services (avec sa propre ancre, ce n'est pas un métier), et
- * les réseaux ne sont plus écrits en dur — ils viennent de src/reseaux.ts, comme
- * dans la Navbar.
- *
- * 2026-10-14 (notes du RDV DPM) : le bouton « Demander un devis » du bandeau part
- * (onglet « Contact » dans l'en-tête à la place), et la marge basse rétrécit : le
- * bouton WhatsApp n'existe plus.
+ * 2026-10-16 – variante C « La carte de visite » (demande de Silva : « la place est
+ * pas gérée astucieusement »). Plus de colonnes : trois rangées pleine largeur.
+ * 1) la marque à gauche, les moyens de joindre DPM à droite ;
+ * 2) les services sur une ligne qui se replie ;
+ * 3) le showroom en une ligne, les mentions au bout.
+ * Le bandeau terre cuite part (la FAQ et la section Devis donnent déjà le numéro et
+ * le délai). Sur téléphone, la marque et quatre boutons carrés passent en premier,
+ * et la liste des services se replie derrière un bouton.
  */
+import { useState } from "react";
 import { Link } from "wouter";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Plus } from "lucide-react";
 import NuancierBar from "@/components/NuancierBar";
 import { RESEAUX_CONNUS } from "@/reseaux";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const ICONE_RESEAU: Record<string, typeof Facebook> = {
-  Facebook,
-  Instagram,
-};
+const ICONE_RESEAU: Record<string, typeof Facebook> = { Facebook, Instagram };
 
-// Les six premiers pointent vers « 01 — Nos métiers ». Le point relais colis
-// n'est pas un métier : il a son propre bandeau, et sa propre ancre.
+// Les six premiers pointent vers « Nos métiers ». Le point relais colis n'est pas
+// un métier : il a son propre bandeau, et sa propre ancre.
 const services: { label: string; ancre: string }[] = [
   { label: "Peinture intérieure", ancre: "#services" },
   { label: "Peinture extérieure", ancre: "#services" },
@@ -31,69 +29,60 @@ const services: { label: string; ancre: string }[] = [
   { label: "Sols & murs", ancre: "#services" },
   { label: "Menuiserie", ancre: "#services" },
   { label: "Dégâts des eaux", ancre: "#services" },
-  // 05/10/2026 : la liste complète de l'adhésif vitrine, sous les cartes métiers
   { label: "Tous nos travaux de rénovation", ancre: "#travaux" },
   { label: "Point relais colis", ancre: "#relais-colis" },
 ];
 
-// 14/10/2026 : réduite aux Yvelines à la demande de la cliente (13/10), comme
-// dans MapSection.tsx.
-const zones = ["Yvelines (78)"];
+// 14/10/2026 : réduite aux Yvelines à la demande de la cliente (13/10).
+const ZONE = "Yvelines (78)";
+
+// Apparition décalée, jouée pour tous (règle « animations pour tout le monde »).
+const apparition = (visible: boolean, delai: number) => ({
+  opacity: visible ? 1 : 0,
+  transform: visible ? "translateY(0)" : "translateY(18px)",
+  transition: `opacity 0.55s ease ${delai}s, transform 0.55s cubic-bezier(0.16,1,0.3,1) ${delai}s`,
+});
+
+const tuile =
+  "inline-flex items-center justify-center gap-2 h-12 border-2 border-creme/25 text-creme hover:border-ocre hover:text-ocre active:scale-[0.97] transition-[color,border-color,transform] text-sm font-bold";
 
 export default function Footer() {
+  const { ref, visible } = useScrollReveal(0.05);
+  const [servicesOuverts, setServicesOuverts] = useState(false);
   const scrollTo = (sel: string) => {
     const el = document.querySelector(sel);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
+  const lienService = (s: { label: string; ancre: string }) => (
+    <a
+      href={s.ancre}
+      onClick={(e) => {
+        e.preventDefault();
+        scrollTo(s.ancre);
+      }}
+      className="inline-flex items-center min-h-11 text-creme/80 hover:text-creme transition-colors text-sm"
+    >
+      {s.label}
+    </a>
+  );
+
   return (
-    <footer className="bg-encre text-creme">
+    <footer className="bg-encre text-creme" data-pied="C">
       <NuancierBar reverse />
 
-      {/* Bandeau de rappel */}
-      <div className="bg-terre border-b-[3px] border-encre py-9">
-        <div className="container flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-          <div>
-            <p className="font-display text-2xl text-white leading-tight">
-              Un chantier en tête ?
-            </p>
-            <p className="text-white/90 text-sm mt-1">
-              Devis gratuit, réponse sous 72h, sans engagement.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="tel:+33185830355"
-              className="inline-flex items-center gap-2 bg-encre text-creme font-bold text-sm px-6 py-3.5 border-[3px] border-encre shadow-[5px_5px_0_var(--color-ocre)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_var(--color-ocre)] transition-all"
-            >
-              <Phone size={15} />
-              01 85 83 03 55
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Marge basse = place de la barre flottante « Appeler » (FloatingCTA), 79 px
-          sous 1024 px. Sans elle, elle recouvrait « Mentions légales » et « Politique
-          de confidentialité » (05/10/2026). 14/10/2026 : le bouton WhatsApp, qui
-          montait jusqu'à 144 px du bas, est retiré ; la marge suit. Au-delà de
-          1024 px, plus rien ne flotte en bas de page. */}
-      <div className="container pt-14 pb-[112px] lg:pb-14">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-          {/* Marque */}
-          <div className="lg:col-span-2">
-            {/* 05/10/2026 : le cartouche crème est retiré (Silva : il cassait la couleur
-                du fond). Le logo se pose sur l'encre comme dans la bannière, rond à
-                gauche, script à droite, slogan dessous. Le rond bleu pétrole y serait
-                invisible (1,28:1) : il passe en monochrome clair par un masque
-                (logo-dpm-rond-masque.png, tiré du PDF ; le pinceau se lit en réserve),
-                peint en crème comme le script. Le slogan reprend l'ocre des titres
-                « Services » et « Zone d'intervention ». */}
+      <div ref={ref} className="container pt-10 lg:pt-12 pb-[112px] lg:pb-8">
+        {/* Rangée 1 : la marque, et les moyens de joindre DPM */}
+        <div
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-7 pb-8 border-b-2 border-creme/15"
+          style={apparition(visible, 0)}
+        >
+          <div className="flex flex-col gap-4">
             <div
               role="img"
-              aria-label="DPM Marigot — Décoration, peinture, menuiserie"
+              aria-label="DPM Marigot, décoration, peinture, menuiserie"
               data-logo-pied
-              className="flex items-center gap-3.5 mb-5"
+              className="flex items-center gap-3.5"
             >
               <span aria-hidden className="logo-rond-masque block bg-creme w-14 h-14 shrink-0" />
               <span aria-hidden className="flex flex-col">
@@ -103,100 +92,101 @@ export default function Footer() {
                 </span>
               </span>
             </div>
-            <p className="text-creme/75 text-sm leading-relaxed max-w-sm">
-              Artisan au Mesnil-Saint-Denis (78). Peinture, décoration, menuiserie, revêtements de
-              sols et murs, remise en état après dégât des eaux. Showroom ouvert au public.
-            </p>
-            <div className="flex flex-col gap-2.5 mt-6">
-              <a
-                href="tel:+33185830355"
-                className="flex items-center gap-2.5 text-creme hover:text-ocre transition-colors text-sm font-bold"
-              >
-                <Phone size={15} /> 01 85 83 03 55
-              </a>
-              <a
-                href="mailto:contact@dpmmarigot.fr"
-                className="flex items-center gap-2.5 text-creme/75 hover:text-ocre transition-colors text-sm"
-              >
-                <Mail size={15} /> contact@dpmmarigot.fr
-              </a>
-              <span className="flex items-start gap-2.5 text-creme/75 text-sm">
-                <MapPin size={15} className="mt-0.5 shrink-0" />
-                92, Avenue Habert de Montmort — Le Mesnil-Saint-Denis (78)
-              </span>
-              <span className="flex items-start gap-2.5 text-creme/75 text-sm">
-                <Clock size={15} className="mt-0.5 shrink-0" />
-                Du mardi au vendredi, 9h00 – 18h30
-              </span>
-              {RESEAUX_CONNUS.map((r) => {
-                const Icone = ICONE_RESEAU[r.nom];
-                return (
-                  <a
-                    key={r.nom}
-                    href={r.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={r.libelle}
-                    className="flex items-center gap-2.5 text-creme/75 hover:text-ocre transition-colors text-sm"
-                  >
-                    <Icone size={15} aria-hidden /> Notre page {r.nom}
-                  </a>
-                );
-              })}
-            </div>
+            <p className="text-creme/75 text-sm">Devis gratuit, réponse sous 72h, sans engagement.</p>
           </div>
 
-          {/* Services */}
-          <div>
-            <p className="section-label text-ocre mb-4">Services</p>
-            <ul className="flex flex-col gap-2.5">
-              {services.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.ancre}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollTo(s.ancre);
-                    }}
-                    className="text-creme/75 hover:text-creme transition-colors text-sm"
-                  >
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Zone */}
-          <div>
-            <p className="section-label text-ocre mb-4">Zone d'intervention</p>
-            <ul className="flex flex-col gap-2.5">
-              {zones.map((z) => (
-                <li key={z} className="text-creme/75 text-sm">
-                  {z}
-                </li>
-              ))}
-            </ul>
+          {/* Téléphone : quatre carrés. Ordinateur : une ligne. */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 lg:flex lg:items-center gap-2.5 lg:gap-3">
+            <a
+              href="tel:+33185830355"
+              className="inline-flex items-center justify-center gap-2 h-12 col-span-3 bg-creme text-encre border-2 border-creme hover:bg-ocre hover:border-ocre active:scale-[0.97] transition-[background-color,border-color,transform] text-sm font-bold lg:px-6"
+            >
+              <Phone size={16} /> 01 85 83 03 55
+            </a>
+            <a href="mailto:contact@dpmmarigot.fr" className={`${tuile} lg:px-5`} aria-label="Écrire à contact@dpmmarigot.fr">
+              <Mail size={16} /> <span className="lg:hidden">Écrire</span>
+              <span className="hidden lg:inline font-normal">contact@dpmmarigot.fr</span>
+            </a>
+            {RESEAUX_CONNUS.map((r) => {
+              const Icone = ICONE_RESEAU[r.nom];
+              return (
+                <a
+                  key={r.nom}
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={r.libelle}
+                  className={`${tuile} lg:w-12 sm:col-span-1`}
+                >
+                  <Icone size={18} aria-hidden />
+                </a>
+              );
+            })}
           </div>
         </div>
 
-        <div className="border-t-2 border-creme/15 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-creme/75 text-xs">
-            © {new Date().getFullYear()} DPM Marigot. Tous droits réservés.
-          </p>
-          {/* 25/09/2026 : ces deux liens existaient en href="#" depuis l'origine.
-              Les pages existent maintenant. */}
-          <div className="flex items-center gap-5">
-            <Link
-              href="/mentions-legales"
-              className="text-creme/75 hover:text-creme text-xs transition-colors"
+        {/* Rangée 2 : les services. Ordinateur : une ligne qui se replie. Téléphone : un bouton. */}
+        <nav aria-label="Services" className="py-5 border-b-2 border-creme/15" style={apparition(visible, 0.12)}>
+          <ul className="hidden lg:flex flex-wrap items-center gap-x-7 gap-y-0">
+            {services.map((s) => (
+              <li key={s.label}>{lienService(s)}</li>
+            ))}
+          </ul>
+          <div className="lg:hidden">
+            <button
+              type="button"
+              aria-expanded={servicesOuverts}
+              aria-controls="pied-services"
+              onClick={() => setServicesOuverts((o) => !o)}
+              className="w-full flex items-center justify-between min-h-12 section-label text-ocre"
             >
+              Services
+              <Plus
+                size={18}
+                aria-hidden
+                className="transition-transform duration-300"
+                style={{ transform: servicesOuverts ? "rotate(45deg)" : "rotate(0deg)" }}
+              />
+            </button>
+            <div
+              id="pied-services"
+              className="grid transition-[grid-template-rows] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+              style={{ gridTemplateRows: servicesOuverts ? "1fr" : "0fr" }}
+            >
+              <ul className="overflow-hidden grid grid-cols-2 gap-x-4" inert={!servicesOuverts || undefined}>
+                {services.map((s) => (
+                  <li key={s.label}>{lienService(s)}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        {/* Rangée 3 : le showroom en une ligne, les mentions au bout */}
+        <div
+          className="pt-5 flex flex-col xl:flex-row xl:items-center justify-between gap-x-8 gap-y-3 text-sm"
+          style={apparition(visible, 0.22)}
+        >
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-x-7 gap-y-2.5 text-creme/80 min-w-0">
+            <span className="flex items-start gap-2">
+              <MapPin size={15} className="mt-0.5 shrink-0" />
+              <span>92, Avenue Habert de Montmort,<br className="sm:hidden" /> Le Mesnil-Saint-Denis (78)</span>
+            </span>
+            <span className="flex items-start gap-2">
+              <Clock size={15} className="mt-0.5 shrink-0" />
+              Du mardi au vendredi, 9h00 – 18h30
+            </span>
+            <span className="flex items-start gap-2">
+              <span aria-hidden className="w-[15px] shrink-0 lg:hidden" />
+              Zone d'intervention : {ZONE}
+            </span>
+          </div>
+          <div className="flex flex-wrap xl:flex-nowrap shrink-0 items-center gap-x-5 text-xs text-creme/75 whitespace-nowrap">
+            <span>© {new Date().getFullYear()} DPM Marigot. Tous droits réservés.</span>
+            <Link href="/mentions-legales" className="inline-flex items-center min-h-11 hover:text-creme transition-colors">
               Mentions légales
             </Link>
-            <Link
-              href="/confidentialite"
-              className="text-creme/75 hover:text-creme text-xs transition-colors"
-            >
+            <Link href="/confidentialite" className="inline-flex items-center min-h-11 hover:text-creme transition-colors">
               Politique de confidentialité
             </Link>
           </div>
