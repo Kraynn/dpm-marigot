@@ -390,7 +390,8 @@ export default function RealisationsGallery() {
   const [video, setVideo] = useState<OuvertureVideo | null>(null);
 
   return (
-    <section id="realisations" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
+    <section id="realisations" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
+      {/* 16/10/2026 (Silva) : fond beige, pour alterner beige / clair dans l'ordre actuel de la page. */}
       <div className="container">
         <div className="mb-12">
           <div>
