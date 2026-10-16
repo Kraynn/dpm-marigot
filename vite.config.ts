@@ -12,18 +12,22 @@ import { defineConfig } from "vite";
 // Une vidéo absente ne peut pas se détecter depuis le navigateur (la
 // réécriture SPA de Vercel renvoie index.html en 200), donc on la relève ici.
 // Chemins : videos/realisations/<id>.{webm,mp4} et images/realisations/<id>/<id>-fin.webp.
+// 2026-10-16 : même relevé pour la version paysage (desktop), suffixe -paysage :
+// videos/realisations/<id>-paysage.{webm,mp4} et images/realisations/<id>/<id>-paysage-fin.webp.
+type Presents = { webm: boolean; mp4: boolean; apercu: boolean };
 function videosRealisations() {
   const pub = path.resolve(import.meta.dirname, "client", "public");
   const dossierImages = path.join(pub, "images", "realisations");
-  const releve: Record<string, { webm: boolean; mp4: boolean; apercu: boolean }> = {};
+  const presents = (n: string, suffixe: string): Presents => ({
+    webm: existsSync(path.join(pub, "videos", "realisations", `${n}${suffixe}.webm`)),
+    mp4: existsSync(path.join(pub, "videos", "realisations", `${n}${suffixe}.mp4`)),
+    apercu: existsSync(path.join(dossierImages, n, `${n}${suffixe}-fin.webp`)),
+  });
+  const releve: Record<string, Presents & { paysage: Presents }> = {};
   for (const id of readdirSync(dossierImages, { withFileTypes: true })) {
     if (!id.isDirectory()) continue;
     const n = id.name;
-    releve[n] = {
-      webm: existsSync(path.join(pub, "videos", "realisations", `${n}.webm`)),
-      mp4: existsSync(path.join(pub, "videos", "realisations", `${n}.mp4`)),
-      apercu: existsSync(path.join(dossierImages, n, `${n}-fin.webp`)),
-    };
+    releve[n] = { ...presents(n, ""), paysage: presents(n, "-paysage") };
   }
   return releve;
 }

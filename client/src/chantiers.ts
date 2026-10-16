@@ -41,12 +41,27 @@ export type PhotoChantier = {
  *   client/public/videos/realisations/<id>.webm et <id>.mp4
  *   client/public/images/realisations/<id>/<id>-fin.webp (image de fin = vignette)
  * Seules les sources réellement présentes sont proposées au navigateur.
+ *
+ * 16/10/2026 : chaque clip portrait (1080×1440, pour le mobile) reçoit une
+ * version PAYSAGE 1920×1080 pour le desktop, à côté :
+ *   client/public/videos/realisations/<id>-paysage.webm et <id>-paysage.mp4
+ *   client/public/images/realisations/<id>/<id>-paysage-fin.webp (affiche)
+ * Facultative : sans elle, la fenêtre vidéo se replie sur la portrait.
  */
-export type AnimationChantier = {
+export type SourcesVideo = {
   apercu: string;
   webm?: string;
   mp4?: string;
 };
+
+export type AnimationChantier = SourcesVideo & {
+  /** Version 16:9 pour le desktop, quand elle est livrée. */
+  paysage?: SourcesVideo;
+};
+
+/** Rapport largeur / hauteur des deux formats de clip. */
+export const RATIO_PORTRAIT = 1080 / 1440;
+export const RATIO_PAYSAGE = 1920 / 1080;
 
 export type Chantier = {
   /** Identifiant, nom du dossier d'images et de la vidéo : "magny". */
@@ -166,11 +181,12 @@ export const CHANTIERS: Chantier[] = [
 const BASE = "/images/realisations/";
 
 /** Chemins publics attendus pour la vidéo d'un chantier, présents ou non. */
-export function cheminsVideo(id: string) {
+export function cheminsVideo(id: string, format: "portrait" | "paysage" = "portrait") {
+  const s = format === "paysage" ? "-paysage" : "";
   return {
-    apercu: `${BASE}${id}/${id}-fin.webp`,
-    webm: `/videos/realisations/${id}.webm`,
-    mp4: `/videos/realisations/${id}.mp4`,
+    apercu: `${BASE}${id}/${id}${s}-fin.webp`,
+    webm: `/videos/realisations/${id}${s}.webm`,
+    mp4: `/videos/realisations/${id}${s}.mp4`,
   };
 }
 
@@ -181,20 +197,48 @@ export function cheminsVideo(id: string) {
  * navigateur ne marcherait pas, d'où le relevé au build. Après l'arrivée des
  * fichiers, un nouveau build (ou un redémarrage du serveur de dev) suffit.
  */
-export type VideosDisponibles = Record<string, { webm: boolean; mp4: boolean; apercu: boolean }>;
+export type FichiersPresents = { webm: boolean; mp4: boolean; apercu: boolean };
+export type VideosDisponibles = Record<string, FichiersPresents & { paysage?: FichiersPresents }>;
 
 const VIDEOS: VideosDisponibles =
   typeof __VIDEOS_REALISATIONS__ !== "undefined" ? __VIDEOS_REALISATIONS__ : {};
 
+/** Les sources d'un format : il faut l'affiche et au moins une des deux vidéos. */
+function sources(id: string, format: "portrait" | "paysage", d?: FichiersPresents): SourcesVideo | undefined {
+  if (!d || !d.apercu || (!d.webm && !d.mp4)) return undefined;
+  const c = cheminsVideo(id, format);
+  return { apercu: c.apercu, webm: d.webm ? c.webm : undefined, mp4: d.mp4 ? c.mp4 : undefined };
+}
+
 /**
- * La vidéo du chantier, ou undefined : il faut l'image de fin et au moins une
- * des deux sources. Sans elle, la carte garde sa photo de couverture.
+ * La vidéo du chantier, ou undefined : il faut la version portrait complète
+ * (image de fin et au moins une source). Sans elle, la carte garde sa photo de
+ * couverture. La version paysage s'y ajoute quand elle est complète aussi.
  */
 export function animationDe(id: string, dispo: VideosDisponibles = VIDEOS): AnimationChantier | undefined {
   const d = dispo[id];
-  if (!d || !d.apercu || (!d.webm && !d.mp4)) return undefined;
-  const c = cheminsVideo(id);
-  return { apercu: c.apercu, webm: d.webm ? c.webm : undefined, mp4: d.mp4 ? c.mp4 : undefined };
+  const portrait = sources(id, "portrait", d);
+  if (!portrait) return undefined;
+  const paysage = sources(id, "paysage", d?.paysage);
+  return paysage ? { ...portrait, paysage } : portrait;
+}
+
+/** La requête qui fait choisir la version paysage : un écran large et couché. */
+export const REQUETE_PAYSAGE = "(min-width: 768px) and (orientation: landscape)";
+
+/**
+ * Les sources à jouer : la paysage sur un écran large et couché quand elle
+ * existe, sinon la portrait (repli, et toujours sur mobile).
+ */
+export function formatAJouer(
+  animation: AnimationChantier,
+  ecranPaysage: boolean,
+): { format: "portrait" | "paysage"; sources: SourcesVideo; ratio: number } {
+  if (ecranPaysage && animation.paysage) {
+    return { format: "paysage", sources: animation.paysage, ratio: RATIO_PAYSAGE };
+  }
+  const { apercu, webm, mp4 } = animation;
+  return { format: "portrait", sources: { apercu, webm, mp4 }, ratio: RATIO_PORTRAIT };
 }
 
 /** Les largeurs réellement produites pour cette photo. */

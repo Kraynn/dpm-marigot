@@ -10,11 +10,26 @@
  * téléchargé avant le clic (preload="none"). WebM d'abord, MP4 en repli.
  * « Rejouer » la reprend du début. Elle joue pour tout le monde : aucune
  * condition sur prefers-reduced-motion.
+ *
+ * 16/10/2026, demande de Silva (« que le pop-up de la vidéo soit moins marqué,
+ * plus en fondu avec le fond ») : la fenêtre vidéo quitte le cadre du Nuancier
+ * (bordure franche, ombre dure, entête blanc). Voile plus léger avec flou
+ * d'arrière-plan, pas de boîte autour : la vidéo flotte, entête et « Rejouer »
+ * discrets en clair sur le voile, apparition en fondu (opacité + léger scale).
+ * La visionneuse des photos garde son cadre : seules les classes fenetre-video-*
+ * changent. Un clic à côté de la vidéo ferme la fenêtre (la boîte laisse passer
+ * le pointeur jusqu'au voile).
+ *
+ * Même jour : version PAYSAGE 1920×1080 pour le desktop. Sur un écran d'au
+ * moins 768 px et couché (REQUETE_PAYSAGE), la fenêtre joue la paysage quand
+ * elle est livrée ; sinon, et toujours sur mobile, la portrait 1080×1440. Dans
+ * les deux cas la vidéo tient entière dans la fenêtre (90 vw × 90 vh au
+ * desktop), sans être rognée.
  */
 import * as Dialog from "@radix-ui/react-dialog";
 import { RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { AnimationChantier, Chantier } from "@/chantiers";
+import { type AnimationChantier, type Chantier, REQUETE_PAYSAGE, formatAJouer } from "@/chantiers";
 
 export type OuvertureVideo = { chantier: Chantier; animation: AnimationChantier };
 
@@ -27,17 +42,34 @@ export default function FenetreVideo({ ouverture, onFermer }: Props) {
   return (
     <Dialog.Root open={ouverture !== null} onOpenChange={(o) => !o && onFermer()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="visionneuse-voile" />
+        <Dialog.Overlay className="fenetre-video-voile" />
         {ouverture && <Contenu key={ouverture.chantier.id} {...ouverture} />}
       </Dialog.Portal>
     </Dialog.Root>
   );
 }
 
+/** Vrai sur un écran large et couché ; suit les rotations et redimensionnements. */
+function useEcranPaysage(): boolean {
+  const [paysage, setPaysage] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia ? window.matchMedia(REQUETE_PAYSAGE).matches : false,
+  );
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const mq = window.matchMedia(REQUETE_PAYSAGE);
+    const suivre = () => setPaysage(mq.matches);
+    suivre();
+    mq.addEventListener("change", suivre);
+    return () => mq.removeEventListener("change", suivre);
+  }, []);
+  return paysage;
+}
+
 function Contenu({ chantier, animation }: OuvertureVideo) {
   const video = useRef<HTMLVideoElement>(null);
   const [finie, setFinie] = useState(false);
   const [declencheur] = useState(() => document.activeElement as HTMLElement | null);
+  const { format, sources, ratio } = formatAJouer(animation, useEcranPaysage());
 
   const lancer = () => {
     const v = video.current;
@@ -49,11 +81,14 @@ function Contenu({ chantier, animation }: OuvertureVideo) {
     v.play().catch(() => {});
   };
 
-  useEffect(lancer, []);
+  // Au premier affichage, et quand le format change (rotation d'une tablette) :
+  // la balise vidéo est recréée (key), on relance.
+  useEffect(lancer, [format]);
 
   return (
     <Dialog.Content
-      className="visionneuse fenetre-video"
+      className="fenetre-video"
+      data-format={format}
       aria-describedby="fenetre-video-travaux"
       onCloseAutoFocus={(e) => {
         if (declencheur?.isConnected) {
@@ -62,23 +97,25 @@ function Contenu({ chantier, animation }: OuvertureVideo) {
         }
       }}
     >
-      <header className="visionneuse-entete">
+      <header className="fenetre-video-entete">
         <div className="min-w-0">
-          <Dialog.Title className="text-2xl lg:text-3xl text-encre leading-tight">{chantier.lieu}</Dialog.Title>
-          <Dialog.Description id="fenetre-video-travaux" className="mt-1 text-sm text-encre/70">
-            {chantier.travaux} — en vidéo
+          <Dialog.Title className="fenetre-video-titre">{chantier.lieu}</Dialog.Title>
+          <Dialog.Description id="fenetre-video-travaux" className="fenetre-video-sous-titre">
+            {chantier.travaux}
           </Dialog.Description>
         </div>
-        <Dialog.Close className="visionneuse-fermer" aria-label="Fermer la vidéo">
-          <X size={22} strokeWidth={2.5} aria-hidden />
+        <Dialog.Close className="fenetre-video-fermer" aria-label="Fermer la vidéo">
+          <X size={20} strokeWidth={2} aria-hidden />
         </Dialog.Close>
       </header>
 
-      <div className="visionneuse-scene">
+      <div className="fenetre-video-scene">
         <video
+          key={format}
           ref={video}
-          className="visionneuse-photo fenetre-video-clip"
-          poster={animation.apercu}
+          className="fenetre-video-clip"
+          style={{ "--ratio": ratio } as React.CSSProperties}
+          poster={sources.apercu}
           muted
           controls
           playsInline
@@ -86,14 +123,14 @@ function Contenu({ chantier, animation }: OuvertureVideo) {
           onEnded={() => setFinie(true)}
           onPlay={() => setFinie(false)}
         >
-          {animation.webm && <source src={animation.webm} type="video/webm" />}
-          {animation.mp4 && <source src={animation.mp4} type="video/mp4" />}
+          {sources.webm && <source src={sources.webm} type="video/webm" />}
+          {sources.mp4 && <source src={sources.mp4} type="video/mp4" />}
         </video>
       </div>
 
       <div className="fenetre-video-pied">
-        <button type="button" className={`cta-btn-ghost ${finie ? "rejouer-attente" : ""}`} onClick={lancer}>
-          <RotateCcw size={17} aria-hidden />
+        <button type="button" className={`fenetre-video-rejouer ${finie ? "attente" : ""}`} onClick={lancer}>
+          <RotateCcw size={16} aria-hidden />
           Rejouer
         </button>
       </div>

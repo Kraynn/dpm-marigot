@@ -36,6 +36,14 @@
  * (VisionneuseChantier.tsx). Les données sont dans client/src/chantiers.ts.
  * Les trois photos d'amorce sont retirées : c'étaient les « après » des trois
  * avant/après de l'autre onglet, donc des doublons.
+ *
+ * 2026-10-16, demande de Silva (« passe les dernières réalisations à la place
+ * de avant après et renomme avant après autres ») : l'ordre s'inverse.
+ *   « Nos dernières réalisations »  premier onglet, ouvert par défaut
+ *   « Autres réalisations »          les trois comparatifs à curseur (ex « Avant / après »)
+ * Aucun lien du site n'ouvrait un onglet précis (#realisations mène à la
+ * section) : seul defaultValue fixe l'onglet ouvert. Garde-fou :
+ * client/src/realisations-onglets.test.ts.
  */
 import * as Tabs from "@radix-ui/react-tabs";
 import { Play } from "lucide-react";
@@ -60,7 +68,8 @@ type Projet = {
   apres: Photo;
 };
 
-// Exporté : la bannière d'accueil reprend deux de ces paires (08/10/2026).
+// Exporté depuis le 08/10/2026 pour la bannière d'accueil, qui ne les reprend
+// plus depuis le 14/10 (carte « Point relais » à leur place, voir HeroSection).
 export const PROJETS: Projet[] = [
   {
     titre: "Plafond fissuré — séjour",
@@ -273,39 +282,18 @@ export default function RealisationsGallery() {
           </div>
         </div>
 
-        <Tabs.Root defaultValue="avant-apres">
+        <Tabs.Root defaultValue="dernieres">
           <Tabs.List
             aria-label="Deux façons de voir nos chantiers"
             className="flex flex-wrap gap-0 mb-10 border-b-[3px] border-encre"
           >
-            <Tabs.Trigger value="avant-apres" className="onglet-rea">
-              Avant / après
-            </Tabs.Trigger>
             <Tabs.Trigger value="dernieres" className="onglet-rea">
               Nos dernières réalisations
             </Tabs.Trigger>
+            <Tabs.Trigger value="autres" className="onglet-rea">
+              Autres réalisations
+            </Tabs.Trigger>
           </Tabs.List>
-
-          <Tabs.Content value="avant-apres" className="outline-none">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {PROJETS.map((projet, i) => (
-                <article
-                  key={projet.titre}
-                  className={`card-hard flex flex-col ${
-                    i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
-                  }`}
-                >
-                  <AvantApres avant={projet.avant} apres={projet.apres} />
-                  <div className="p-5">
-                    <h3 className="text-xl text-encre leading-tight">{projet.titre}</h3>
-                    <p className="mt-2 text-sm text-encre/70 leading-relaxed">
-                      {projet.description}
-                    </p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </Tabs.Content>
 
           <Tabs.Content value="dernieres" className="outline-none">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-start">
@@ -348,6 +336,27 @@ export default function RealisationsGallery() {
                   </article>
                 );
               })}
+            </div>
+          </Tabs.Content>
+
+          <Tabs.Content value="autres" className="outline-none">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {PROJETS.map((projet, i) => (
+                <article
+                  key={projet.titre}
+                  className={`card-hard flex flex-col ${
+                    i === 1 ? "card-hard-terre lg:mt-6" : i === 2 ? "card-hard-prusse" : ""
+                  }`}
+                >
+                  <AvantApres avant={projet.avant} apres={projet.apres} />
+                  <div className="p-5">
+                    <h3 className="text-xl text-encre leading-tight">{projet.titre}</h3>
+                    <p className="mt-2 text-sm text-encre/70 leading-relaxed">
+                      {projet.description}
+                    </p>
+                  </div>
+                </article>
+              ))}
             </div>
           </Tabs.Content>
         </Tabs.Root>

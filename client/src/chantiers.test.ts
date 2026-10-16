@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, largeursDe, srcDe } from "./chantiers";
+import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, formatAJouer, largeursDe, srcDe } from "./chantiers";
 
 const PUBLIC = path.resolve(import.meta.dirname, "..", "public");
 
@@ -67,6 +67,34 @@ describe("chantiers des dernières réalisations", () => {
       webm: "/videos/realisations/magny.webm",
       mp4: "/videos/realisations/magny.mp4",
     });
+  });
+
+  it("la version paysage s'ajoute quand elle est complète, sinon repli sur la portrait", () => {
+    const portrait = { webm: true, mp4: true, apercu: true };
+    // paysage absente, ou incomplète : aucune clé paysage
+    expect(animationDe("buc", { buc: portrait })?.paysage).toBeUndefined();
+    expect(
+      animationDe("buc", { buc: { ...portrait, paysage: { webm: true, mp4: true, apercu: false } } })?.paysage,
+    ).toBeUndefined();
+    // paysage seule, sans portrait : pas de vidéo (la carte et le mobile ont besoin de la portrait)
+    expect(
+      animationDe("buc", { buc: { webm: false, mp4: false, apercu: false, paysage: portrait } }),
+    ).toBeUndefined();
+    const anim = animationDe("buc", { buc: { ...portrait, paysage: { webm: false, mp4: true, apercu: true } } });
+    expect(anim?.paysage).toEqual({
+      apercu: "/images/realisations/buc/buc-paysage-fin.webp",
+      webm: undefined,
+      mp4: "/videos/realisations/buc-paysage.mp4",
+    });
+    // écran large et couché : paysage ; sinon portrait
+    expect(formatAJouer(anim!, true).format).toBe("paysage");
+    expect(formatAJouer(anim!, true).ratio).toBeCloseTo(16 / 9);
+    expect(formatAJouer(anim!, false).format).toBe("portrait");
+    expect(formatAJouer(anim!, false).sources.mp4).toBe("/videos/realisations/buc.mp4");
+    // sans paysage, même sur écran couché : portrait
+    const seule = animationDe("buc", { buc: portrait })!;
+    expect(formatAJouer(seule, true).format).toBe("portrait");
+    expect(formatAJouer(seule, true).ratio).toBeCloseTo(3 / 4);
   });
 
   it("le dossier d'images de chaque chantier porte son id (chemins vidéo)", () => {

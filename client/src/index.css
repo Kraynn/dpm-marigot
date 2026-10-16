@@ -953,24 +953,147 @@
   pointer-events: none;
 }
 
-/* Fenêtre vidéo : même cadre que la visionneuse, un pied pour « Rejouer ». */
+/* ---- Fenêtre vidéo (16/10/2026) ------------------------------------------
+   « Moins marquée, plus en fondu avec le fond » (Silva) : pas de boîte, pas de
+   bordure franche ni d'ombre dure. Voile léger + flou d'arrière-plan, la vidéo
+   flotte au centre et prend l'essentiel de la place, entête et pied discrets
+   en clair sur le voile. La visionneuse des photos garde son cadre Nuancier.
+   Les animations jouent pour tout le monde (aucune media query de mouvement). */
+@keyframes fenetre-video-voile-entree {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fenetre-video-entree {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.fenetre-video-voile {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--color-encre) 58%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  animation: fenetre-video-voile-entree 0.4s ease-out;
+}
+.fenetre-video {
+  position: fixed;
+  z-index: 61;
+  inset: 0;
+  margin: auto;
+  /* 90 vw × 90 vh au desktop : la vidéo s'inscrit dedans sans être rognée */
+  width: 90vw;
+  height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--color-creme-2);
+  outline: none;
+  animation: fenetre-video-entree 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  /* la boîte est invisible : un clic à côté de la vidéo atteint le voile et ferme */
+  pointer-events: none;
+}
+.fenetre-video-fermer,
+.fenetre-video-clip,
+.fenetre-video-rejouer {
+  pointer-events: auto;
+}
+@media (max-width: 639px) {
+  .fenetre-video {
+    width: 100vw;
+    height: 100dvh;
+    padding: 0.75rem 0.75rem 1rem;
+  }
+}
+.fenetre-video-entete {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.fenetre-video-titre {
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: #fff;
+}
+.fenetre-video-sous-titre {
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--color-creme-2) 70%, transparent);
+}
+.fenetre-video-fermer {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in srgb, #fff 12%, transparent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.fenetre-video-fermer:hover {
+  background: color-mix(in srgb, #fff 24%, transparent);
+}
+.fenetre-video-fermer:focus-visible,
+.fenetre-video-rejouer:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.fenetre-video-scene {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  /* les unités cqw/cqh de la vidéo se rapportent à cette scène */
+  container-type: size;
+}
 .fenetre-video-clip {
-  background: var(--color-encre);
+  display: block;
+  /* --ratio = largeur / hauteur du clip (16:9 paysage, 3:4 portrait) :
+     la plus grande taille qui tient entière dans la scène */
+  aspect-ratio: var(--ratio);
+  width: min(100cqw, calc(100cqh * var(--ratio)));
+  height: auto;
+  object-fit: contain;
+  background: color-mix(in srgb, var(--color-encre) 60%, transparent);
+  border-radius: 4px;
+  box-shadow: 0 24px 80px -20px rgb(0 0 0 / 0.55);
 }
 .fenetre-video-pied {
   flex: none;
   display: flex;
   justify-content: center;
-  padding: 0 1.25rem 1.25rem;
 }
-/* À la fin du clip, « Rejouer » s'anime pour se signaler. */
-@keyframes rejouer-signal {
-  0%, 100% { transform: translate(0, 0); box-shadow: 6px 6px 0 var(--color-prusse); }
-  50% { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--color-prusse); }
+.fenetre-video-rejouer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in srgb, #fff 12%, transparent);
+  color: #fff;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-.rejouer-attente {
-  /* trois battements, pas une boucle sans fin qui distrait */
-  animation: rejouer-signal 1.1s ease-in-out 3;
+.fenetre-video-rejouer:hover {
+  background: color-mix(in srgb, #fff 24%, transparent);
+}
+/* À la fin du clip, « Rejouer » pulse doucement pour se signaler : trois
+   battements, pas une boucle sans fin qui distrait. */
+@keyframes fenetre-video-rejouer-signal {
+  0%, 100% { transform: scale(1); background-color: color-mix(in srgb, #fff 12%, transparent); }
+  50% { transform: scale(1.06); background-color: color-mix(in srgb, #fff 28%, transparent); }
+}
+.fenetre-video-rejouer.attente {
+  animation: fenetre-video-rejouer-signal 1.1s ease-in-out 3;
 }
 
 /* Badge carré : bordure franche, sans arrondi. */
