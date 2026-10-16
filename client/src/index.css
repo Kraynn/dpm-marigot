@@ -815,9 +815,9 @@
 .couverture-bouton:hover .couverture-chantier {
   transform: scale(1.03);
 }
-.couverture-bouton:hover .badge-video {
-  transform: translate(3px, 3px);
-  box-shadow: 0 0 0 var(--color-encre);
+.couverture-bouton:hover .badge-video,
+.couverture-bouton:focus-visible .badge-video {
+  background: var(--color-terre);
 }
 .ouvrir-chantier:hover .cta-arrow {
   transform: translateX(4px);
@@ -833,40 +833,51 @@
   align-items: center;
   gap: 0.5rem;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-encre);
-  border-bottom: 3px solid var(--color-terre);
+  /* 16/10 : soulignement fin au lieu du trait de 3 px (carte allégée). */
+  border-bottom: 1.5px solid var(--color-terre);
   cursor: pointer;
+}
+/* « avant → après » : reprise discrète de l'ancienne pastille posée sur la photo. */
+.ouvrir-chantier-note {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--color-encre) 60%, transparent);
 }
 .ouvrir-chantier:focus-visible {
   outline: 3px solid var(--color-prusse);
   outline-offset: 3px;
 }
 
-/* Bouton « Voir la vidéo » posé sur l'image de fin du clip. */
+/* « Voir la vidéo » posé sur la photo d'aperçu. 16/10/2026 (Silva : « plus
+   discret ») : étiquette sobre dans le coin bas droit, fond encre translucide,
+   plus de bordure franche ni d'ombre dure. Le visuel entier reste le bouton
+   (aria-label « Voir la vidéo du chantier de … »), au clavier comme à la souris ;
+   au survol ou au focus, l'étiquette passe en terre. */
 .badge-video {
   position: absolute;
-  left: 50%;
-  bottom: 1rem;
-  translate: -50% 0;
+  right: 0.6rem;
+  bottom: 0.6rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  background: var(--color-terre);
+  gap: 0.35rem;
+  background: color-mix(in srgb, var(--color-encre) 72%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   color: #fff;
-  border: 3px solid var(--color-encre);
-  box-shadow: 4px 4px 0 var(--color-encre);
-  padding: 0.55rem 1rem;
+  padding: 0.3rem 0.6rem;
   font-family: "Space Grotesk", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 /* Rangée de miniatures d'une carte : même recette que la bande de la
@@ -900,10 +911,12 @@
 }
 .miniature {
   display: block;
-  height: 56px;
+  /* 16/10 : 56 → 44 px, la navigation cède de la place à l'aperçu (44 px reste
+     une cible tactile correcte). */
+  height: 44px;
   padding: 0;
   background: #fff;
-  border: 2px solid var(--color-encre);
+  border: 1.5px solid var(--color-encre);
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -914,6 +927,29 @@
 .miniature:focus-visible {
   outline: 3px solid var(--color-prusse);
   outline-offset: 1px;
+}
+/* 16/10/2026 : la miniature montrée dans l'aperçu de la carte. */
+.miniature[data-apercu] {
+  border-color: var(--color-terre);
+  box-shadow: 0 0 0 1px var(--color-terre);
+}
+/* Changement d'aperçu au survol d'une miniature : la nouvelle photo attend
+   d'être chargée, puis apparaît en fondu court par-dessus l'ancienne. Joué pour
+   tout le monde, mouvement réduit compris : pas de condition sur
+   prefers-reduced-motion. */
+.apercu-attente {
+  opacity: 0;
+}
+.apercu-fondu {
+  animation: apercu-fondu 0.28s ease-out both;
+}
+@keyframes apercu-fondu {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .miniature img {
   display: block;
