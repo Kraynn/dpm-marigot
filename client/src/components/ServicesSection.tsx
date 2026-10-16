@@ -79,7 +79,8 @@ export default function ServicesSection() {
   const { ref, visible } = useScrollReveal();
 
   return (
-    <section id="services" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
+    <section id="services" className="bg-creme-2 py-20 lg:py-24 border-b-[3px] border-encre">
+      {/* 16/10/2026 (Silva) : fond clair, pour alterner avec la bannière beige juste au-dessus. */}
       <div className="container" ref={ref}>
         <div
           className="mb-12"

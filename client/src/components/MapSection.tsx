@@ -53,7 +53,8 @@ export default function MapSection() {
   // action du visiteur. Elle a été reformulée en conséquence.
 
   return (
-    <section id="localisation" className="bg-white py-20 lg:py-24 border-b-[3px] border-encre">
+    <section id="localisation" className="bg-creme py-20 lg:py-24 border-b-[3px] border-encre">
+      {/* 16/10/2026 (Silva) : fond beige, après le showroom clair et avant le bloc Contact sombre. */}
       <div className="container" ref={ref}>
         <div
           className="mb-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6"
