@@ -6,8 +6,17 @@
  * piège à focus, Échap, croix, focus rendu au bouton de la carte.
  *
  * La vidéo part dès l'ouverture : muette (donc autorisée à démarrer seule),
- * avec les contrôles natifs, en ligne sur iPhone (playsinline), et rien n'est
- * téléchargé avant le clic (preload="none"). WebM d'abord, MP4 en repli.
+ * en ligne sur iPhone (playsinline), et rien n'est téléchargé avant le clic
+ * (preload="none"). WebM d'abord, MP4 en repli.
+ *
+ * 17/10/2026, demande de Silva (« je pense qu'on est pas obligé d'inclure le
+ * player dans la lecture de la vidéo juste cliquer pour arrêter et cliquer pour
+ * reprendre (pareil sur tel/tablette) ») : plus aucun contrôle de lecteur. Un
+ * clic (ou un toucher) sur la vidéo la met en pause, le suivant la reprend.
+ * Au clavier, la vidéo prend le focus et Espace / Entrée font la même chose ;
+ * son nom accessible suit l'état (« Mettre en pause » / « Reprendre »). Seul
+ * signe : un pictogramme pause / lecture qui s'efface en 0,7 s, pour tout le
+ * monde. La fermeture ne change pas (croix, Échap, clic à côté de la vidéo).
  * « Rejouer » la reprend du début. Elle joue pour tout le monde : aucune
  * condition sur prefers-reduced-motion.
  *
@@ -27,7 +36,7 @@
  * desktop), sans être rognée.
  */
 import * as Dialog from "@radix-ui/react-dialog";
-import { RotateCcw, X } from "lucide-react";
+import { Pause, Play, RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { type AnimationChantier, type Chantier, REQUETE_PAYSAGE, ecranVeut72, formatAJouer } from "@/chantiers";
 
@@ -112,6 +121,9 @@ function useCadenceEcran(): number | null {
 function Contenu({ chantier, animation }: OuvertureVideo) {
   const video = useRef<HTMLVideoElement>(null);
   const [finie, setFinie] = useState(false);
+  const [enPause, setEnPause] = useState(false);
+  // pictogramme bref après un clic : état montré + compteur (rejoue l'animation)
+  const [signe, setSigne] = useState<{ pause: boolean; n: number } | null>(null);
   const [declencheur] = useState(() => document.activeElement as HTMLElement | null);
   const { format, sources, ratio } = formatAJouer(animation, useEcranPaysage(), ecranVeut72(useCadenceEcran()));
 
@@ -121,8 +133,21 @@ function Contenu({ chantier, animation }: OuvertureVideo) {
     v.currentTime = 0;
     setFinie(false);
     // play() peut être refusée (économie d'énergie, onglet en arrière-plan) :
-    // les contrôles natifs restent là pour la lancer à la main.
-    v.play().catch(() => {});
+    // un clic sur la vidéo la lance alors à la main.
+    v.play().catch(() => setEnPause(true));
+  };
+
+  // Clic, toucher, Espace ou Entrée : pause si elle joue, reprise sinon.
+  const basculer = () => {
+    const v = video.current;
+    if (!v) return;
+    if (v.paused || v.ended) {
+      v.play().catch(() => {});
+      setSigne((s) => ({ pause: false, n: (s?.n ?? 0) + 1 }));
+    } else {
+      v.pause();
+      setSigne((s) => ({ pause: true, n: (s?.n ?? 0) + 1 }));
+    }
   };
 
   // Au premier affichage, et quand le format change (rotation d'une tablette) :
@@ -161,15 +186,36 @@ function Contenu({ chantier, animation }: OuvertureVideo) {
           style={{ "--ratio": ratio } as React.CSSProperties}
           poster={sources.apercu}
           muted
-          controls
           playsInline
           preload="none"
-          onEnded={() => setFinie(true)}
-          onPlay={() => setFinie(false)}
+          tabIndex={0}
+          role="button"
+          aria-label={enPause ? "Reprendre" : "Mettre en pause"}
+          onClick={basculer}
+          onKeyDown={(e) => {
+            if (e.key === " " || e.key === "Enter") {
+              e.preventDefault();
+              basculer();
+            }
+          }}
+          onEnded={() => {
+            setFinie(true);
+            setEnPause(true);
+          }}
+          onPlay={() => {
+            setFinie(false);
+            setEnPause(false);
+          }}
+          onPause={() => setEnPause(true)}
         >
           {sources.webm && <source src={sources.webm} type="video/webm" />}
           {sources.mp4 && <source src={sources.mp4} type="video/mp4" />}
         </video>
+        {signe && (
+          <span key={signe.n} className="fenetre-video-signe" aria-hidden>
+            {signe.pause ? <Pause size={30} fill="currentColor" strokeWidth={0} /> : <Play size={30} fill="currentColor" strokeWidth={0} />}
+          </span>
+        )}
       </div>
 
       <div className="fenetre-video-pied">

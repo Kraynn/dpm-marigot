@@ -1058,6 +1058,9 @@
   container-type: size;
 }
 .fenetre-video-clip {
+  /* 17/10/2026 : vidéo et pictogramme de pause superposés dans la même case */
+  grid-area: 1 / 1;
+  cursor: pointer;
   display: block;
   /* --ratio = largeur / hauteur du clip (16:9 paysage, 3:4 portrait) :
      la plus grande taille qui tient entière dans la scène */
@@ -1068,6 +1071,31 @@
   background: color-mix(in srgb, var(--color-encre) 60%, transparent);
   border-radius: 4px;
   box-shadow: 0 24px 80px -20px rgb(0 0 0 / 0.55);
+}
+/* Pictogramme pause / lecture après un clic sur la vidéo : il apparaît et
+   s'efface en 0,7 s, pour tout le monde (pas de condition sur le mouvement réduit). */
+.fenetre-video-signe {
+  grid-area: 1 / 1;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-encre) 55%, transparent);
+  color: #fff;
+  pointer-events: none;
+  opacity: 0;
+  animation: fenetre-video-signe 0.7s ease-out;
+}
+@keyframes fenetre-video-signe {
+  0% { opacity: 0; transform: scale(0.85); }
+  20% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+.fenetre-video-clip:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 .fenetre-video-pied {
   flex: none;
