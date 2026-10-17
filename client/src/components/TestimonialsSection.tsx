@@ -213,7 +213,7 @@ export default function TestimonialsSection() {
         >
           <p className="section-num text-encre mb-2">Ils nous ont fait confiance</p>
           <h2 className="text-4xl lg:text-[2.9rem] leading-[1.06] text-encre">
-            Nos avis, tels quels.
+            Nos avis.
           </h2>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6">
@@ -243,9 +243,22 @@ export default function TestimonialsSection() {
             partagent pour ça une seule grille à trois colonnes : la première
             garde sa demi-largeur d'avant (50 % moins la demi-gouttière), la
             deuxième est ce qui reste avant la colonne du lien « Voir plus
-            d'avis ». L'alignement tient sans largeur codée en dur. */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-[calc(50%-0.875rem)_minmax(0,1fr)_auto] items-start gap-7 lg:gap-y-10">
-          {AVIS.map((avis, i) => (
+            d'avis ». L'alignement tient sans largeur codée en dur.
+
+            2026-10-17, demandé par Silva : « Voir plus d'avis » quitte la
+            droite de la bannière et passe entre le second avis et la bannière,
+            dans le vide que laisse sous lui le second avis (plus court que le
+            premier). Il vit avec ce second avis dans une colonne flex étirée à
+            la hauteur de la rangée (`lg:self-stretch`), poussé en bas par
+            `mt-auto` : la rangée garde la hauteur du premier avis tant que le
+            second et le lien y tiennent, et grandit au lieu de chevaucher sinon.
+            Sur mobile, même ordre logique : second avis, lien, bannière.
+            « Sans modifier l'agencement » : la troisième colonne reste, vide,
+            à la largeur qu'avait le lien (125 px mesurés en Chrome), pour que
+            le second avis et la bannière gardent leur bord droit au pixel près. */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-[calc(50%-0.875rem)_minmax(0,1fr)_125px] items-start gap-7 lg:gap-y-10">
+          {AVIS.map((avis, i) => {
+            const carte = (
             <figure
               key={avis.auteur}
               className="relative card-hard card-hard-prusse p-7 pt-8 overflow-hidden"
@@ -300,13 +313,34 @@ export default function TestimonialsSection() {
                 {avis.tronque ? "…" : ""}
               </blockquote>
             </figure>
-          ))}
+            );
+            if (i < AVIS.length - 1) return carte;
+            return (
+              <div
+                key={avis.auteur}
+                className="min-w-0 flex flex-col gap-6 lg:self-stretch"
+              >
+                {carte}
+                <a
+                  href={GOOGLE_FICHE}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={apparition}
+                  className="mt-auto self-center inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors whitespace-nowrap"
+                >
+                  Voir plus d'avis
+                  <ArrowRight size={16} />
+                </a>
+              </div>
+            );
+          })}
 
           {/* 2026-09-21 : la bannière bleue et « Voir plus d'avis » passent sur
               la même ligne pour gagner de la hauteur, demandé par Silva. Le texte
               tient en une ligne, et les trois boutons se rangent à droite du texte
               quand la largeur le permet (xl), dessous sinon — c'est flex-wrap qui
-              décide, sans point de rupture codé en dur. */}
+              décide, sans point de rupture codé en dur. (Depuis le 17/10, le
+              lien est remonté sous le second avis, voir plus haut.) */}
           <div
             className="md:col-span-2 mt-3 lg:mt-0 min-w-0 bg-prusse text-creme border-[3px] border-encre shadow-[6px_6px_0_var(--color-encre)] p-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-5"
             style={apparition}
@@ -349,17 +383,6 @@ export default function TestimonialsSection() {
               </a>
             </div>
           </div>
-
-          <a
-            href={GOOGLE_FICHE}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={apparition}
-            className="md:col-span-2 lg:col-span-1 justify-self-center self-center inline-flex items-center gap-2 font-bold text-sm text-encre border-b-[3px] border-encre pb-1 hover:text-prusse hover:border-prusse transition-colors whitespace-nowrap"
-          >
-            Voir plus d'avis
-            <ArrowRight size={16} />
-          </a>
         </div>
       </div>
     </section>
