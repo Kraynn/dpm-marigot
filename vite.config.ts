@@ -23,11 +23,13 @@ function videosRealisations() {
     mp4: existsSync(path.join(pub, "videos", "realisations", `${n}${suffixe}.mp4`)),
     apercu: existsSync(path.join(dossierImages, n, `${n}${suffixe}-fin.webp`)),
   });
-  const releve: Record<string, Presents & { paysage: Presents }> = {};
+  // 2026-10-17 : version paysage à 72 i/s pour les écrans à 144 Hz (-paysage-72), même affiche
+  // que la paysage. Une vidéo à 60 i/s y reste tantôt 2, tantôt 3 rafraîchissements : à-coups.
+  const releve: Record<string, Presents & { paysage: Presents; paysage72: Presents }> = {};
   for (const id of readdirSync(dossierImages, { withFileTypes: true })) {
     if (!id.isDirectory()) continue;
     const n = id.name;
-    releve[n] = { ...presents(n, ""), paysage: presents(n, "-paysage") };
+    releve[n] = { ...presents(n, ""), paysage: presents(n, "-paysage"), paysage72: presents(n, "-paysage-72") };
   }
   return releve;
 }

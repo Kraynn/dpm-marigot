@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, formatAJouer, largeursDe, srcDe, taillesApercu } from "./chantiers";
+import { CHANTIERS, LARGEURS, animationDe, cheminsVideo, ecranVeut72, formatAJouer, largeursDe, srcDe, taillesApercu } from "./chantiers";
 
 const PUBLIC = path.resolve(import.meta.dirname, "..", "public");
 
@@ -127,5 +127,41 @@ describe("chantiers des dernières réalisations", () => {
     const lq = CHANTIERS.find((c) => c.id === "la-queue-les-yvelines")!;
     expect(lq.couverture).toBe(lq.photos.length - 1);
     expect(CHANTIERS.find((c) => c.id === "magny")!.couverture).toBe(5);
+  });
+});
+
+describe("cadence de l'écran et Buc sans avant / après (17/10/2026)", () => {
+  it("la version 72 i/s ne sert qu'aux écrans multiples de 72 et pas de 60", () => {
+    expect(ecranVeut72(144)).toBe(true);
+    expect(ecranVeut72(144.9)).toBe(true);
+    expect(ecranVeut72(72)).toBe(true);
+    expect(ecranVeut72(60)).toBe(false);
+    expect(ecranVeut72(120)).toBe(false);
+    expect(ecranVeut72(165)).toBe(false);
+    expect(ecranVeut72(null)).toBe(false);
+  });
+
+  it("paysage 72 i/s : choisie seulement sur un écran couché à 144 Hz, avec l'affiche de la paysage", () => {
+    const p = { webm: true, mp4: true, apercu: true };
+    const anim = animationDe("magny", { magny: { ...p, paysage: p, paysage72: { webm: true, mp4: true, apercu: false } } })!;
+    expect(anim.paysage72?.webm).toBe("/videos/realisations/magny-paysage-72.webm");
+    expect(anim.paysage72?.apercu).toBe("/images/realisations/magny/magny-paysage-fin.webp");
+    expect(formatAJouer(anim, true, true).sources.webm).toBe("/videos/realisations/magny-paysage-72.webm");
+    expect(formatAJouer(anim, true, false).sources.webm).toBe("/videos/realisations/magny-paysage.webm");
+    expect(formatAJouer(anim, false, true).format).toBe("portrait");
+    // sans fichier 72, la paysage à 60 i/s reste servie
+    const sans = animationDe("magny", { magny: { ...p, paysage: p } })!;
+    expect(formatAJouer(sans, true, true).format).toBe("paysage");
+  });
+
+  it("Buc ne se lit plus en avant → après", () => {
+    const buc = CHANTIERS.find((c) => c.id === "buc")!;
+    expect(buc.chronologique).toBe(false);
+    for (const ph of buc.photos) {
+      expect(ph.etape, ph.fichier).toBeUndefined();
+      expect(ph.alt, ph.fichier).not.toMatch(/avant|après travaux/i);
+    }
+    // La Queue-les-Yvelines garde son avant / après
+    expect(CHANTIERS.find((c) => c.id === "la-queue-les-yvelines")!.chronologique).toBe(true);
   });
 });
