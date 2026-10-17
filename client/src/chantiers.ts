@@ -57,6 +57,13 @@ export type SourcesVideo = {
 export type AnimationChantier = SourcesVideo & {
   /** Version 16:9 pour le desktop, quand elle est livrée. */
   paysage?: SourcesVideo;
+  /**
+   * 17/10/2026 : la même version 16:9 à 72 images par seconde, pour les écrans
+   * dont la cadence est un multiple de 72 et pas de 60 (144 Hz). Mesuré sur le
+   * site : une vidéo à 60 i/s y reste 14 puis 21 ms par image (à-coups, écart-
+   * type 3,4 ms) ; à 72 i/s, 14 ms à chaque image (écart-type 0,08 ms).
+   */
+  paysage72?: SourcesVideo;
 };
 
 /** Rapport largeur / hauteur des deux formats de clip. */
@@ -136,18 +143,22 @@ export const CHANTIERS: Chantier[] = [
     id: "buc",
     lieu: "Buc",
     travaux: "Parquet déposé et reposé après un dégât des eaux",
-    chronologique: true,
+    // 17/10/2026 (Silva) : « pour buc je suis pas certain que la premiere image soit vraiment un
+    // avant, on est plutot deja dans les travaux donc tu peux pas faire avant apres ». Plus de
+    // lecture avant → après : ni étape, ni « avant / après travaux » dans les textes, la carte ne
+    // l'annonce plus et la visionneuse s'ouvre sur la couverture. Les photos gardent leur ordre.
+    chronologique: false,
     // 16/10 (Silva) : « par défaut pour buc montre l'avant-dernière, pas la dernière ».
     couverture: 6,
     photos: [
-      portrait("buc/buc-01", "Buc, avant travaux : ancien parquet foncé abîmé", "Avant"),
-      portrait("buc/buc-02", "Buc, avant travaux : ancien parquet foncé sur le palier, le long du garde-corps", "Avant"),
-      portrait("buc/buc-03", "Buc, dépose : ancien parquet retiré le long du garde-corps", "Dépose et chape"),
-      portrait("buc/buc-04", "Buc, dépose : sol de la pièce mis à nu, traces de colle", "Dépose et chape"),
-      portrait("buc/buc-05", "Buc, préparation du sol : couche orange appliquée sur la dalle", "Dépose et chape"),
-      portrait("buc/buc-06", "Buc, chape : sol de la pièce lissé, gris uniforme", "Dépose et chape"),
-      portrait("buc/buc-07", "Buc, après travaux : parquet neuf clair posé dans la chambre", "Après"),
-      portrait("buc/buc-08", "Buc, après travaux : parquet neuf posé sur le palier, le long du garde-corps", "Après"),
+      portrait("buc/buc-01", "Buc : ancien parquet foncé abîmé"),
+      portrait("buc/buc-02", "Buc : ancien parquet foncé sur le palier, le long du garde-corps"),
+      portrait("buc/buc-03", "Buc, dépose : ancien parquet retiré le long du garde-corps"),
+      portrait("buc/buc-04", "Buc, dépose : sol de la pièce mis à nu, traces de colle"),
+      portrait("buc/buc-05", "Buc, préparation du sol : couche orange appliquée sur la dalle"),
+      portrait("buc/buc-06", "Buc, chape : sol de la pièce lissé, gris uniforme"),
+      portrait("buc/buc-07", "Buc : parquet neuf clair posé dans la chambre"),
+      portrait("buc/buc-08", "Buc : parquet neuf posé sur le palier, le long du garde-corps"),
     ],
   },
   {
@@ -185,8 +196,8 @@ export const CHANTIERS: Chantier[] = [
 const BASE = "/images/realisations/";
 
 /** Chemins publics attendus pour la vidéo d'un chantier, présents ou non. */
-export function cheminsVideo(id: string, format: "portrait" | "paysage" = "portrait") {
-  const s = format === "paysage" ? "-paysage" : "";
+export function cheminsVideo(id: string, format: "portrait" | "paysage" | "paysage-72" = "portrait") {
+  const s = format === "portrait" ? "" : `-${format}`;
   return {
     apercu: `${BASE}${id}/${id}${s}-fin.webp`,
     webm: `/videos/realisations/${id}${s}.webm`,
@@ -202,13 +213,13 @@ export function cheminsVideo(id: string, format: "portrait" | "paysage" = "portr
  * fichiers, un nouveau build (ou un redémarrage du serveur de dev) suffit.
  */
 export type FichiersPresents = { webm: boolean; mp4: boolean; apercu: boolean };
-export type VideosDisponibles = Record<string, FichiersPresents & { paysage?: FichiersPresents }>;
+export type VideosDisponibles = Record<string, FichiersPresents & { paysage?: FichiersPresents; paysage72?: FichiersPresents }>;
 
 const VIDEOS: VideosDisponibles =
   typeof __VIDEOS_REALISATIONS__ !== "undefined" ? __VIDEOS_REALISATIONS__ : {};
 
 /** Les sources d'un format : il faut l'affiche et au moins une des deux vidéos. */
-function sources(id: string, format: "portrait" | "paysage", d?: FichiersPresents): SourcesVideo | undefined {
+function sources(id: string, format: "portrait" | "paysage" | "paysage-72", d?: FichiersPresents): SourcesVideo | undefined {
   if (!d || !d.apercu || (!d.webm && !d.mp4)) return undefined;
   const c = cheminsVideo(id, format);
   return { apercu: c.apercu, webm: d.webm ? c.webm : undefined, mp4: d.mp4 ? c.mp4 : undefined };
@@ -224,7 +235,22 @@ export function animationDe(id: string, dispo: VideosDisponibles = VIDEOS): Anim
   const portrait = sources(id, "portrait", d);
   if (!portrait) return undefined;
   const paysage = sources(id, "paysage", d?.paysage);
-  return paysage ? { ...portrait, paysage } : portrait;
+  if (!paysage) return portrait;
+  // la 72 i/s reprend l'affiche de la paysage : seules ses vidéos sont relevées
+  const p72 = d?.paysage72;
+  const paysage72 = p72 && (p72.webm || p72.mp4) ? sources(id, "paysage-72", { ...p72, apercu: true }) : undefined;
+  return paysage72 ? { ...portrait, paysage, paysage72: { ...paysage72, apercu: paysage.apercu } } : { ...portrait, paysage };
+}
+
+/**
+ * Vrai quand l'écran tourne à un multiple de 72 Hz qui n'est pas un multiple de
+ * 60 (144 Hz surtout) : la version à 72 i/s y passe chaque image le même temps.
+ * 60, 120 Hz et les téléphones gardent la 60 i/s. `hz` : cadence mesurée.
+ */
+export function ecranVeut72(hz: number | null): boolean {
+  if (!hz) return false;
+  const juste = (k: number) => Math.abs(hz / k - Math.round(hz / k)) < 0.06;
+  return juste(72) && !juste(60);
 }
 
 /** La requête qui fait choisir la version paysage : un écran large et couché. */
@@ -237,7 +263,11 @@ export const REQUETE_PAYSAGE = "(min-width: 768px) and (orientation: landscape)"
 export function formatAJouer(
   animation: AnimationChantier,
   ecranPaysage: boolean,
-): { format: "portrait" | "paysage"; sources: SourcesVideo; ratio: number } {
+  cadence72 = false,
+): { format: "portrait" | "paysage" | "paysage-72"; sources: SourcesVideo; ratio: number } {
+  if (ecranPaysage && cadence72 && animation.paysage72) {
+    return { format: "paysage-72", sources: animation.paysage72, ratio: RATIO_PAYSAGE };
+  }
   if (ecranPaysage && animation.paysage) {
     return { format: "paysage", sources: animation.paysage, ratio: RATIO_PAYSAGE };
   }

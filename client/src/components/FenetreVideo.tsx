@@ -29,7 +29,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { RotateCcw, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { type AnimationChantier, type Chantier, REQUETE_PAYSAGE, formatAJouer } from "@/chantiers";
+import { type AnimationChantier, type Chantier, REQUETE_PAYSAGE, ecranVeut72, formatAJouer } from "@/chantiers";
 
 export type OuvertureVideo = { chantier: Chantier; animation: AnimationChantier };
 
@@ -39,6 +39,10 @@ type Props = {
 };
 
 export default function FenetreVideo({ ouverture, onFermer }: Props) {
+  // la mesure part dès l'arrivée sur la page : elle est prête avant le clic
+  useEffect(() => {
+    mesurerCadence();
+  }, []);
   return (
     <Dialog.Root open={ouverture !== null} onOpenChange={(o) => !o && onFermer()}>
       <Dialog.Portal>
@@ -65,11 +69,51 @@ function useEcranPaysage(): boolean {
   return paysage;
 }
 
+/**
+ * Cadence de l'écran (Hz), mesurée une fois par page : médiane de 60 intervalles
+ * requestAnimationFrame (un rafraîchissement manqué au chargement ne fausse
+ * rien). 17/10/2026 : sur un écran à 144 Hz, la vidéo à 60 i/s avance par
+ * à-coups (chaque image reste 2 puis 3 rafraîchissements) ; la version à 72 i/s
+ * y est régulière. Tant que la mesure n'est pas faite, on reste en 60 i/s.
+ */
+let cadenceMesuree: number | null = null;
+let mesureEnCours: Promise<number> | null = null;
+function mesurerCadence(): Promise<number> {
+  if (!mesureEnCours) {
+    mesureEnCours = new Promise((ok) => {
+      const t: number[] = [];
+      const pas = (x: number) => {
+        t.push(x);
+        if (t.length < 61) {
+          requestAnimationFrame(pas);
+          return;
+        }
+        const d = t
+          .slice(1)
+          .map((v, i) => v - t[i])
+          .sort((a, b) => a - b);
+        cadenceMesuree = 1000 / d[Math.floor(d.length / 2)];
+        ok(cadenceMesuree);
+      };
+      requestAnimationFrame(pas);
+    });
+  }
+  return mesureEnCours;
+}
+
+function useCadenceEcran(): number | null {
+  const [hz, setHz] = useState(cadenceMesuree);
+  useEffect(() => {
+    if (hz === null) mesurerCadence().then(setHz);
+  }, [hz]);
+  return hz;
+}
+
 function Contenu({ chantier, animation }: OuvertureVideo) {
   const video = useRef<HTMLVideoElement>(null);
   const [finie, setFinie] = useState(false);
   const [declencheur] = useState(() => document.activeElement as HTMLElement | null);
-  const { format, sources, ratio } = formatAJouer(animation, useEcranPaysage());
+  const { format, sources, ratio } = formatAJouer(animation, useEcranPaysage(), ecranVeut72(useCadenceEcran()));
 
   const lancer = () => {
     const v = video.current;
